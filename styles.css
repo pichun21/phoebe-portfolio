@@ -1,4 +1,3 @@
-@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@400;500;600;700&display=swap");
 
 :root{
   --ink:#17191f;
@@ -193,3 +192,10 @@ button{font:inherit}
   #work .work-meta h3{font-size:18px}
   #work .work-meta p,#work .compact-meta p{font-size:12px;margin-top:6px}
 }
+
+
+/* v11 — force Manrope on all English UI text */
+:root{--font-en:"Manrope","Avenir Next","Segoe UI",Arial,sans-serif}
+body{font-family:var(--font-en),"Noto Sans TC","PingFang TC",system-ui,-apple-system,sans-serif}
+.brand,.brand-sub,.nav a,.eyebrow,.section h2,.pill,.work-meta h3,.button,.ticker-track,.tool-row h3,.tool-row span,.site-footer,.hero-note span{font-family:var(--font-en),"Noto Sans TC","PingFang TC",sans-serif}
+#work .section-title-row h2{font-family:var(--font-en),sans-serif;font-weight:800;letter-spacing:-0.035em}
