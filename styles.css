@@ -339,3 +339,10 @@ a.line-product:hover{box-shadow:inset 0 0 0 2px var(--plum)}
   .illus-gallery{grid-template-columns:1fr;gap:14px}
   .illus-pic{border-radius:22px}
 }
+
+/* ===== v26 — 第二張改為角色設定圖（2:1） ===== */
+.illus-gallery{grid-template-columns:minmax(0,1.432fr) minmax(0,2fr)}
+figure.illus-pic{margin:0}
+.illus-pic:not(a):hover img{transform:none}
+@media (max-width:640px){.illus-gallery{grid-template-columns:1fr}}
+.work-screen img.pos-top{object-position:center top}
