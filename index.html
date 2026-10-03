@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Huninn&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=27" />
+  <link rel="stylesheet" href="styles.css?v=28" />
 </head>
 <body>
   <header class="site-header">
@@ -53,7 +53,6 @@
     <section id="work" class="section shell">
       <div class="section-head">
         <h2>最近在做的</h2>
-        <p>不是把所有作品都塞進來，而是先放最想讓人看見的幾個。</p>
       </div>
 
       <div class="work-grid">
@@ -66,14 +65,6 @@
           </div>
         </a>
 
-        <a class="work-card feature" href="https://pichun21.github.io/vcp-stock-tool/" target="_blank" rel="noreferrer">
-          <div class="work-screen"><img src="assets/vcpulse-actual.png" alt="VCPulse 選股工具畫面" loading="lazy" /></div>
-          <div class="work-meta">
-            <span class="tag tag-tool">工具</span>
-            <h3>VCPulse</h3>
-            <p>把台股與美股資訊整理成每天都能快速打開看的工具。</p>
-          </div>
-        </a>
 
         <a class="work-card" href="https://pichun21.github.io/niuniu-hide-game/" target="_blank" rel="noreferrer">
           <div class="work-screen"><img src="assets/find-actual.png" alt="妞妞躲哪裡？遊戲畫面" loading="lazy" /></div>
@@ -184,7 +175,7 @@
           <p>有些東西是為了解決自己的問題，有些只是想看看「做不做得出來」。</p>
         </div>
         <ul class="tool-list">
-          <li><a class="tool-row" href="https://pichun21.github.io/vcp-stock-tool/" target="_blank" rel="noreferrer"><h3>VCPulse</h3><p>台股美股資訊整合</p><span class="status">打開</span></a></li>
+          <li><div class="tool-row is-locked" aria-disabled="true"><h3>VCPulse</h3><p>台股美股資訊整合</p><span class="status"><svg class="lock-icon" viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="7" width="10" height="7.5" rx="2"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>未開放</span></div></li>
           <li><div class="tool-row is-soon"><h3>網頁實驗</h3><p>網站功能與互動測試</p><span class="status">準備中</span></div></li>
           <li><div class="tool-row is-soon"><h3>新點子</h3><p>持續增加中</p><span class="status">準備中</span></div></li>
         </ul>
