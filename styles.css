@@ -188,3 +188,73 @@ a.tool-row:hover h3{color:var(--apricot)}
   html{scroll-behavior:auto}
   *,*::before,*::after{animation:none!important;transition:none!important}
 }
+
+/* ===== v21 — 5 張作品卡、插畫封面連結、桌布區、LINE 作品區 ===== */
+
+/* Works: 上排兩張大卡，下排三張小卡 */
+.work-grid{grid-template-columns:repeat(6,1fr);gap:40px 28px}
+.work-card{grid-column:span 2}
+.work-card.feature{grid-column:span 3}
+.work-card:not(.feature) .work-screen{padding:8px;border-radius:20px}
+.work-card:not(.feature) .work-screen img{border-radius:13px}
+
+/* Illustration cover link fills the figure */
+.illus-cover-link{display:block;height:100%}
+.illus-cover-link img{transition:transform .4s ease}
+.illus-cover-link:hover img{transform:scale(1.03)}
+a.illus-tile{transition:box-shadow .2s,transform .2s}
+a.illus-tile:hover{box-shadow:inset 0 0 0 2px var(--violet)}
+
+/* Shared sub-panel heading */
+.wallpaper-panel,.line-store-panel{margin-top:56px;scroll-margin-top:90px}
+.wallpaper-heading,.line-store-heading{display:flex;justify-content:space-between;align-items:end;gap:24px;margin-bottom:22px}
+.wallpaper-heading h3,.line-store-heading h3{font-size:28px;line-height:1.3}
+.wallpaper-heading p,.line-store-heading p{margin:0;color:var(--plum-soft);font-size:15px;max-width:22em}
+.wallpaper-kicker,.line-kicker{display:block;font-family:var(--font-round);font-size:14px;color:var(--violet);margin-bottom:2px}
+
+/* Wallpapers */
+.wallpaper-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.wallpaper-card{display:flex;flex-direction:column;background:#fff;border-radius:22px;padding:8px;box-shadow:0 0 0 2px var(--line);transition:box-shadow .2s}
+a.wallpaper-card:hover{box-shadow:0 0 0 3px var(--violet)}
+.wallpaper-card img,.wallpaper-placeholder{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:15px}
+.wallpaper-placeholder{display:grid;place-items:center;font-family:var(--font-round);font-size:28px;color:var(--lilac-deep);
+  background:radial-gradient(circle,#d9cff688 5px,transparent 6px) 0 0/28px 28px,var(--paper)}
+.wallpaper-meta{display:flex;flex-direction:column;gap:2px;padding:12px 8px 6px}
+.wallpaper-meta strong{font-family:var(--font-round);font-weight:400;font-size:18px}
+.wallpaper-meta span{font-size:13px;color:var(--plum-soft)}
+.wallpaper-soon .wallpaper-meta strong{color:var(--plum-soft)}
+
+/* LINE creations */
+.line-store-grid{display:grid;grid-template-columns:1fr 1.6fr 1fr;gap:16px}
+.line-product{display:flex;flex-direction:column;justify-content:flex-end;gap:4px;min-height:190px;padding:24px;border-radius:24px;transition:box-shadow .2s}
+.line-product strong{font-family:var(--font-round);font-weight:400;font-size:24px;line-height:1.3}
+.line-product > span:last-child{font-size:14px;color:var(--plum-soft)}
+.line-product-type{font-family:var(--font-round);font-size:13px;color:var(--plum-soft);margin-bottom:auto}
+.line-product-feature{background:var(--apricot-soft)}
+.line-emoji-group{background:var(--lilac)}
+.line-product-theme{background:var(--mint)}
+a.line-product:hover{box-shadow:inset 0 0 0 2px var(--plum)}
+.emoji-links{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.emoji-links a{width:42px;height:42px;display:grid;place-items:center;border-radius:50%;background:#fff;font-family:var(--font-round);font-size:15px;transition:background .2s,color .2s}
+.emoji-links a:hover{background:var(--plum);color:#fff}
+
+@media (max-width:900px){
+  .work-grid{gap:32px 20px}
+  .work-card:not(.feature) .work-meta h3{font-size:18px}
+  .wallpaper-heading,.line-store-heading{flex-direction:column;align-items:flex-start;gap:6px}
+  .wallpaper-grid{gap:12px}
+  .line-store-grid{grid-template-columns:1fr 1fr}
+  .line-emoji-group{grid-column:1/-1;grid-row:1}
+}
+@media (max-width:640px){
+  .work-grid{grid-template-columns:1fr}
+  .work-card,.work-card.feature{grid-column:auto}
+  .work-card:not(.feature) .work-meta h3{font-size:21px}
+  .wallpaper-grid{grid-template-columns:repeat(2,1fr)}
+  .illus-grid{grid-template-rows:240px auto auto}
+  .illus-tile{min-height:110px}
+  .line-emoji-group{grid-column:auto;grid-row:auto}
+  .wallpaper-meta strong{font-size:16px}
+  .line-store-grid{grid-template-columns:1fr}
+  .line-product{min-height:150px}
+}
