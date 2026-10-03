@@ -285,3 +285,34 @@ a.line-product:hover{box-shadow:inset 0 0 0 2px var(--plum)}
   .illus-wall img{flex:none;width:110px;height:110px}
   .illus-wall-meta{padding:8px 12px}
 }
+
+/* ===== v23 — Safari 插畫區修正 + LINE 縮圖 ===== */
+/* 不再依賴 aspect-ratio 撐高度，改用固定高度，Safari / iPad 才不會塌掉 */
+.illus-grid{grid-template-rows:auto}
+.illus-feature{aspect-ratio:auto;width:100%;height:100%;min-height:320px}
+.illus-feature figcaption{white-space:nowrap;max-width:calc(100% - 32px);overflow:hidden;text-overflow:ellipsis}
+.illus-wall img{flex:none;height:230px;width:100%}
+
+/* LINE 縮圖 */
+.line-product .line-product-type{margin-bottom:auto}
+.line-thumb{display:flex;align-items:center;justify-content:flex-start;height:130px;margin-top:12px}
+.line-thumb img{max-height:100%;width:auto;max-width:100%;object-fit:contain}
+.line-thumb-theme img{border-radius:12px;box-shadow:0 6px 16px rgba(46,35,71,.15)}
+.line-product{min-height:260px}
+.line-product strong{margin-top:12px}
+.emoji-links a{position:relative;width:54px;height:54px;overflow:hidden}
+.emoji-links a img{position:absolute;inset:6px;width:calc(100% - 12px);height:calc(100% - 12px);object-fit:contain;background:#fff}
+.emoji-links a:hover{background:#fff;box-shadow:0 0 0 2px var(--plum)}
+.emoji-links a:hover img{transform:scale(1.08)}
+.line-emoji-group strong{margin-top:auto}
+
+@media (max-width:640px){
+  .illus-feature{min-height:0;height:auto;aspect-ratio:4/3}
+  .illus-wall img{width:110px;height:110px}
+  .line-product{min-height:0}
+  .line-thumb{height:110px}
+  .emoji-links a{width:48px;height:48px}
+}
+.emoji-links{gap:6px}
+.emoji-links a{width:46px;height:46px}
+.emoji-links a img{inset:4px;width:calc(100% - 8px);height:calc(100% - 8px)}

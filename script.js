@@ -15,3 +15,16 @@ const observer = new IntersectionObserver((entries) => {
   navLinks.forEach(link => link.classList.toggle('active', link.getAttribute('href') === `#${visible.target.id}`));
 }, { rootMargin: '-35% 0px -55% 0px', threshold: [0, .25, .5] });
 sections.forEach(section => observer.observe(section));
+
+// LINE 主題縮圖：LINE 的主題圖片網址含版本號，依序嘗試，全部失敗就移除縮圖框。
+document.querySelectorAll('img[data-line-theme]').forEach(img => {
+  const id = img.dataset.lineTheme;
+  const base = `https://shop.line-scdn.net/themeshop/v1/products/${id.slice(0,2)}/${id.slice(2,4)}/${id}`;
+  let v = 1;
+  const tryNext = () => {
+    if (v > 8) { img.parentElement?.remove(); return; }
+    img.src = `${base}/${v++}/WEBSTORE/icon_198x278.png`;
+  };
+  img.addEventListener('error', tryNext);
+  tryNext();
+});
