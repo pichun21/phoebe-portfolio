@@ -1,205 +1,311 @@
-<!doctype html>
-<html lang="zh-Hant">
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#ede7fb" />
-  <meta property="og:title" content="Phoebe — Games, Illustration & Tools" />
-  <meta property="og:description" content="遊戲、插畫、網站與小工具作品集。" />
-  <title>Phoebe — Games, Illustration & Tools</title>
-  <meta name="description" content="Phoebe 的遊戲、插畫與小工具作品集。" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Huninn&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=28" />
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Phoebe — Games, Illustration & Tools</title>
+<meta name="description" content="Phoebe 的遊戲、插畫與小工具作品集。">
+<meta property="og:title" content="Phoebe — Games, Illustration & Tools">
+<meta property="og:description" content="遊戲、插畫、網站與小工具作品集。">
+<meta name="theme-color" content="#E9EDE9">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=LXGW+WenKai+TC:wght@400;700&family=Noto+Sans+TC:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --chestnut: #5C4A42;   /* 栗殼 */
+    --caramel:  #9A7658;   /* 焦糖 */
+    --oat:      #D4C4A2;   /* 燕麥 */
+    --sage:     #CFD8D5;   /* 霧綠 */
+    --paper:    #E9EDE9;   /* 米白 */
+    --ink:      #3A2F2A;
+    --muted:    #6E6058;
+    --display: "LXGW WenKai TC", "Kaiti TC", "BiauKai", serif;
+    --body: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+    --wrap: 1040px;
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; scroll-padding-top: 72px; }
+  body {
+    margin: 0; background: var(--paper); color: var(--ink);
+    font: 400 16px/1.75 var(--body);
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+  img { max-width: 100%; display: block; }
+  a { color: inherit; }
+  :focus-visible { outline: 2px solid var(--caramel); outline-offset: 3px; border-radius: 4px; }
+  .wrap { max-width: var(--wrap); margin: 0 auto; padding: 0 24px; }
+
+  /* 頁首 */
+  header {
+    position: sticky; top: 0; z-index: 10;
+    background: color-mix(in srgb, var(--paper) 88%, transparent);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  }
+  .bar { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+  .logo { font: 700 22px/1 var(--display); text-decoration: none; color: var(--chestnut); }
+  nav { display: flex; gap: 4px; }
+  nav a {
+    text-decoration: none; font-size: 15px; color: var(--muted);
+    padding: 6px 12px; border-radius: 999px;
+  }
+  nav a:hover { background: var(--sage); color: var(--ink); }
+
+  /* 開場 */
+  .hero {
+    display: grid; grid-template-columns: 1fr auto; gap: 40px; align-items: end;
+    padding: 56px 0 64px;
+  }
+  .hero p.hi { margin: 0 0 12px; color: var(--muted); }
+  .hero h1 {
+    margin: 0; font: 700 clamp(34px, 5.4vw, 56px)/1.25 var(--display);
+    color: var(--chestnut); letter-spacing: .02em;
+  }
+  .hero p.lead { margin: 20px 0 0; max-width: 30em; color: var(--muted); }
+  .hero-img {
+    width: 200px; aspect-ratio: 1; border-radius: 50%;
+    background: var(--oat); overflow: hidden;
+  }
+  .hero-img img { width: 100%; height: 100%; object-fit: cover; }
+
+  /* 區塊共用 */
+  section.block { padding: 56px 0; border-top: 1px solid var(--sage); }
+  .split { display: grid; grid-template-columns: 200px 1fr; gap: 40px; }
+  .split > h2 {
+    margin: 0; font: 700 28px/1.3 var(--display); color: var(--chestnut);
+    position: sticky; top: 88px; align-self: start;
+  }
+  .split > h2 small { display: block; font: 400 14px/1.6 var(--body); color: var(--muted); margin-top: 8px; }
+
+  /* 遊戲館：主角 */
+  .games { list-style: none; margin: 0; padding: 0; }
+  .games a {
+    display: grid; grid-template-columns: 72px 1fr auto; gap: 2px 20px; align-items: baseline;
+    padding: 22px 0; text-decoration: none; border-bottom: 1px solid var(--sage);
+  }
+  .games .thumb {
+    grid-row: 1 / span 3; align-self: center; position: relative;
+    width: 72px; height: 72px; border-radius: 16px; overflow: hidden;
+    display: grid; place-items: center;
+    font: 700 28px/1 var(--display); color: var(--chestnut); background: var(--oat);
+  }
+  .games .thumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .games li:nth-child(2) .thumb { background: var(--sage); }
+  .games li:nth-child(3) .thumb { background: var(--caramel); color: var(--paper); }
+  .games li:nth-child(4) .thumb { background: var(--chestnut); color: var(--oat); }
+  .games li:nth-child(5) .thumb { background: #fff; }
+  .games li:first-child a { padding-top: 0; }
+  .games .name {
+    font: 700 clamp(24px, 3.2vw, 34px)/1.3 var(--display); color: var(--chestnut);
+    transition: color .15s;
+  }
+  .games .tag {
+    font-size: 13px; padding: 2px 12px; border-radius: 999px;
+    background: var(--oat); color: var(--chestnut); white-space: nowrap;
+  }
+  .games .desc { grid-column: 2 / -1; color: var(--muted); font-size: 15px; }
+  .games a:hover .name { color: var(--caramel); }
+  .games .play {
+    grid-column: 2 / -1; font-size: 14px; color: var(--caramel);
+    text-decoration: underline; text-underline-offset: 4px;
+  }
+  .more { margin: 20px 0 0; color: var(--muted); font-size: 15px; }
+
+  /* 插畫與貼圖 */
+  .art { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+  .tile {
+    background: #fff; border-radius: 16px; padding: 12px; text-decoration: none;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .tile img { aspect-ratio: 4 / 3; width: 100%; object-fit: cover; border-radius: 10px; background: var(--sage); }
+  .tile span { font-size: 14px; color: var(--muted); padding: 0 4px 2px; }
+  a.tile:hover span { color: var(--caramel); }
+
+  .line { margin-top: 32px; }
+  .line h3 { margin: 0 0 12px; font: 700 20px/1.4 var(--display); color: var(--chestnut); }
+  .line-row { display: grid; grid-template-columns: auto auto 1fr; gap: 12px; align-items: stretch; }
+  .chip {
+    display: flex; align-items: center; gap: 10px; padding: 10px 16px 10px 10px;
+    background: var(--sage); border-radius: 14px; text-decoration: none; font-size: 15px;
+  }
+  .chip img { width: 44px; height: 44px; object-fit: contain; border-radius: 8px; background: #fff; }
+  .chip:hover { background: var(--oat); }
+  .emoji {
+    background: var(--sage); border-radius: 14px; padding: 10px 14px;
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  }
+  .emoji b { font-weight: 500; font-size: 15px; margin-right: 4px; }
+  .emoji a { display: block; width: 40px; height: 40px; border-radius: 8px; background: #fff; padding: 3px; }
+  .emoji a:hover { background: var(--oat); }
+  .emoji img { width: 100%; height: 100%; object-fit: contain; }
+
+  /* 小工具 */
+  .tools { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 10px; }
+  .tools li {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 16px; border: 1px dashed var(--caramel); border-radius: 12px; font-size: 15px;
+  }
+  .tools em { font-style: normal; font-size: 13px; color: var(--muted); }
+
+  /* 關於我 */
+  .about { background: var(--chestnut); color: var(--paper); margin-top: 24px; }
+  .about .wrap { padding-top: 56px; padding-bottom: calc(32px + env(safe-area-inset-bottom, 0px)); }
+  .about h2 { margin: 0 0 16px; font: 700 32px/1.3 var(--display); color: var(--oat); }
+  .about p { max-width: 32em; margin: 0 0 12px; color: #E3DDD6; }
+  .about footer {
+    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+    margin-top: 48px; padding-top: 20px; border-top: 1px solid rgba(233,237,233,.2);
+    font-size: 14px; color: var(--oat);
+  }
+  .about footer a { color: var(--oat); }
+
+  @media (max-width: 760px) {
+    nav a { padding: 6px 8px; font-size: 14px; }
+    .hero { grid-template-columns: 1fr; gap: 24px; padding: 32px 0 48px; }
+    .hero-img { width: 120px; order: -1; }
+    .split { grid-template-columns: 1fr; gap: 20px; }
+    .split > h2 { position: static; }
+    .games a { grid-template-columns: 56px 1fr auto; gap: 2px 14px; }
+    .games .thumb { width: 56px; height: 56px; border-radius: 12px; font-size: 22px; }
+    .line-row { grid-template-columns: 1fr 1fr; }
+    .emoji { grid-column: 1 / -1; }
+  }
+  @media (max-width: 420px) {
+    .logo { font-size: 20px; }
+    nav { gap: 0; }
+    .art { grid-template-columns: 1fr 1fr; gap: 10px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    * { transition: none !important; }
+  }
+</style>
 </head>
-<body>
-  <header class="site-header">
-    <div class="shell header-inner">
-      <a class="brand" href="#top" aria-label="Phoebe 首頁">
-        <span class="brand-mark" aria-hidden="true"></span>
-        <span>Phoebe</span>
-      </a>
-      <nav class="nav" aria-label="主要導覽">
-        <a href="#work">作品</a>
-        <a href="#games">遊戲館</a>
-        <a href="#illustration">插畫</a>
-        <a href="#tools">小工具</a>
-        <a href="#about">關於我</a>
-      </nav>
-      <button class="menu-btn" aria-label="開啟選單" aria-expanded="false">選單</button>
+<body id="top">
+
+<header>
+  <div class="wrap bar">
+    <a class="logo" href="#top">Phoebe</a>
+    <nav aria-label="主選單">
+      <a href="#games">遊戲</a>
+      <a href="#illustration">插畫</a>
+      <a href="#tools">小工具</a>
+      <a href="#about">關於我</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="hero">
+    <div>
+      <p class="hi">嗨，我是 Phoebe，這是妞妞。</p>
+      <h1>把喜歡的東西，<br>一個一個做出來。</h1>
+      <p class="lead">遊戲、插畫、網站與實用小工具，所有小專案都從這裡進去。</p>
     </div>
-  </header>
+    <div class="hero-img">
+      <img src="assets/hero-niuniu.png" alt="小貴賓狗妞妞趴在紫色筆電前">
+    </div>
+  </div>
 
-  <main id="top">
-    <section class="hero">
-      <div class="shell hero-grid">
-        <div class="hero-copy">
-          <p class="hero-hello">嗨，我是 Phoebe，這是妞妞。</p>
-          <h1><span>把喜歡的東西，</span><span>一個一個做出來。</span></h1>
-          <p class="hero-lead">遊戲、插畫、網站與實用小工具。這裡是我的作品首頁，也是所有小專案的入口。</p>
-          <div class="hero-actions">
-            <a class="button primary" href="#work">看看最近作品</a>
-            <a class="button secondary" href="#games">進入遊戲館</a>
-          </div>
-        </div>
-        <div class="hero-art">
-          <img class="hero-photo" src="assets/hero-niuniu.png" alt="小貴賓狗妞妞趴在紫色筆電前，旁邊有遊戲手把、插畫和圖表" width="1448" height="1086" />
-          <p class="hero-sticker">正在做<br>網頁小遊戲</p>
-        </div>
-      </div>
-    </section>
-
-    <section id="work" class="section shell">
-      <div class="section-head">
-        <h2>最近在做的</h2>
-      </div>
-
-      <div class="work-grid">
-        <a class="work-card feature" href="https://pichun21.github.io/niuniu-town/" target="_blank" rel="noreferrer">
-          <div class="work-screen"><img src="assets/town-actual.png" alt="妞妞小鎮遊戲畫面" loading="lazy" /></div>
-          <div class="work-meta">
-            <span class="tag tag-game">遊戲</span>
-            <h3>妞妞小鎮</h3>
-            <p>建造、合成，慢慢把一座小世界蓋起來。</p>
-          </div>
-        </a>
-
-
-        <a class="work-card" href="https://pichun21.github.io/niuniu-hide-game/" target="_blank" rel="noreferrer">
-          <div class="work-screen"><img src="assets/find-actual.png" alt="妞妞躲哪裡？遊戲畫面" loading="lazy" /></div>
-          <div class="work-meta">
-            <span class="tag tag-game">遊戲</span>
-            <h3>妞妞躲哪裡？</h3>
-            <p>Where's Niuniu? 格子推理解謎。</p>
-          </div>
-        </a>
-
-        <a class="work-card" href="https://pichun21.github.io/niuniu-color-sort/" target="_blank" rel="noreferrer">
-          <div class="work-screen"><img class="pos-top" src="assets/tubes-actual.jpg?v=2" alt="妞妞顏色實驗室遊戲畫面" loading="lazy" /></div>
-          <div class="work-meta">
-            <span class="tag tag-game">遊戲</span>
-            <h3>妞妞顏色實驗室</h3>
-            <p>分類顏色，簡單又療癒。</p>
-          </div>
-        </a>
-
-        <a class="work-card" href="https://pichun21.github.io/niuniu-match3/" target="_blank" rel="noreferrer">
-          <div class="work-screen"><img src="assets/match3-actual.png" alt="妞妞零食消消樂遊戲畫面" loading="lazy" /></div>
-          <div class="work-meta">
-            <span class="tag tag-game">遊戲</span>
-            <h3>妞妞零食消消樂</h3>
-            <p>交換相鄰圖案，三個連成一線。</p>
-          </div>
-        </a>
-      </div>
-    </section>
-
-    <section id="games" class="section games">
-      <div class="shell">
-        <div class="section-head">
-          <h2>妞妞遊戲館</h2>
-          <p>短短玩一下也可以，想一路闖關也可以。</p>
-        </div>
-        <ul class="game-list">
-          <li><a class="game-row" href="https://pichun21.github.io/niuniu-snack-game/" target="_blank" rel="noreferrer"><span class="game-dot" style="--dot:#f5b77f"></span><span class="game-name">妞妞接零食</span><span class="game-desc">30 秒接零食挑戰。</span><span class="status">開始玩</span></a></li>
-          <li><a class="game-row" href="https://pichun21.github.io/niuniu-hide-game/" target="_blank" rel="noreferrer"><span class="game-dot" style="--dot:#bfe3c9"></span><span class="game-name">妞妞躲哪裡？</span><span class="game-desc">從提示中找出躲起來的妞妞。</span><span class="status">開始玩</span></a></li>
-          <li><a class="game-row" href="https://pichun21.github.io/niuniu-color-sort/" target="_blank" rel="noreferrer"><span class="game-dot" style="--dot:#8f7ee6"></span><span class="game-name">妞妞顏色實驗室</span><span class="game-desc">把相同顏色的液體分類。</span><span class="status">開始玩</span></a></li>
-          <li><a class="game-row" href="https://pichun21.github.io/niuniu-town/" target="_blank" rel="noreferrer"><span class="game-dot" style="--dot:#9cc98a"></span><span class="game-name">妞妞小鎮</span><span class="game-desc">建造、合成與關卡。</span><span class="status">開始玩</span></a></li>
-          <li><a class="game-row" href="https://pichun21.github.io/niuniu-match3/" target="_blank" rel="noreferrer"><span class="game-dot" style="--dot:#f3a9c4"></span><span class="game-name">妞妞零食消消樂</span><span class="game-desc">交換相鄰圖案，三個連成一線。</span><span class="status">開始玩</span></a></li>
+  <section class="block" id="games">
+    <div class="split">
+      <h2>妞妞遊戲館<small>短短玩一下也可以，想一路闖關也可以。</small></h2>
+      <div>
+        <ul class="games">
+          <li><a href="https://pichun21.github.io/niuniu-snack-game/">
+            <span class="thumb" aria-hidden="true">零</span>
+            <span class="name">妞妞接零食</span><span class="tag">一局 30 秒</span>
+            <span class="desc">在時間內接住掉下來的零食。</span><span class="play">開始玩</span>
+          </a></li>
+          <li><a href="https://pichun21.github.io/niuniu-color-sort/">
+            <span class="thumb" aria-hidden="true">色<img src="assets/games/color-sort.webp" alt="" loading="lazy" onerror="this.remove()"></span>
+            <span class="name">妞妞顏色實驗室</span><span class="tag">放鬆</span>
+            <span class="desc">把相同顏色的液體倒在一起，簡單又療癒。</span><span class="play">開始玩</span>
+          </a></li>
+          <li><a href="https://pichun21.github.io/niuniu-match3/">
+            <span class="thumb" aria-hidden="true">消<img src="assets/games/match3.webp" alt="" loading="lazy" onerror="this.remove()"></span>
+            <span class="name">妞妞零食消消樂</span><span class="tag">三消</span>
+            <span class="desc">交換相鄰圖案，三個連成一線就消除。</span><span class="play">開始玩</span>
+          </a></li>
+          <li><a href="https://pichun21.github.io/niuniu-hide-game/">
+            <span class="thumb" aria-hidden="true">躲<img src="assets/games/hide.webp" alt="" loading="lazy" onerror="this.remove()"></span>
+            <span class="name">妞妞躲哪裡？</span><span class="tag">推理</span>
+            <span class="desc">從格子裡的提示，找出妞妞躲在哪。</span><span class="play">開始玩</span>
+          </a></li>
+          <li><a href="https://pichun21.github.io/niuniu-town/">
+            <span class="thumb" aria-hidden="true">鎮<img src="assets/games/town.webp" alt="" loading="lazy" onerror="this.remove()"></span>
+            <span class="name">妞妞小鎮</span><span class="tag">建造</span>
+            <span class="desc">建造、合成、過關，慢慢蓋出一座小世界。</span><span class="play">開始玩</span>
+          </a></li>
         </ul>
-        <p class="games-more">還有更多遊戲在路上。</p>
+        <p class="more">還有更多遊戲在路上。</p>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <section id="illustration" class="section shell">
-      <div class="section-head">
-        <h2>插畫與貼圖</h2>
-      </div>
-      <div class="illus-gallery">
-        <a class="illus-pic pic-duck" href="https://www.instagram.com/needtodeco/" target="_blank" rel="noreferrer">
-          <img src="assets/illustration-cover.jpg" alt="needtodeco 插畫：妞妞坐在黃色小鴨泳圈上" loading="lazy" width="2048" height="1430" />
-          <span class="pic-label">@needtodeco on Instagram</span>
-        </a>
-        <figure class="illus-pic pic-sheet">
-          <img src="assets/niuniu-sheet.webp" alt="妞妞角色設定：正面、背面與側面的上色稿和線稿" loading="lazy" width="1774" height="887" />
-          <figcaption class="pic-label">妞妞角色設定</figcaption>
-        </figure>
-      </div>
-
-      <div class="line-store-panel" id="line">
-        <div class="line-store-heading">
-          <div>
-            <span class="line-kicker">LINE CREATIONS</span>
-            <h3>貼圖、表情貼與主題</h3>
+  <section class="block" id="illustration">
+    <div class="split">
+      <h2>插畫與貼圖<small>妞妞的日常，也做成了 LINE 貼圖。</small></h2>
+      <div>
+        <div class="art">
+          <a class="tile" href="https://www.instagram.com/needtodeco/">
+            <img src="assets/illustration-cover.jpg" alt="妞妞坐在黃色小鴨泳圈上">
+            <span>更多插畫在 Instagram @needtodeco</span>
+          </a>
+          <div class="tile">
+            <img src="assets/niuniu-sheet.webp" alt="妞妞角色設定：正面、背面與側面">
+            <span>妞妞角色設定</span>
           </div>
         </div>
 
-        <div class="line-store-grid">
-          <a class="line-product line-product-feature" href="https://store.line.me/stickershop/product/17339391/zh-Hant?utm_source=gnsh_stickerDetail" target="_blank" rel="noreferrer">
-            <span class="line-product-type">STICKER</span>
-            <span class="line-thumb"><img src="https://stickershop.line-scdn.net/stickershop/v1/product/17339391/LINEStorePC/main.png" alt="LINE 貼圖封面" loading="lazy" onerror="this.parentElement.remove()" /></span>
-            <strong>LINE 貼圖</strong>
-            <span>查看貼圖作品 →</span>
-          </a>
-
-          <div class="line-product line-emoji-group">
-            <span class="line-product-type">EMOJI</span>
-            <div class="emoji-links" aria-label="LINE 表情貼作品">
-              <a href="https://store.line.me/emojishop/product/6298157a02450a0831387b84/zh-Hant" target="_blank" rel="noreferrer" aria-label="LINE 表情貼 01"><span>01</span><img src="https://stickershop.line-scdn.net/sticonshop/v1/product/6298157a02450a0831387b84/iPhone/main.png" alt="" loading="lazy" onerror="this.remove()" /></a>
-              <a href="https://store.line.me/emojishop/product/681dbb161405823fb2ed10bc/zh-Hant?lang=zh-Hant&amp;utm_source=gnsh_sticonDetail" target="_blank" rel="noreferrer" aria-label="LINE 表情貼 02"><span>02</span><img src="https://stickershop.line-scdn.net/sticonshop/v1/product/681dbb161405823fb2ed10bc/iPhone/main.png" alt="" loading="lazy" onerror="this.remove()" /></a>
-              <a href="https://store.line.me/emojishop/product/6878ae0548df014043ba25ea/zh-Hant" target="_blank" rel="noreferrer" aria-label="LINE 表情貼 03"><span>03</span><img src="https://stickershop.line-scdn.net/sticonshop/v1/product/6878ae0548df014043ba25ea/iPhone/main.png" alt="" loading="lazy" onerror="this.remove()" /></a>
-              <a href="https://store.line.me/emojishop/product/683409067c063c41352eb0d3/zh-Hant" target="_blank" rel="noreferrer" aria-label="LINE 表情貼 04"><span>04</span><img src="https://stickershop.line-scdn.net/sticonshop/v1/product/683409067c063c41352eb0d3/iPhone/main.png" alt="" loading="lazy" onerror="this.remove()" /></a>
-              <a href="https://store.line.me/emojishop/product/68537244690f116e3be35861/zh-Hant" target="_blank" rel="noreferrer" aria-label="LINE 表情貼 05"><span>05</span><img src="https://stickershop.line-scdn.net/sticonshop/v1/product/68537244690f116e3be35861/iPhone/main.png" alt="" loading="lazy" onerror="this.remove()" /></a>
-              <a href="https://store.line.me/emojishop/product/685e3877eaa20a6f72d6ddb5/zh-Hant" target="_blank" rel="noreferrer" aria-label="LINE 表情貼 06"><span>06</span><img src="https://stickershop.line-scdn.net/sticonshop/v1/product/685e3877eaa20a6f72d6ddb5/iPhone/main.png" alt="" loading="lazy" onerror="this.remove()" /></a>
-              <a href="https://store.line.me/emojishop/product/684a8bc9690f116e3be34178/zh-Hant" target="_blank" rel="noreferrer" aria-label="LINE 表情貼 07"><span>07</span><img src="https://stickershop.line-scdn.net/sticonshop/v1/product/684a8bc9690f116e3be34178/iPhone/main.png" alt="" loading="lazy" onerror="this.remove()" /></a>
+        <div class="line">
+          <h3>LINE 貼圖、表情貼與主題</h3>
+          <div class="line-row">
+            <a class="chip" href="https://store.line.me/stickershop/product/17339391/zh-Hant">
+              <img src="https://stickershop.line-scdn.net/stickershop/v1/product/17339391/LINEStorePC/main.png" alt="">貼圖
+            </a>
+            <a class="chip" href="https://store.line.me/themeshop/product/181d70fa-5ddb-4bf8-8a29-758d72087d2b/zh-Hant">
+              <img src="assets/line-theme.png" alt="">主題
+            </a>
+            <div class="emoji">
+              <b>表情貼</b>
+              <a href="https://store.line.me/emojishop/product/6298157a02450a0831387b84/zh-Hant" aria-label="表情貼第 1 組"><img src="https://stickershop.line-scdn.net/sticonshop/v1/product/6298157a02450a0831387b84/iPhone/main.png" alt=""></a>
+              <a href="https://store.line.me/emojishop/product/681dbb161405823fb2ed10bc/zh-Hant" aria-label="表情貼第 2 組"><img src="https://stickershop.line-scdn.net/sticonshop/v1/product/681dbb161405823fb2ed10bc/iPhone/main.png" alt=""></a>
+              <a href="https://store.line.me/emojishop/product/6878ae0548df014043ba25ea/zh-Hant" aria-label="表情貼第 3 組"><img src="https://stickershop.line-scdn.net/sticonshop/v1/product/6878ae0548df014043ba25ea/iPhone/main.png" alt=""></a>
+              <a href="https://store.line.me/emojishop/product/683409067c063c41352eb0d3/zh-Hant" aria-label="表情貼第 4 組"><img src="https://stickershop.line-scdn.net/sticonshop/v1/product/683409067c063c41352eb0d3/iPhone/main.png" alt=""></a>
+              <a href="https://store.line.me/emojishop/product/68537244690f116e3be35861/zh-Hant" aria-label="表情貼第 5 組"><img src="https://stickershop.line-scdn.net/sticonshop/v1/product/68537244690f116e3be35861/iPhone/main.png" alt=""></a>
+              <a href="https://store.line.me/emojishop/product/685e3877eaa20a6f72d6ddb5/zh-Hant" aria-label="表情貼第 6 組"><img src="https://stickershop.line-scdn.net/sticonshop/v1/product/685e3877eaa20a6f72d6ddb5/iPhone/main.png" alt=""></a>
+              <a href="https://store.line.me/emojishop/product/684a8bc9690f116e3be34178/zh-Hant" aria-label="表情貼第 7 組"><img src="https://stickershop.line-scdn.net/sticonshop/v1/product/684a8bc9690f116e3be34178/iPhone/main.png" alt=""></a>
             </div>
-            <strong>LINE 表情貼</strong>
-            <span>點選任一組查看表情貼 →</span>
           </div>
-
-          <a class="line-product line-product-theme" href="https://store.line.me/themeshop/product/181d70fa-5ddb-4bf8-8a29-758d72087d2b/zh-Hant?lang=zh-Hant&amp;ref=lsh_themeDetail" target="_blank" rel="noreferrer">
-            <span class="line-product-type">THEME</span>
-            <span class="line-thumb line-thumb-theme"><img src="assets/line-theme.png" data-line-theme="181d70fa-5ddb-4bf8-8a29-758d72087d2b" alt="LINE 主題封面" /></span>
-            <strong>LINE 主題</strong>
-            <span>查看主題作品 →</span>
-          </a>
         </div>
       </div>
-    </section>
-
-    <section id="tools" class="section shell">
-      <div class="tools-panel">
-        <div class="tools-copy">
-          <h2>小工具與實驗</h2>
-          <p>有些東西是為了解決自己的問題，有些只是想看看「做不做得出來」。</p>
-        </div>
-        <ul class="tool-list">
-          <li><div class="tool-row is-locked" aria-disabled="true"><h3>VCPulse</h3><p>台股美股資訊整合</p><span class="status"><svg class="lock-icon" viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="7" width="10" height="7.5" rx="2"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>未開放</span></div></li>
-          <li><div class="tool-row is-soon"><h3>網頁實驗</h3><p>網站功能與互動測試</p><span class="status">準備中</span></div></li>
-          <li><div class="tool-row is-soon"><h3>新點子</h3><p>持續增加中</p><span class="status">準備中</span></div></li>
-        </ul>
-      </div>
-    </section>
-
-    <section id="about" class="section shell about">
-      <h2>Hi, I’m Phoebe.</h2>
-      <div class="about-copy">
-        <p>平常做行政工作，空閒時喜歡把腦中的小點子做成真的網站、遊戲和插畫。</p>
-        <p>這裡不只是一個作品集，也像是一個持續長大的小倉庫：每完成一個東西，就多放進來一件。</p>
-        <div class="about-links"><a href="#games">去玩遊戲</a><a href="#illustration">看插畫</a><a href="#tools">試試小工具</a></div>
-      </div>
-    </section>
-  </main>
-
-  <footer class="site-footer">
-    <div class="shell footer-inner">
-      <p class="footer-brand">Phoebe 和妞妞的小倉庫</p>
-      <a class="back-top" href="#top">回到最上面</a>
-      <p class="copyright">© 2026 Phoebe</p>
     </div>
-  </footer>
+  </section>
 
-  <script src="script.js?v=25"></script>
+  <section class="block" id="tools">
+    <div class="split">
+      <h2>小工具與實驗<small>為了解決自己的問題，或只是想試試做不做得出來。</small></h2>
+      <ul class="tools">
+        <li>VCPulse<em>未開放</em></li>
+        <li>網頁實驗<em>準備中</em></li>
+        <li>新點子<em>持續增加</em></li>
+      </ul>
+    </div>
+  </section>
+</main>
+
+<section class="about" id="about">
+  <div class="wrap">
+    <h2>Hi, I’m Phoebe.</h2>
+    <p>平常做行政工作，空閒時喜歡把腦中的小點子做成真的網站、遊戲和插畫。</p>
+    <p>這裡像一個持續長大的小倉庫：每完成一個東西，就多放進來一件。</p>
+    <footer>
+      <span>© 2026 Phoebe 和妞妞的小倉庫</span>
+      <a href="#top">回到最上面</a>
+    </footer>
+  </div>
+</section>
+
 </body>
 </html>
