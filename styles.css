@@ -258,3 +258,30 @@ a.line-product:hover{box-shadow:inset 0 0 0 2px var(--plum)}
   .line-store-grid{grid-template-columns:1fr}
   .line-product{min-height:150px}
 }
+
+/* ===== v22 — 插畫區精簡：封面 / Instagram / 一張桌布 ===== */
+.illus-grid{grid-template-columns:minmax(0,1.25fr) minmax(0,1fr) minmax(0,1fr);grid-template-rows:auto;align-items:stretch}
+.illus-feature{grid-row:auto;grid-column:auto;aspect-ratio:4/3;min-width:0}
+.illus-feature img{position:absolute;inset:0;width:100%;height:100%}
+.t-insta{grid-column:auto;background:var(--lilac);padding:28px}
+.t-insta strong{font-size:26px}
+.illus-wall{display:flex;flex-direction:column;min-width:0;background:var(--mint);border-radius:22px;padding:10px;transition:box-shadow .2s}
+.illus-wall:hover{box-shadow:inset 0 0 0 2px var(--plum)}
+.illus-wall img{width:100%;flex:1 1 0;min-height:0;object-fit:cover;border-radius:15px}
+.illus-wall-meta{display:flex;flex-direction:column;padding:14px 14px 8px}
+.illus-wall-meta strong{font-family:var(--font-round);font-weight:400;font-size:22px}
+.illus-wall-meta span{font-size:14px;color:var(--plum-soft)}
+
+@media (max-width:900px){
+  .t-insta{padding:22px}
+  .t-insta strong{font-size:22px}
+  .illus-wall-meta strong{font-size:19px}
+  .illus-wall-meta span{font-size:13px}
+}
+@media (max-width:640px){
+  .illus-grid{grid-template-columns:1fr;grid-template-rows:auto}
+  .t-insta{min-height:120px}
+  .illus-wall{flex-direction:row;align-items:center;gap:6px}
+  .illus-wall img{flex:none;width:110px;height:110px}
+  .illus-wall-meta{padding:8px 12px}
+}
