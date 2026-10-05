@@ -3,21 +3,21 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#e4eeea" />
+  <meta name="theme-color" content="#f7f9f5" />
   <meta property="og:title" content="Phoebe — Games, Illustration & Tools" />
   <meta property="og:description" content="遊戲、插畫、網站與小工具作品集。" />
   <title>Phoebe — Games, Illustration & Tools</title>
   <meta name="description" content="Phoebe 的遊戲、插畫與小工具作品集。" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Huninn&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=31" />
+  <link href="https://fonts.googleapis.com/css2?family=LXGW+WenKai+TC:wght@400;700&family=Noto+Sans+TC:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=50" />
 </head>
 <body>
   <header class="site-header">
     <div class="shell header-inner">
       <a class="brand" href="#top" aria-label="Phoebe 首頁">
-        <span class="brand-mark" aria-hidden="true"></span>
+        <span class="seal" aria-hidden="true">妞</span>
         <span>Phoebe</span>
       </a>
       <nav class="nav" aria-label="主要導覽">
@@ -32,29 +32,24 @@
   </header>
 
   <main id="top">
-    <section class="hero">
-      <div class="shell hero-grid">
-        <div class="hero-copy">
-          <p class="hero-hello">嗨，我是 Phoebe，這是妞妞。</p>
-          <h1><span>把喜歡的東西，</span><span>一個一個做出來。</span></h1>
-          <p class="hero-lead">遊戲、插畫、網站與實用小工具。這裡是我的作品首頁，也是所有小專案的入口。</p>
-          <div class="hero-actions">
-            <a class="button primary" href="#work">看看最近作品</a>
-            <a class="button secondary" href="#games">進入遊戲館</a>
-          </div>
-        </div>
-        <div class="hero-art">
-          <img class="hero-photo" src="assets/hero-niuniu.png" alt="小貴賓狗妞妞趴在紫色筆電前，旁邊有遊戲手把、插畫和圖表" width="1448" height="1086" />
-          <p class="hero-sticker">正在做<br>網頁小遊戲</p>
+    <section class="hero shell">
+      <h1 class="hero-title"><span>把喜歡的東西，</span><span>一個一個做出來。</span></h1>
+      <div class="hero-art">
+        <img class="hero-photo" src="assets/hero-niuniu.png" alt="小貴賓狗妞妞趴在紫色筆電前，旁邊有遊戲手把、插畫和圖表" width="1448" height="1086" />
+      </div>
+      <div class="hero-text">
+        <p class="hero-hello">嗨，我是 Phoebe，這是妞妞。</p>
+        <p class="hero-lead">遊戲、插畫、網站與實用小工具。這裡是我的作品首頁，也是所有小專案的入口。</p>
+        <div class="hero-actions">
+          <a class="button primary" href="#work">看看最近作品</a>
+          <a class="button secondary" href="#games">進入遊戲館</a>
         </div>
       </div>
     </section>
 
-    <section id="work" class="section shell">
-      <div class="section-head">
-        <h2>最近在做的</h2>
-      </div>
-
+    <section id="work" class="chapter shell">
+      <h2 class="chapter-title">最近在做的</h2>
+      <div class="chapter-body">
       <div class="work-grid">
         <a class="work-card feature" href="https://pichun21.github.io/niuniu-town/" target="_blank" rel="noreferrer">
           <div class="work-screen"><img src="assets/town-actual.png" alt="妞妞小鎮遊戲畫面" loading="lazy" /></div>
@@ -93,14 +88,13 @@
           </div>
         </a>
       </div>
+      </div>
     </section>
 
-    <section id="games" class="section games">
-      <div class="shell">
-        <div class="section-head">
-          <h2>妞妞遊戲館</h2>
-          <p>短短玩一下也可以，想一路闖關也可以。</p>
-        </div>
+    <section id="games" class="chapter shell">
+      <h2 class="chapter-title">妞妞遊戲館</h2>
+      <div class="chapter-body">
+        <p class="chapter-intro">短短玩一下也可以，想一路闖關也可以。</p>
         <ul class="game-list">
           <li><a class="game-row" href="https://pichun21.github.io/niuniu-snack-game/" target="_blank" rel="noreferrer"><span class="game-dot" style="--dot:#f5b77f"></span><span class="game-name">妞妞接零食</span><span class="game-desc">30 秒接零食挑戰。</span><span class="status">開始玩</span></a></li>
           <li><a class="game-row" href="https://pichun21.github.io/niuniu-hide-game/" target="_blank" rel="noreferrer"><span class="game-dot" style="--dot:#bfe3c9"></span><span class="game-name">妞妞躲哪裡？</span><span class="game-desc">從提示中找出躲起來的妞妞。</span><span class="status">開始玩</span></a></li>
@@ -112,10 +106,9 @@
       </div>
     </section>
 
-    <section id="illustration" class="section shell">
-      <div class="section-head">
-        <h2>插畫與貼圖</h2>
-      </div>
+    <section id="illustration" class="chapter shell">
+      <h2 class="chapter-title">插畫與貼圖</h2>
+      <div class="chapter-body">
       <div class="illus-gallery">
         <a class="illus-pic pic-duck" href="https://www.instagram.com/needtodeco/" target="_blank" rel="noreferrer">
           <img src="assets/illustration-cover.jpg" alt="needtodeco 插畫：妞妞坐在黃色小鴨泳圈上" loading="lazy" width="2048" height="1430" />
@@ -126,25 +119,17 @@
           <figcaption class="pic-label">妞妞角色設定</figcaption>
         </figure>
       </div>
-
       <div class="line-store-panel" id="line">
-        <div class="line-store-heading">
-          <div>
-            <span class="line-kicker">LINE CREATIONS</span>
-            <h3>貼圖、表情貼與主題</h3>
-          </div>
-        </div>
+        <h3 class="sub-title">貼圖、表情貼與主題</h3>
 
         <div class="line-store-grid">
           <a class="line-product line-product-feature" href="https://store.line.me/stickershop/product/17339391/zh-Hant?utm_source=gnsh_stickerDetail" target="_blank" rel="noreferrer">
-            <span class="line-product-type">STICKER</span>
             <span class="line-thumb"><img src="https://stickershop.line-scdn.net/stickershop/v1/product/17339391/LINEStorePC/main.png" alt="LINE 貼圖封面" loading="lazy" onerror="this.parentElement.remove()" /></span>
             <strong>LINE 貼圖</strong>
             <span>查看貼圖作品 →</span>
           </a>
 
           <div class="line-product line-emoji-group">
-            <span class="line-product-type">EMOJI</span>
             <div class="emoji-links" aria-label="LINE 表情貼作品">
               <a href="https://store.line.me/emojishop/product/6298157a02450a0831387b84/zh-Hant" target="_blank" rel="noreferrer" aria-label="LINE 表情貼 01"><span>01</span><img src="https://stickershop.line-scdn.net/sticonshop/v1/product/6298157a02450a0831387b84/iPhone/main.png" alt="" loading="lazy" onerror="this.remove()" /></a>
               <a href="https://store.line.me/emojishop/product/681dbb161405823fb2ed10bc/zh-Hant?lang=zh-Hant&amp;utm_source=gnsh_sticonDetail" target="_blank" rel="noreferrer" aria-label="LINE 表情貼 02"><span>02</span><img src="https://stickershop.line-scdn.net/sticonshop/v1/product/681dbb161405823fb2ed10bc/iPhone/main.png" alt="" loading="lazy" onerror="this.remove()" /></a>
@@ -159,21 +144,19 @@
           </div>
 
           <a class="line-product line-product-theme" href="https://store.line.me/themeshop/product/181d70fa-5ddb-4bf8-8a29-758d72087d2b/zh-Hant?lang=zh-Hant&amp;ref=lsh_themeDetail" target="_blank" rel="noreferrer">
-            <span class="line-product-type">THEME</span>
             <span class="line-thumb line-thumb-theme"><img src="assets/line-theme.png" data-line-theme="181d70fa-5ddb-4bf8-8a29-758d72087d2b" alt="LINE 主題封面" /></span>
             <strong>LINE 主題</strong>
             <span>查看主題作品 →</span>
           </a>
         </div>
       </div>
+      </div>
     </section>
 
-    <section id="tools" class="section shell">
-      <div class="tools-panel">
-        <div class="tools-copy">
-          <h2>小工具與實驗</h2>
-          <p>有些東西是為了解決自己的問題，有些只是想看看「做不做得出來」。</p>
-        </div>
+    <section id="tools" class="chapter shell">
+      <h2 class="chapter-title">小工具與實驗</h2>
+      <div class="chapter-body">
+        <p class="chapter-intro">有些東西是為了解決自己的問題，有些只是想看看「做不做得出來」。</p>
         <ul class="tool-list">
           <li><a class="tool-row" href="vcpulse.html"><h3>VCPulse</h3><p>選股雷達｜僅限授權使用</p><span class="status">看介紹</span></a></li>
           <li><div class="tool-row is-soon"><h3>網頁實驗</h3><p>網站功能與互動測試</p><span class="status">準備中</span></div></li>
@@ -182,9 +165,10 @@
       </div>
     </section>
 
-    <section id="about" class="section shell about">
-      <h2>Hi, I’m Phoebe.</h2>
-      <div class="about-copy">
+    <section id="about" class="chapter shell">
+      <h2 class="chapter-title">關於我</h2>
+      <div class="chapter-body about-copy">
+        <p class="about-hi">Hi, I'm Phoebe.</p>
         <p>平常做行政工作，空閒時喜歡把腦中的小點子做成真的網站、遊戲和插畫。</p>
         <p>這裡不只是一個作品集，也像是一個持續長大的小倉庫：每完成一個東西，就多放進來一件。</p>
         <div class="about-links"><a href="#games">去玩遊戲</a><a href="#illustration">看插畫</a><a href="#tools">試試小工具</a></div>
@@ -194,12 +178,13 @@
 
   <footer class="site-footer">
     <div class="shell footer-inner">
+      <span class="seal seal-lg" aria-hidden="true">妞妞</span>
       <p class="footer-brand">Phoebe 和妞妞的小倉庫</p>
       <a class="back-top" href="#top">回到最上面</a>
       <p class="copyright">© 2026 Phoebe</p>
     </div>
   </footer>
 
-  <script src="script.js?v=25"></script>
+  <script src="script.js?v=50"></script>
 </body>
 </html>
