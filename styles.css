@@ -8,7 +8,7 @@
   --line:#dde5df;
   --moss:#4a7466;
   --leaf:#e6eee8;
-  --display:"LXGW WenKai TC","霞鶩文楷 TC","Kaiti TC","BiauKai","DFKai-SB","Noto Serif TC","Noto Serif CJK TC",serif;
+  --display:"Iansui","芫荽","LXGW WenKai TC","霞鶩文楷 TC","Kaiti TC","BiauKai","DFKai-SB","Noto Serif TC","Noto Serif CJK TC",serif;
   --body:"Noto Sans TC","PingFang TC","Microsoft JhengHei","Noto Sans CJK TC",system-ui,sans-serif;
 }
 *{box-sizing:border-box}
@@ -26,7 +26,7 @@ figure{margin:0}
 
 /* 印章 */
 .seal{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:5px;background:var(--moss);color:var(--paper);
-  font-family:var(--display);font-weight:700;font-size:17px;line-height:1;box-shadow:inset 0 0 0 2px var(--moss),inset 0 0 0 3px #f7f9f566}
+  font-family:var(--display);font-weight:400;font-size:17px;line-height:1;box-shadow:inset 0 0 0 2px var(--moss),inset 0 0 0 3px #f7f9f566}
 .seal-lg{width:58px;height:58px;font-size:22px;writing-mode:vertical-rl;letter-spacing:.05em;transform:rotate(-4deg);border-radius:7px}
 
 /* ---------- Header ---------- */
@@ -43,7 +43,7 @@ figure{margin:0}
 .hero{display:grid;grid-template-columns:minmax(0,.75fr) minmax(0,1.25fr) auto;grid-template-areas:"text art title";
   align-items:end;gap:40px;padding:48px 0 24px;min-height:min(78vh,720px)}
 .hero-title{grid-area:title;align-self:start;writing-mode:vertical-rl;
-  font-size:clamp(44px,5.6vw,72px);line-height:1.3;letter-spacing:.06em;font-weight:700}
+  font-size:clamp(44px,5.6vw,72px);line-height:1.3;letter-spacing:.06em;font-weight:400}
 .hero-title span{display:block;white-space:nowrap;animation:write 1.1s cubic-bezier(.6,0,.2,1) both}
 .hero-title span:nth-child(2){animation-delay:.75s;padding-top:1.5em}
 @keyframes write{from{clip-path:inset(0 0 100% 0)}to{clip-path:inset(0 0 0 0)}}
