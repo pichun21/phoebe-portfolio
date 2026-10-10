@@ -84,17 +84,15 @@ figure{margin:0}
 .work-card.feature .work-meta h3{font-size:34px}
 .work-card.feature .work-meta p{font-size:15px;margin-top:8px}
 
-/* Games & tools：筆記本橫線 */
-.game-list,.tool-list{border-top:1px solid var(--line)}
-.game-row,.tool-row{display:grid;align-items:center;gap:20px;padding:18px 6px;border-bottom:1px solid var(--line);transition:background .2s}
+/* Games：筆記本橫線 */
+.game-list{border-top:1px solid var(--line)}
+.game-row{display:grid;align-items:center;gap:20px;padding:18px 6px;border-bottom:1px solid var(--line);transition:background .2s}
 .game-row{grid-template-columns:10px minmax(8em,13em) 1fr auto}
-.tool-row{grid-template-columns:minmax(8em,13em) 1fr auto}
-a.game-row:hover,a.tool-row:hover{background:var(--leaf)}
+a.game-row:hover{background:var(--leaf)}
 .game-dot{width:10px;height:10px;border-radius:50%;background:var(--dot)}
-.game-name,.tool-row h3{font-family:var(--display);font-size:20px}
-.game-desc,.tool-row p{color:var(--muted);font-size:14px}
+.game-name{font-family:var(--display);font-size:20px}
+.game-desc{color:var(--muted);font-size:14px}
 .status{font-size:14px;color:var(--moss);white-space:nowrap}
-.is-soon h3,.is-soon .status{color:#a3ada8}
 .games-more{margin-top:18px;color:var(--muted);font-size:14px}
 
 /* Illustration */
@@ -158,9 +156,6 @@ a.line-product:hover{box-shadow:inset 0 0 0 1px var(--moss)}
   .game-row{grid-template-columns:10px 1fr auto;gap:4px 14px;padding:16px 2px}
   .game-desc{grid-column:2;grid-row:2;font-size:13px;line-height:1.5}
   .game-row .status{grid-column:3;grid-row:1/3}
-  .tool-row{grid-template-columns:1fr auto;gap:2px 12px}
-  .tool-row p{grid-row:2;font-size:13px}
-  .tool-row .status{grid-column:2;grid-row:1/3}
   .illus-gallery{grid-template-columns:1fr;gap:28px}
   .line-store-grid{grid-template-columns:1fr}
   .about-hi{font-size:30px}
@@ -170,4 +165,96 @@ a.line-product:hover{box-shadow:inset 0 0 0 1px var(--moss)}
   html{scroll-behavior:auto}
   .hero-title span{animation:none}
   *{transition:none!important}
+}
+
+/* ==========================================================
+   小工具與實驗（#tools）— 產品展示區
+   只作用在 #tools 之內，沿用全站變數（--paper / --ink / --muted / --line / --moss / --leaf）。
+   ========================================================== */
+#tools{--tool-card:#fff;--tool-radius:14px;--tool-shadow:0 1px 2px rgba(31,45,40,.04),0 8px 24px -14px rgba(31,45,40,.18);
+  --tool-shadow-hover:0 2px 4px rgba(31,45,40,.05),0 18px 36px -16px rgba(31,45,40,.26)}
+#tools .visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+
+/* 標題區 */
+#tools .tools-head{margin-bottom:40px}
+#tools .tools-eyebrow{font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:var(--moss);margin-bottom:10px}
+#tools .tools-lead{text-wrap:balance;font-family:var(--display);font-size:clamp(22px,2.4vw,27px);line-height:1.55;color:var(--ink)}
+#tools .tools-sub{text-wrap:pretty;color:var(--muted);font-size:15px;margin-top:8px}
+
+/* 卡片排列：主打一張滿版，下排兩張等寬 */
+#tools .tools-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px}
+#tools .tool-card{position:relative;display:flex;flex-direction:column;min-width:0;background:var(--tool-card);border-radius:var(--tool-radius);
+  box-shadow:inset 0 0 0 1px var(--line),var(--tool-shadow);overflow:hidden;transition:transform .25s ease,box-shadow .25s ease}
+#tools .tool-featured{grid-column:1/-1;display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);align-items:stretch}
+
+/* 縮圖 */
+#tools .tool-media{position:relative;background:var(--leaf);border-bottom:1px solid var(--line);overflow:hidden}
+#tools .tool-media img{width:100%;aspect-ratio:16/10;object-fit:cover;object-position:center top}
+#tools .tool-featured .tool-media{border-bottom:0;border-right:1px solid var(--line);min-height:100%}
+
+
+/* 文字層級 */
+#tools .tool-body{display:flex;flex-direction:column;flex:1;padding:24px 26px 26px}
+#tools .tool-featured .tool-body{justify-content:center;padding:40px 44px}
+#tools .tool-kicker{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--moss);margin-bottom:6px}
+#tools .tool-note{letter-spacing:.04em;text-transform:none;color:var(--muted);font-size:12px;padding:1px 9px;border-radius:999px;box-shadow:inset 0 0 0 1px var(--line)}
+#tools .tool-name{font-size:26px;line-height:1.35;color:var(--ink)}
+#tools .tool-featured .tool-name{font-size:clamp(30px,3.4vw,38px)}
+#tools .tool-desc{text-wrap:pretty;color:var(--muted);font-size:15px;line-height:1.75;margin-top:6px}
+#tools .tool-featured .tool-desc{font-size:16px;margin-top:10px}
+
+/* 功能標籤 */
+#tools .tool-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+#tools .tool-tags li{font-size:13px;line-height:1;padding:7px 12px;border-radius:999px;background:var(--leaf);color:var(--moss)}
+
+/* 按鈕 */
+#tools .tool-actions{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-top:auto;padding-top:22px}
+#tools .tool-featured .tool-actions{margin-top:0;padding-top:28px}
+#tools .tool-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;padding:0 22px;border-radius:999px;
+  font-size:15px;line-height:1;white-space:nowrap;transition:background-color .2s ease,color .2s ease,box-shadow .2s ease}
+#tools .tool-btn.is-primary{background:var(--moss);color:#fff}
+#tools .tool-btn.is-primary:hover{background:var(--ink)}
+#tools .tool-btn.is-secondary{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 1px var(--line)}
+#tools .tool-btn.is-secondary:hover{color:var(--moss);box-shadow:inset 0 0 0 1px var(--moss);background:var(--paper)}
+#tools .tool-btn-ext{font-size:13px;opacity:.85}
+#tools .tool-btn-arrow{transition:transform .2s ease}
+/* 單一按鈕的卡片：整張卡都可點（按鈕本身仍是唯一的連結） */
+#tools .tool-stretch::after{content:"";position:absolute;inset:0;border-radius:var(--tool-radius)}
+#tools .tool-stretch:focus-visible{outline-offset:3px}
+
+/* Hover：只在有滑鼠的裝置上輕微上移 */
+@media (hover:hover){
+  #tools .tool-card:hover{transform:translateY(-3px);box-shadow:inset 0 0 0 1px var(--line),var(--tool-shadow-hover)}
+  #tools .tool-card:hover .tool-stretch{color:var(--moss);box-shadow:inset 0 0 0 1px var(--moss);background:var(--paper)}
+  #tools .tool-card:hover .tool-btn-arrow{transform:translateX(3px)}
+}
+
+/* 準備中：輕量提示 */
+#tools .tools-more{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:32px;padding:16px;
+  border-top:1px dashed var(--line);border-bottom:1px dashed var(--line);color:var(--muted);font-size:14px}
+#tools .tools-sparkle{width:18px;height:18px;flex:none;fill:#c9a27c}
+
+/* 平板：主打卡改上下排 */
+@media (max-width:960px){
+  #tools .tool-featured{grid-template-columns:1fr}
+  #tools .tool-featured .tool-media{border-right:0;border-bottom:1px solid var(--line);min-height:0}
+  #tools .tool-featured .tool-body{padding:28px 30px 30px}
+}
+/* 窄版：單欄 */
+@media (max-width:760px){
+  #tools .tools-grid{grid-template-columns:1fr;gap:22px}
+  #tools .tools-head{margin-bottom:28px}
+}
+@media (max-width:700px){
+  #tools .tool-body,#tools .tool-featured .tool-body{padding:20px 20px 22px}
+  #tools .tool-name{font-size:24px}
+}
+@media (max-width:440px){
+  #tools .tool-featured .tool-actions{flex-direction:column;align-items:stretch}
+  #tools .tool-featured .tool-btn{width:100%}
+  #tools .tool-btn{min-height:48px}
+}
+@media (prefers-reduced-motion:reduce){
+  #tools .tool-card:hover{transform:none}
+  #tools .tool-card:hover .tool-btn-arrow{transform:none}
 }

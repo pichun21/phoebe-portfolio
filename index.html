@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Iansui&family=Noto+Sans+TC:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=51" />
+  <link rel="stylesheet" href="styles.css?v=52" />
 </head>
 <body>
   <header class="site-header">
@@ -156,14 +156,73 @@
     <section id="tools" class="chapter shell">
       <h2 class="chapter-title">小工具與實驗</h2>
       <div class="chapter-body">
-        <p class="chapter-intro">有些東西是為了解決自己的問題，有些只是想看看「做不做得出來」。</p>
-        <ul class="tool-list">
-          <li><a class="tool-row" href="pages-between-days.html"><h3>頁間日子</h3><p>閱讀書櫃｜把讀過的書放上自己的書架</p><span class="status">看介紹</span></a></li>
-          <li><a class="tool-row" href="readays.html"><h3>讀日子</h3><p>EPUB 閱讀器｜把閱讀放進日常裡</p><span class="status">看介紹</span></a></li>
-          <li><a class="tool-row" href="vcpulse.html"><h3>VCPulse</h3><p>選股雷達｜僅限授權使用</p><span class="status">看介紹</span></a></li>
-          <li><div class="tool-row is-soon"><h3>網頁實驗</h3><p>網站功能與互動測試</p><span class="status">準備中</span></div></li>
-          <li><div class="tool-row is-soon"><h3>新點子</h3><p>持續增加中</p><span class="status">準備中</span></div></li>
-        </ul>
+        <header class="tools-head">
+          <p class="tools-eyebrow" lang="en">Tools &amp; Experiments</p>
+          <p class="tools-lead">把生活裡的需求與好奇心，變成真正能使用的小作品。</p>
+          <p class="tools-sub">從閱讀紀錄、電子書工具，到資料分析，每個作品都是一次新的嘗試。</p>
+        </header>
+
+        <div class="tools-grid">
+          <!-- 主打作品：頁間日子 -->
+          <article class="tool-card tool-featured" aria-labelledby="tool-pbd">
+            <div class="tool-media">
+              <img src="assets/pages-between-days-shelf.webp" alt="頁間日子的書架畫面：依月份排列、放滿書封的木書架" width="1600" height="1000" loading="lazy" />
+            </div>
+            <div class="tool-body">
+              <p class="tool-kicker">閱讀紀錄</p>
+              <h3 id="tool-pbd" class="tool-name">頁間日子</h3>
+              <p class="tool-desc">讀過的每一本書，都值得留在自己的時光書架。</p>
+              <ul class="tool-tags" aria-label="功能">
+                <li>月度書架</li><li>閱讀回顧</li><li>書摘收藏</li>
+              </ul>
+              <div class="tool-actions">
+                <a class="tool-btn is-primary" href="https://pichun21.github.io/reading-shelf/" target="_blank" rel="noreferrer">立即體驗<span class="tool-btn-ext" aria-hidden="true">↗</span><span class="visually-hidden">（另開新視窗）</span></a>
+                <a class="tool-btn is-secondary" href="pages-between-days.html">作品介紹</a>
+              </div>
+            </div>
+          </article>
+
+          <!-- 讀日子 -->
+          <article class="tool-card" aria-labelledby="tool-readays">
+            <div class="tool-media">
+              <img src="assets/readays-shelf.webp" alt="讀日子的書櫃畫面：上次讀到的書與閱讀中書籍" width="1200" height="750" loading="lazy" />
+            </div>
+            <div class="tool-body">
+              <p class="tool-kicker" lang="en">EPUB Reader</p>
+              <h3 id="tool-readays" class="tool-name">讀日子</h3>
+              <p class="tool-desc">自在閱讀、筆記與收藏。</p>
+              <ul class="tool-tags" aria-label="功能">
+                <li>EPUB 閱讀</li><li>離線使用</li>
+              </ul>
+              <div class="tool-actions">
+                <a class="tool-btn is-secondary tool-stretch" href="readays.html">了解作品<span class="tool-btn-arrow" aria-hidden="true">→</span></a>
+              </div>
+            </div>
+          </article>
+
+          <!-- VCPulse：私人授權工具，只連到介紹頁 -->
+          <article class="tool-card" aria-labelledby="tool-vcpulse">
+            <div class="tool-media">
+              <img class="pos-top" src="assets/vcpulse-actual.png" alt="VCPulse 選股雷達畫面：Market Pulse 市場指標" width="1672" height="941" loading="lazy" />
+            </div>
+            <div class="tool-body">
+              <p class="tool-kicker"><span lang="en">Data Project</span><span class="tool-note">私人使用・授權制</span></p>
+              <h3 id="tool-vcpulse" class="tool-name" lang="en">VCPulse</h3>
+              <p class="tool-desc">從資料中觀察市場型態。</p>
+              <ul class="tool-tags" aria-label="標籤">
+                <li>台美股</li><li>資料分析</li><li>技術案例</li>
+              </ul>
+              <div class="tool-actions">
+                <a class="tool-btn is-secondary tool-stretch" href="vcpulse.html">開發紀錄<span class="tool-btn-arrow" aria-hidden="true">→</span></a>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <p class="tools-more">
+          <svg class="tools-sparkle" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l1.6 4.9 4.9 1.6-4.9 1.6L12 16.5l-1.6-4.9L5.5 10l4.9-1.6z"/><path d="M18.5 15l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7z"/></svg>
+          更多小工具正在慢慢誕生中...
+        </p>
       </div>
     </section>
 
