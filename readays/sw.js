@@ -1,6 +1,6 @@
 // 讀日子 Readays 離線快取（只管 /readays/ 這個資料夾，不影響作品集其他頁面）
 // 先用網路拿最新版；沒有網路時，改用上次存下來的版本。
-const CACHE = 'readays-v2';
+const CACHE = 'readays-v3';
 const FILES = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './apple-touch-icon.png'];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES)).then(() => self.skipWaiting()));

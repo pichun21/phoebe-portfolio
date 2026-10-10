@@ -426,6 +426,7 @@ html[data-theme=dark] .mbox.finish h3{color:var(--fg)}
   <symbol id="i-more" viewBox="0 0 24 24"><circle cx="5.5" cy="12" r="1.4"/><circle cx="12" cy="12" r="1.4"/><circle cx="18.5" cy="12" r="1.4"/></symbol>
   <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 4v11M7.5 10.5L12 15l4.5-4.5M5 19.5h14"/></symbol>
   <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8.5" y="8.5" width="11" height="11" rx="2"/><path d="M15.5 8.5V6a1.5 1.5 0 0 0-1.5-1.5H6A1.5 1.5 0 0 0 4.5 6v8A1.5 1.5 0 0 0 6 15.5h2.5"/></symbol>
+  <symbol id="i-convert" viewBox="0 0 24 24"><path d="M4 7h11l-3-3M20 17H9l3 3"/><path d="M17 4v6M7 14v6" opacity=".0"/></symbol>
   <symbol id="i-book" viewBox="0 0 24 24"><path d="M12 6.5C10 5 7 4.5 3.5 5v13c3.5-.5 6.5 0 8.5 1.5 2-1.5 5-2 8.5-1.5V5C17 4.5 14 5 12 6.5zM12 6.5v13"/></symbol>
 </svg>
 
@@ -649,14 +650,15 @@ function fmtDate(t) { const d = new Date(t); const p = n => String(n).padStart(2
 async function download(name, text, type = 'text/plain') {
   name = name.replace(/[\\/:*?"<>|\u0000-\u001f]+/g, ' ').replace(/\s+/g, ' ').trim(); // 去掉檔名不能用的符號
   const ext = name.slice(name.lastIndexOf('.'));
+  const blob = text instanceof Blob ? text : new Blob([text], { type: type + ';charset=utf-8' });
   if (window.showSaveFilePicker) {
     try {
-      const h = await showSaveFilePicker({ suggestedName: name, types: [{ description: { '.md': 'Markdown 文件', '.txt': '純文字', '.json': '備份檔' }[ext] || '檔案', accept: { [type]: [ext] } }] });
-      const w = await h.createWritable(); await w.write(new Blob([text], { type: type + ';charset=utf-8' })); await w.close();
+      const h = await showSaveFilePicker({ suggestedName: name, types: [{ description: { '.md': 'Markdown 文件', '.txt': '純文字', '.json': '備份檔', '.epub': 'EPUB 電子書' }[ext] || '檔案', accept: { [type]: [ext] } }] });
+      const w = await h.createWritable(); await w.write(blob); await w.close();
       return true;
     } catch (err) { if (err && err.name === 'AbortError') return false; /* 其他錯誤就改用一般下載 */ }
   }
-  const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([text], { type: type + ';charset=utf-8' }));
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
   a.download = name; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
   return true;
 }
@@ -888,6 +890,61 @@ function promptFinish() {
     <div class="acts"><button class="btn" data-x>先不要</button><button class="btn primary" id="btnFinishYes">標示為讀完</button></div></div>`);
   $('#btnFinishYes').onclick = async () => { closeModal(); await setFinished(rec.id, true); };
 }
+/* ================= 匯出繁體版 EPUB：整本書轉成台灣用語的繁體，另存新檔（原書不動） ================= */
+const toTrad = s => { s = Conv.convert(s); return S.quotes ? fixQuotes(s) : s; };
+// 只轉換標籤之間的文字，不動標籤、屬性和檔名；<script>/<style>/<dc:identifier> 內容保持原樣
+function convertMarkup(src) {
+  const parts = src.split(/(<!--[\s\S]*?-->|<!\[CDATA\[[\s\S]*?\]\]>|<[^>]+>)/);
+  let skip = null, out = '';
+  for (const p of parts) {
+    if (!p) continue;
+    if (p[0] === '<') {
+      const m = p.match(/^<\/?\s*([\w:.-]+)/), tag = m ? m[1].toLowerCase() : '';
+      if (skip) { if (p.startsWith('</') && tag === skip) skip = null; out += p; continue; }
+      if (!p.startsWith('</') && !p.endsWith('/>') && /^(script|style|dc:identifier|identifier)$/.test(tag)) skip = tag;
+      // 語言標記改成台灣繁體
+      out += p.replace(/((?:xml:)?lang\s*=\s*["'])zh(?:[-_](?:cn|hans|sg|hans-cn))?(["'])/gi, '$1zh-TW$2')
+        .replace(/(\s(?:alt|title)\s*=\s*)(["'])([^"']*)\2/gi, (m, k, q, v) => k + q + toTrad(v) + q); // 圖片替代文字、提示文字也轉
+    } else out += skip ? p : toTrad(p);
+  }
+  return out.replace(/(<dc:language[^>]*>)\s*zh(?:[-_](?:cn|hans|sg|hans-cn))?\s*(<\/dc:language>)/gi, '$1zh-TW$2');
+}
+function decodeText(u8) {
+  const head = new TextDecoder('ascii').decode(u8.subarray(0, 200));
+  const m = head.match(/encoding\s*=\s*["']([\w-]+)["']/i);
+  const enc = m ? m[1].toLowerCase() : 'utf-8';
+  let s;
+  try { s = new TextDecoder(enc).decode(u8); } catch (e) { s = new TextDecoder('utf-8').decode(u8); }
+  if (s.charCodeAt(0) === 0xFEFF) s = s.slice(1);
+  if (m && !/^utf-?8$/.test(enc)) s = s.replace(/encoding\s*=\s*["'][\w-]+["']/i, 'encoding="utf-8"');
+  return s;
+}
+async function exportTradEpub(b) {
+  const file = await DB.get('files', b.id); if (!file) { toast('找不到書檔，請重新匯入'); return; }
+  try {
+    toast('轉換中…', 60000);
+    const zip = await JSZip.loadAsync(file);
+    await parsePackage(zip); // 有 DRM 的書會在這裡停下
+    const out = new JSZip();
+    out.file('mimetype', 'application/epub+zip', { compression: 'STORE', createFolders: false }); // EPUB 規定 mimetype 要放第一個、不壓縮
+    const names = Object.keys(zip.files).filter(n => !zip.files[n].dir && n !== 'mimetype');
+    const TEXT = /\.(x?html?|xml|opf|ncx|svg)$/i;
+    let done = 0;
+    for (const n of names) {
+      const f = zip.files[n];
+      if (TEXT.test(n) && !/^META-INF\/(encryption|signatures|rights)\.xml$/i.test(n)) {
+        const s = decodeText(await f.async('uint8array'));
+        out.file(n, convertMarkup(s), { date: f.date, createFolders: false });
+      } else out.file(n, await f.async('uint8array'), { date: f.date, binary: true, createFolders: false });
+      if (++done % 10 === 0) { $('#toast').textContent = `轉換中…（${done} / ${names.length}）`; await sleep(0); }
+    }
+    const blob = await out.generateAsync({ type: 'blob', mimeType: 'application/epub+zip', compression: 'DEFLATE', compressionOptions: { level: 6 } });
+    $('#toast').classList.remove('on');
+    const ok = await download(`${toTrad(b.title)}（繁體）.epub`, blob, 'application/epub+zip');
+    if (ok) toast('已匯出繁體版 EPUB，可以放進其他閱讀器使用', 3200);
+  } catch (e) { console.error(e); toast('轉換失敗：' + e.message, 4000); }
+}
+
 /* 書本「⋯」選單 */
 const cardMenu = document.createElement('div'); cardMenu.id = 'cardMenu'; cardMenu.hidden = true; document.body.appendChild(cardMenu);
 async function openCardMenu(btn, b, pos) {
@@ -900,6 +957,7 @@ async function openCardMenu(btn, b, pos) {
     <button data-m="md"${dis}><svg class="i"><use href="#i-download"/></svg>匯出劃線（Markdown）</button>
     <button data-m="txt"${dis}><svg class="i"><use href="#i-download"/></svg>匯出劃線（純文字）</button>
     <button data-m="copy"${dis}><svg class="i"><use href="#i-copy"/></svg>複製全部劃線</button>
+    <hr><button data-m="epub"><svg class="i"><use href="#i-convert"/></svg>匯出繁體版 EPUB</button>
     <hr><button data-m="del" class="danger"><svg class="i"><use href="#i-x"/></svg>從書櫃移除</button>`;
   cardMenu.hidden = false;
   const mw = cardMenu.offsetWidth, mh = cardMenu.offsetHeight;
@@ -913,6 +971,7 @@ async function openCardMenu(btn, b, pos) {
     if (k === 'open') openBook(b.id);
     else if (k === 'finish') setFinished(b.id, !b.finished);
     else if (k === 'md' || k === 'txt' || k === 'copy') exportBookNotes(b, k, hs);
+    else if (k === 'epub') exportTradEpub(b);
     else removeBook(b);
   };
 }
