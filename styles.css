@@ -169,11 +169,15 @@ a.line-product:hover{box-shadow:0 0 0 2px var(--sky)}
 .about{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:44px;align-items:center}
 .about-art{display:grid;place-items:center;aspect-ratio:1;border-radius:var(--r-lg);background:var(--puff-soft);padding:18%}
 .about-art img{width:100%;height:auto}
+.about-art.is-photo{aspect-ratio:4/5;padding:0;overflow:hidden;background:#f3eace;box-shadow:0 1px 2px rgba(62,54,48,.06),0 10px 30px -12px rgba(62,54,48,.22)}
+.about-art.is-photo img{width:100%;height:100%;object-fit:cover}
 .about-copy{color:var(--clay-ink);font-size:16px;max-width:34em}
 .about-copy p+p{margin-top:12px}
 .pill-links{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
 .pill-links a{font-size:14px;padding:7px 18px;border-radius:999px;background:var(--stone-soft);color:var(--ink);transition:background .2s}
 .pill-links a:hover{background:var(--sky-soft)}
+.about .pill-links a{background:var(--puff);color:var(--clay-ink);font-weight:500;transition:background .2s,color .2s}
+.about .pill-links a:hover,.about .pill-links a:focus-visible{background:var(--sun);color:var(--ink)}
 
 /* ---------- 頁尾 ---------- */
 .site-footer{margin-top:56px;padding:22px 0 28px;border-top:1px solid var(--line)}
@@ -221,6 +225,7 @@ a.line-product:hover{box-shadow:0 0 0 2px var(--sky)}
   .work-grid{gap:28px}
   .about{gap:24px}
   .about-art{max-width:260px}
+  .about-art.is-photo{max-width:none}
   .footer-inner{grid-template-columns:1fr;justify-items:center;text-align:center;gap:12px}
   .footer-links{justify-content:center}
 }
