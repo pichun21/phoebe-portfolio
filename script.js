@@ -6,16 +6,6 @@ btn?.addEventListener('click', () => {
 });
 nav?.querySelectorAll('a').forEach(a => a.addEventListener('click', () => nav.classList.remove('open')));
 
-// Subtle active navigation state while scrolling.
-const sections = [...document.querySelectorAll('main section[id]')];
-const navLinks = [...document.querySelectorAll('.nav a')];
-const observer = new IntersectionObserver((entries) => {
-  const visible = entries.filter(e => e.isIntersecting).sort((a,b) => b.intersectionRatio - a.intersectionRatio)[0];
-  if (!visible) return;
-  navLinks.forEach(link => link.classList.toggle('active', link.getAttribute('href') === `#${visible.target.id}`));
-}, { rootMargin: '-35% 0px -55% 0px', threshold: [0, .25, .5] });
-sections.forEach(section => observer.observe(section));
-
 // LINE 主題縮圖：先用 assets/line-theme.png；沒有的話到 LINE 圖片伺服器依版本號尋找，全部失敗就移除縮圖框。
 document.querySelectorAll('img[data-line-theme]').forEach(img => {
   const id = img.dataset.lineTheme;
@@ -29,3 +19,11 @@ document.querySelectorAll('img[data-line-theme]').forEach(img => {
   img.addEventListener('error', tryNext);
   if (img.complete && img.naturalWidth === 0) tryNext();
 });
+
+// 手機等沒有游標的裝置：最近更新的卡片滑到畫面中間時，自動從線稿變成實際畫面。
+if (window.matchMedia('(hover: none)').matches && 'IntersectionObserver' in window) {
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => e.target.classList.toggle('is-real', e.isIntersecting));
+  }, { threshold: 0.75 });
+  document.querySelectorAll('.recent-card').forEach(c => io.observe(c));
+}

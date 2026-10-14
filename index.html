@@ -3,249 +3,125 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#f7f9f5" />
-  <meta property="og:title" content="Phoebe — Games, Illustration & Tools" />
-  <meta property="og:description" content="遊戲、插畫、網站與小工具作品集。" />
-  <title>Phoebe — Games, Illustration & Tools</title>
-  <meta name="description" content="Phoebe 的遊戲、插畫與小工具作品集。" />
+  <meta name="theme-color" content="#f7f5ee" />
+  <title>need to deco｜Phoebe 的遊戲、插畫與小工具</title>
+  <meta name="description" content="need to deco：Phoebe 的作品小屋，收著妞妞系列遊戲、插畫、LINE 貼圖和自己做的網頁小工具。" />
+  <meta property="og:title" content="need to deco｜Phoebe 的遊戲、插畫與小工具" />
+  <meta property="og:description" content="need to deco：Phoebe 的作品小屋，收著妞妞系列遊戲、插畫、LINE 貼圖和自己做的網頁小工具。" />
+  <link rel="icon" type="image/png" sizes="64x64" href="assets/needtodeco-mark-64.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/needtodeco-mark-192.png" />
+  <link rel="apple-touch-icon" href="assets/needtodeco-touch-180.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Iansui&family=Noto+Sans+TC:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=52" />
+  <link href="https://fonts.googleapis.com/css2?family=Iansui&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=71" />
 </head>
 <body>
   <header class="site-header">
     <div class="shell header-inner">
-      <a class="brand" href="#top" aria-label="Phoebe 首頁">
-        <span class="seal" aria-hidden="true">妞</span>
-        <span>Phoebe</span>
+      <a class="brand" href="index.html" aria-label="need to deco 首頁">
+        <img src="assets/needtodeco-logo.png" alt="need to deco" width="1000" height="213" />
       </a>
       <nav class="nav" aria-label="主要導覽">
-        <a href="#work">作品</a>
-        <a href="#games">遊戲館</a>
-        <a href="#illustration">插畫</a>
-        <a href="#tools">小工具</a>
-        <a href="#about">關於我</a>
+        <a href="games.html">遊戲館</a>
+        <a href="illustrations.html">插畫</a>
+        <a href="reading.html">閱讀</a>
+        <a href="tools.html">小工具</a>
+        <a href="about.html">關於我</a>
       </nav>
       <button class="menu-btn" aria-label="開啟選單" aria-expanded="false">選單</button>
     </div>
   </header>
-
   <main id="top">
-    <section class="hero shell">
-      <h1 class="hero-title"><span>把喜歡的東西，</span><span>一個一個做出來。</span></h1>
-      <div class="hero-art">
-        <img class="hero-photo" src="assets/hero-niuniu.png?v=2" alt="小貴賓狗妞妞趴在綠色筆電前，旁邊有遊戲手把、插畫和圖表" width="1448" height="1086" />
+    <section class="hero shell" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <h1 id="hero-title" lang="en">decorate<br>everyday life.</h1>
+        <p class="hero-zh">把喜歡的東西，一個一個做出來。</p>
       </div>
-      <div class="hero-text">
-        <p class="hero-hello">嗨，我是 Phoebe，這是妞妞。</p>
-        <p class="hero-lead">遊戲、插畫、網站與實用小工具。這裡是我的作品首頁，也是所有小專案的入口。</p>
-        <div class="hero-actions">
-          <a class="button primary" href="#work">看看最近作品</a>
-          <a class="button secondary" href="#games">進入遊戲館</a>
-        </div>
+      <div class="hero-art-wrap"><img class="hero-art" src="assets/hero-desk.webp" alt="手繪線稿：書桌上有鬱金香、書本、盆栽、筆筒、吊燈、畫著妞妞的素描本和寫著 Good Day 的咖啡杯" width="1800" height="630" /></div>
+    </section>
+
+    <section class="shell cats" aria-label="作品分類">
+      <div class="cat-grid">
+        <a class="cat-card c-sky" href="games.html">
+          <span class="cat-icon"><img src="assets/icon-games.png" alt="" loading="lazy" /></span>
+          <span class="cat-en" lang="en">Games</span>
+          <span class="cat-zh">遊戲館</span>
+          <span class="cat-desc">妞妞系列小遊戲，短短玩一下也好。</span>
+          <span class="cat-go" aria-hidden="true">→</span>
+        </a>
+        <a class="cat-card c-puff" href="illustrations.html">
+          <span class="cat-icon"><img src="assets/icon-illustrations.png" alt="" loading="lazy" /></span>
+          <span class="cat-en" lang="en">Illustrations</span>
+          <span class="cat-zh">插畫與貼圖</span>
+          <span class="cat-desc">日常裡的柔和顏色，還有 LINE 作品。</span>
+          <span class="cat-go" aria-hidden="true">→</span>
+        </a>
+        <a class="cat-card c-sun" href="reading.html">
+          <span class="cat-icon"><img src="assets/icon-reading.png" alt="" loading="lazy" /></span>
+          <span class="cat-en" lang="en">Reading</span>
+          <span class="cat-zh">閱讀</span>
+          <span class="cat-desc">記錄讀過的書，也在網頁上讀電子書。</span>
+          <span class="cat-go" aria-hidden="true">→</span>
+        </a>
+        <a class="cat-card c-stone" href="tools.html">
+          <span class="cat-icon"><img src="assets/icon-tools.png" alt="" loading="lazy" /></span>
+          <span class="cat-en" lang="en">Creative Tools</span>
+          <span class="cat-zh">小工具與實驗</span>
+          <span class="cat-desc">為自己做的工具，和一些新的嘗試。</span>
+          <span class="cat-go" aria-hidden="true">→</span>
+        </a>
       </div>
     </section>
 
-    <section id="work" class="chapter shell">
-      <h2 class="chapter-title">最近在做的</h2>
-      <div class="chapter-body">
-      <div class="work-grid">
-        <a class="work-card feature" href="https://pichun21.github.io/niuniu-town/" target="_blank" rel="noreferrer">
-          <div class="work-screen"><img src="assets/town-actual.png" alt="妞妞小鎮遊戲畫面" loading="lazy" /></div>
-          <div class="work-meta">
-            <span class="tag tag-game">遊戲</span>
-            <h3>妞妞小鎮</h3>
-            <p>建造、合成，慢慢把一座小世界蓋起來。</p>
-          </div>
+    <section class="shell recent" aria-labelledby="recent-title">
+      <div class="row-head">
+        <h2 id="recent-title">最近更新</h2>
+        <p class="row-hint"><span class="hint-hover">游標移上去，看看實際畫面</span><span class="hint-touch">滑到卡片時，線稿會變成實際畫面</span></p>
+      </div>
+      <div class="recent-grid">
+        <a class="recent-card" href="pages-between-days.html">
+          <span class="recent-img c-sun">
+            <img class="sketch" src="assets/sketch-pages-between-days.webp" alt="" loading="lazy" />
+            <img class="real" src="assets/pages-between-days-shelf.webp" alt="頁間日子的實際畫面：依月份排列、放滿書封的木書架" loading="lazy" />
+          </span>
+          <span class="recent-kind">閱讀紀錄</span>
+          <span class="recent-name">頁間日子</span>
+          <span class="recent-desc">把讀過的書，放上自己的時光書架。</span>
         </a>
-
-
-        <a class="work-card" href="https://pichun21.github.io/niuniu-hide-game/" target="_blank" rel="noreferrer">
-          <div class="work-screen"><img src="assets/find-actual.png" alt="妞妞躲哪裡？遊戲畫面" loading="lazy" /></div>
-          <div class="work-meta">
-            <span class="tag tag-game">遊戲</span>
-            <h3>妞妞躲哪裡？</h3>
-            <p>Where's Niuniu? 格子推理解謎。</p>
-          </div>
+        <a class="recent-card" href="readays.html">
+          <span class="recent-img c-puff">
+            <img class="sketch" src="assets/sketch-readays.webp" alt="" loading="lazy" />
+            <img class="real" style="object-position:center bottom" src="assets/readays-cover.webp" alt="讀日子的實際畫面：上次讀到這裡與最近加入的書" loading="lazy" />
+          </span>
+          <span class="recent-kind">電子書</span>
+          <span class="recent-name">讀日子</span>
+          <span class="recent-desc">打開就能用的 EPUB 閱讀工具。</span>
         </a>
-
-        <a class="work-card" href="https://pichun21.github.io/niuniu-color-sort/" target="_blank" rel="noreferrer">
-          <div class="work-screen"><img class="pos-top" src="assets/tubes-actual.jpg?v=2" alt="妞妞顏色實驗室遊戲畫面" loading="lazy" /></div>
-          <div class="work-meta">
-            <span class="tag tag-game">遊戲</span>
-            <h3>妞妞顏色實驗室</h3>
-            <p>分類顏色，簡單又療癒。</p>
-          </div>
+        <a class="recent-card" href="https://pichun21.github.io/niuniu-town/" target="_blank" rel="noreferrer">
+          <span class="recent-img c-sky">
+            <img class="sketch" src="assets/sketch-niuniu-town.webp" alt="" loading="lazy" />
+            <img class="real" src="assets/town-actual.png" alt="妞妞小鎮的實際遊戲畫面" loading="lazy" />
+          </span>
+          <span class="recent-kind">遊戲</span>
+          <span class="recent-name">妞妞小鎮</span>
+          <span class="recent-desc">建造、合成，慢慢把一座小世界蓋起來。</span>
         </a>
-
-        <a class="work-card" href="https://pichun21.github.io/niuniu-match3/" target="_blank" rel="noreferrer">
-          <div class="work-screen"><img src="assets/match3-actual.png" alt="妞妞零食消消樂遊戲畫面" loading="lazy" /></div>
-          <div class="work-meta">
-            <span class="tag tag-game">遊戲</span>
-            <h3>妞妞零食消消樂</h3>
-            <p>交換相鄰圖案，三個連成一線。</p>
-          </div>
-        </a>
-      </div>
-      </div>
-    </section>
-
-    <section id="games" class="chapter shell">
-      <h2 class="chapter-title">妞妞遊戲館</h2>
-      <div class="chapter-body">
-        <p class="chapter-intro">短短玩一下也可以，想一路闖關也可以。</p>
-        <ul class="game-list">
-          <li><a class="game-row" href="https://pichun21.github.io/niuniu-snack-game/" target="_blank" rel="noreferrer"><span class="game-dot" style="--dot:#f5b77f"></span><span class="game-name">妞妞接零食</span><span class="game-desc">30 秒接零食挑戰。</span><span class="status">開始玩</span></a></li>
-          <li><a class="game-row" href="https://pichun21.github.io/niuniu-hide-game/" target="_blank" rel="noreferrer"><span class="game-dot" style="--dot:#bfe3c9"></span><span class="game-name">妞妞躲哪裡？</span><span class="game-desc">從提示中找出躲起來的妞妞。</span><span class="status">開始玩</span></a></li>
-          <li><a class="game-row" href="https://pichun21.github.io/niuniu-color-sort/" target="_blank" rel="noreferrer"><span class="game-dot" style="--dot:#8f7ee6"></span><span class="game-name">妞妞顏色實驗室</span><span class="game-desc">把相同顏色的液體分類。</span><span class="status">開始玩</span></a></li>
-          <li><a class="game-row" href="https://pichun21.github.io/niuniu-town/" target="_blank" rel="noreferrer"><span class="game-dot" style="--dot:#9cc98a"></span><span class="game-name">妞妞小鎮</span><span class="game-desc">建造、合成與關卡。</span><span class="status">開始玩</span></a></li>
-          <li><a class="game-row" href="https://pichun21.github.io/niuniu-match3/" target="_blank" rel="noreferrer"><span class="game-dot" style="--dot:#f3a9c4"></span><span class="game-name">妞妞零食消消樂</span><span class="game-desc">交換相鄰圖案，三個連成一線。</span><span class="status">開始玩</span></a></li>
-        </ul>
-        <p class="games-more">還有更多遊戲在路上。</p>
-      </div>
-    </section>
-
-    <section id="illustration" class="chapter shell">
-      <h2 class="chapter-title">插畫與貼圖</h2>
-      <div class="chapter-body">
-      <div class="illus-gallery">
-        <a class="illus-pic pic-duck" href="https://www.instagram.com/needtodeco/" target="_blank" rel="noreferrer">
-          <img src="assets/illustration-cover.jpg" alt="needtodeco 插畫：妞妞坐在黃色小鴨泳圈上" loading="lazy" width="2048" height="1430" />
-          <span class="pic-label">@needtodeco on Instagram</span>
-        </a>
-        <figure class="illus-pic pic-sheet">
-          <img src="assets/niuniu-sheet.webp" alt="妞妞角色設定：正面、背面與側面的上色稿和線稿" loading="lazy" width="1774" height="887" />
-          <figcaption class="pic-label">妞妞角色設定</figcaption>
-        </figure>
-      </div>
-      <div class="line-store-panel" id="line">
-        <h3 class="sub-title">貼圖、表情貼與主題</h3>
-
-        <div class="line-store-grid">
-          <a class="line-product line-product-feature" href="https://store.line.me/stickershop/product/17339391/zh-Hant?utm_source=gnsh_stickerDetail" target="_blank" rel="noreferrer">
-            <span class="line-thumb"><img src="https://stickershop.line-scdn.net/stickershop/v1/product/17339391/LINEStorePC/main.png" alt="LINE 貼圖封面" loading="lazy" onerror="this.parentElement.remove()" /></span>
-            <strong>LINE 貼圖</strong>
-            <span>查看貼圖作品 →</span>
-          </a>
-
-          <div class="line-product line-emoji-group">
-            <div class="emoji-links" aria-label="LINE 表情貼作品">
-              <a href="https://store.line.me/emojishop/product/6298157a02450a0831387b84/zh-Hant" target="_blank" rel="noreferrer" aria-label="LINE 表情貼 01"><span>01</span><img src="https://stickershop.line-scdn.net/sticonshop/v1/product/6298157a02450a0831387b84/iPhone/main.png" alt="" loading="lazy" onerror="this.remove()" /></a>
-              <a href="https://store.line.me/emojishop/product/681dbb161405823fb2ed10bc/zh-Hant?lang=zh-Hant&amp;utm_source=gnsh_sticonDetail" target="_blank" rel="noreferrer" aria-label="LINE 表情貼 02"><span>02</span><img src="https://stickershop.line-scdn.net/sticonshop/v1/product/681dbb161405823fb2ed10bc/iPhone/main.png" alt="" loading="lazy" onerror="this.remove()" /></a>
-              <a href="https://store.line.me/emojishop/product/6878ae0548df014043ba25ea/zh-Hant" target="_blank" rel="noreferrer" aria-label="LINE 表情貼 03"><span>03</span><img src="https://stickershop.line-scdn.net/sticonshop/v1/product/6878ae0548df014043ba25ea/iPhone/main.png" alt="" loading="lazy" onerror="this.remove()" /></a>
-              <a href="https://store.line.me/emojishop/product/683409067c063c41352eb0d3/zh-Hant" target="_blank" rel="noreferrer" aria-label="LINE 表情貼 04"><span>04</span><img src="https://stickershop.line-scdn.net/sticonshop/v1/product/683409067c063c41352eb0d3/iPhone/main.png" alt="" loading="lazy" onerror="this.remove()" /></a>
-              <a href="https://store.line.me/emojishop/product/68537244690f116e3be35861/zh-Hant" target="_blank" rel="noreferrer" aria-label="LINE 表情貼 05"><span>05</span><img src="https://stickershop.line-scdn.net/sticonshop/v1/product/68537244690f116e3be35861/iPhone/main.png" alt="" loading="lazy" onerror="this.remove()" /></a>
-              <a href="https://store.line.me/emojishop/product/685e3877eaa20a6f72d6ddb5/zh-Hant" target="_blank" rel="noreferrer" aria-label="LINE 表情貼 06"><span>06</span><img src="https://stickershop.line-scdn.net/sticonshop/v1/product/685e3877eaa20a6f72d6ddb5/iPhone/main.png" alt="" loading="lazy" onerror="this.remove()" /></a>
-              <a href="https://store.line.me/emojishop/product/684a8bc9690f116e3be34178/zh-Hant" target="_blank" rel="noreferrer" aria-label="LINE 表情貼 07"><span>07</span><img src="https://stickershop.line-scdn.net/sticonshop/v1/product/684a8bc9690f116e3be34178/iPhone/main.png" alt="" loading="lazy" onerror="this.remove()" /></a>
-            </div>
-            <strong>LINE 表情貼</strong>
-            <span>點選任一組查看表情貼 →</span>
-          </div>
-
-          <a class="line-product line-product-theme" href="https://store.line.me/themeshop/product/181d70fa-5ddb-4bf8-8a29-758d72087d2b/zh-Hant?lang=zh-Hant&amp;ref=lsh_themeDetail" target="_blank" rel="noreferrer">
-            <span class="line-thumb line-thumb-theme"><img src="assets/line-theme.png" data-line-theme="181d70fa-5ddb-4bf8-8a29-758d72087d2b" alt="LINE 主題封面" /></span>
-            <strong>LINE 主題</strong>
-            <span>查看主題作品 →</span>
-          </a>
-        </div>
-      </div>
-      </div>
-    </section>
-
-    <section id="tools" class="chapter shell">
-      <h2 class="chapter-title">小工具與實驗</h2>
-      <div class="chapter-body">
-        <header class="tools-head">
-          <p class="tools-eyebrow" lang="en">Tools &amp; Experiments</p>
-          <p class="tools-lead">把生活裡的需求與好奇心，變成真正能使用的小作品。</p>
-          <p class="tools-sub">從閱讀紀錄、電子書工具，到資料分析，每個作品都是一次新的嘗試。</p>
-        </header>
-
-        <div class="tools-grid">
-          <!-- 主打作品：頁間日子 -->
-          <article class="tool-card tool-featured" aria-labelledby="tool-pbd">
-            <div class="tool-media">
-              <img src="assets/pages-between-days-shelf.webp" alt="頁間日子的書架畫面：依月份排列、放滿書封的木書架" width="1600" height="1000" loading="lazy" />
-            </div>
-            <div class="tool-body">
-              <p class="tool-kicker">閱讀紀錄</p>
-              <h3 id="tool-pbd" class="tool-name">頁間日子</h3>
-              <p class="tool-desc">讀過的每一本書，都值得留在自己的時光書架。</p>
-              <ul class="tool-tags" aria-label="功能">
-                <li>月度書架</li><li>閱讀回顧</li><li>書摘收藏</li>
-              </ul>
-              <div class="tool-actions">
-                <a class="tool-btn is-primary" href="https://pichun21.github.io/reading-shelf/" target="_blank" rel="noreferrer">立即體驗<span class="tool-btn-ext" aria-hidden="true">↗</span><span class="visually-hidden">（另開新視窗）</span></a>
-                <a class="tool-btn is-secondary" href="pages-between-days.html">作品介紹</a>
-              </div>
-            </div>
-          </article>
-
-          <!-- 讀日子 -->
-          <article class="tool-card" aria-labelledby="tool-readays">
-            <div class="tool-media">
-              <img src="assets/readays-shelf.webp" alt="讀日子的書櫃畫面：上次讀到的書與閱讀中書籍" width="1200" height="750" loading="lazy" />
-            </div>
-            <div class="tool-body">
-              <p class="tool-kicker" lang="en">EPUB Reader</p>
-              <h3 id="tool-readays" class="tool-name">讀日子</h3>
-              <p class="tool-desc">自在閱讀、筆記與收藏。</p>
-              <ul class="tool-tags" aria-label="功能">
-                <li>EPUB 閱讀</li><li>離線使用</li>
-              </ul>
-              <div class="tool-actions">
-                <a class="tool-btn is-secondary tool-stretch" href="readays.html">了解作品<span class="tool-btn-arrow" aria-hidden="true">→</span></a>
-              </div>
-            </div>
-          </article>
-
-          <!-- VCPulse：私人授權工具，只連到介紹頁 -->
-          <article class="tool-card" aria-labelledby="tool-vcpulse">
-            <div class="tool-media">
-              <img class="pos-top" src="assets/vcpulse-actual.png" alt="VCPulse 選股雷達畫面：Market Pulse 市場指標" width="1672" height="941" loading="lazy" />
-            </div>
-            <div class="tool-body">
-              <p class="tool-kicker"><span lang="en">Data Project</span><span class="tool-note">私人使用・授權制</span></p>
-              <h3 id="tool-vcpulse" class="tool-name" lang="en">VCPulse</h3>
-              <p class="tool-desc">從資料中觀察市場型態。</p>
-              <ul class="tool-tags" aria-label="標籤">
-                <li>台美股</li><li>資料分析</li><li>技術案例</li>
-              </ul>
-              <div class="tool-actions">
-                <a class="tool-btn is-secondary tool-stretch" href="vcpulse.html">開發紀錄<span class="tool-btn-arrow" aria-hidden="true">→</span></a>
-              </div>
-            </div>
-          </article>
-        </div>
-
-        <p class="tools-more">
-          <svg class="tools-sparkle" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l1.6 4.9 4.9 1.6-4.9 1.6L12 16.5l-1.6-4.9L5.5 10l4.9-1.6z"/><path d="M18.5 15l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7z"/></svg>
-          更多小工具正在慢慢誕生中...
-        </p>
-      </div>
-    </section>
-
-    <section id="about" class="chapter shell">
-      <h2 class="chapter-title">關於我</h2>
-      <div class="chapter-body about-copy">
-        <p class="about-hi">Hi, I'm Phoebe.</p>
-        <p>平常做行政工作，空閒時喜歡把腦中的小點子做成真的網站、遊戲和插畫。</p>
-        <p>這裡不只是一個作品集，也像是一個持續長大的小倉庫：每完成一個東西，就多放進來一件。</p>
-        <div class="about-links"><a href="#games">去玩遊戲</a><a href="#illustration">看插畫</a><a href="#tools">試試小工具</a></div>
       </div>
     </section>
   </main>
-
   <footer class="site-footer">
     <div class="shell footer-inner">
-      <span class="seal seal-lg" aria-hidden="true">妞妞</span>
-      <p class="footer-brand">Phoebe 和妞妞的小倉庫</p>
-      <a class="back-top" href="#top">回到最上面</a>
-      <p class="copyright">© 2026 pichun21</p>
+      <a class="footer-brand" href="index.html"><img src="assets/needtodeco-logo.png" alt="need to deco" width="1000" height="213" loading="lazy" /></a>
+      <p class="footer-motto">small ideas, brighter days.</p>
+      <nav class="footer-links" aria-label="外部連結">
+        <a href="https://www.instagram.com/needtodeco/" target="_blank" rel="noreferrer">Instagram</a>
+        <a href="about.html">關於我</a>
+        <a href="#top" class="to-top" aria-label="回到最上面">↑</a>
+      </nav>
     </div>
+    <p class="shell copyright">© 2026 pichun21</p>
   </footer>
-
-  <script src="script.js?v=50"></script>
+  <script src="script.js?v=71"></script>
 </body>
 </html>
