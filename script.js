@@ -27,3 +27,11 @@ if (window.matchMedia('(hover: none)').matches && 'IntersectionObserver' in wind
   }, { threshold: 0.75 });
   document.querySelectorAll('.recent-card').forEach(c => io.observe(c));
 }
+
+// 首頁吊燈：點燈罩開關燈
+document.querySelectorAll('.lamp-switch').forEach(sw => sw.addEventListener('click', () => {
+  const wrap = sw.closest('.hero-art-wrap');
+  const on = wrap.classList.toggle('is-on');
+  sw.setAttribute('aria-pressed', String(on));
+  sw.setAttribute('aria-label', on ? '關燈' : '開燈');
+}));

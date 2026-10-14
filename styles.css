@@ -18,6 +18,7 @@
   --puff:#f3e0a7;
   --puff-soft:#f8efd3;
   --line:#e3dfd3;
+  --en:"Caveat","Iansui","芫荽",cursive;
   --hand:"Iansui","芫荽","Noto Sans TC",sans-serif;
   --body:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
   --r-lg:28px;
@@ -57,7 +58,18 @@ h1,h2,h3{font-family:var(--hand);font-weight:400}
 .hero-zh{margin-top:16px;font-family:var(--hand);font-size:clamp(16px,1.6vw,20px);color:var(--clay-ink);letter-spacing:.08em;padding-top:14px;position:relative}
 .hero-zh::before{content:"";position:absolute;left:0;top:0;width:32px;height:2px;background:var(--ink)}
 .hero-art-wrap{position:relative;margin-top:clamp(-70px,-4.5vw,-20px);pointer-events:none}
-.hero-art{width:100%}
+.hero-art{width:100%;position:relative;z-index:1}
+/* 吊燈：點一下開燈，暖黃色光從燈罩灑到桌面 */
+.lamp-switch{position:absolute;z-index:2;left:49.4%;top:15%;width:16.6%;height:32%;border-radius:40% 40% 30% 30%;pointer-events:auto;cursor:pointer;background:transparent;border:0;padding:0;-webkit-tap-highlight-color:transparent}
+.lamp-switch:focus-visible{outline:2px dashed var(--clay);outline-offset:4px}
+.lamp-glow{position:absolute;inset:0;z-index:0;pointer-events:none;opacity:0;transition:opacity .45s ease;
+  background:
+    radial-gradient(circle at 57.8% 44.6%,rgba(255,226,120,.95) 0,rgba(255,220,110,.7) 1.6%,rgba(255,214,100,0) 5%),
+    radial-gradient(ellipse 30% 70% at 57.8% 44%,rgba(250,215,110,.55),rgba(250,215,110,.22) 55%,rgba(250,215,110,0) 100%);
+  clip-path:polygon(50.2% 41%,65.4% 41%,82% 100%,34% 100%)}
+.hero-art-wrap.is-on .lamp-glow{opacity:1;animation:lampOn .5s steps(1,end)}
+@keyframes lampOn{0%{opacity:.35}25%{opacity:.1}45%{opacity:.8}60%{opacity:.4}100%{opacity:1}}
+@media (hover:hover){.hero-art-wrap:not(.is-on):has(.lamp-switch:hover) .lamp-glow{opacity:.35}}
 /* 吊燈的電線往上接到主視覺頂端，像真的從天花板垂下來（位置與粗細對齊插圖裡的電線） */
 .hero-art-wrap::before{content:"";position:absolute;bottom:calc(100% - 1px);left:calc(57.86% - .228%);width:max(1.5px,.456%);height:800px;background:#3e3630;border-radius:2px}
 
@@ -229,8 +241,17 @@ a.line-product:hover{box-shadow:0 0 0 2px var(--sky)}
   .footer-inner{grid-template-columns:1fr;justify-items:center;text-align:center;gap:12px}
   .footer-links{justify-content:center}
 }
-@media (prefers-reduced-motion:reduce){
+@media (prefers-reduced-motion:reduce){.hero-art-wrap.is-on .lamp-glow{animation:none}
   .recent-img .real{transition:none}
   html{scroll-behavior:auto}
   *{transition:none!important}
 }
+
+/* 英文改用 Caveat 手寫體（像原子筆隨手寫），中文維持芫荽 */
+:lang(en).page-en,:lang(en).cat-en,:lang(en).footer-motto,:lang(en).tool-kicker,.tool-kicker [lang="en"],.hero h1,.hero-sub{font-family:var(--en);font-weight:500}
+.hero h1{font-size:clamp(46px,6.2vw,80px);line-height:1.02;letter-spacing:.01em}
+.hero-sub{margin-top:8px;font-size:clamp(18px,1.8vw,23px);color:var(--sky-ink);letter-spacing:.03em}
+.cat-en{font-size:30px;letter-spacing:.02em;line-height:1.1}
+.page-en{font-size:24px;letter-spacing:.03em}
+.footer-motto:lang(en){font-size:20px;letter-spacing:.03em}
+.tool-kicker:lang(en),.tool-kicker [lang="en"]{font-size:1.25em;letter-spacing:.02em}
