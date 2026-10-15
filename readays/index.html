@@ -498,7 +498,7 @@ html[data-theme=dark] .mbox.finish h3{color:var(--fg)}
   <div id="runhead"><span id="rhTitle"></span><span class="grow"></span><span id="rhClock"></span></div>
   <div id="ribbon" hidden></div>
   <div id="pages">
-    <div id="content"></div>
+    <div id="content" lang="zh-Hant-TW"></div>
     <div id="loading" hidden><div class="pageflip"><i></i></div><span id="loadingText">載入中…</span></div>
   </div>
   <div id="runfoot"><span id="rfChap"></span><span class="grow"></span><span id="rfPage"></span></div>
@@ -1146,6 +1146,8 @@ async function chapterDOM(i) {
   box.querySelectorAll(KILL).forEach(e => e.remove());
   for (const el of box.querySelectorAll('*')) {
     for (const a of Array.from(el.attributes)) { const n = a.name.toLowerCase(); if (n.startsWith('on') || n === 'style' || n === 'srcset') el.removeAttribute(a.name); }
+    // 書檔標成簡體或日文時，瀏覽器會把直排標點擠到右上角；一律改用台灣規則（標點置中）
+    el.removeAttribute('lang'); el.removeAttributeNS('http://www.w3.org/XML/1998/namespace', 'lang');
     if (el.id) el.id = 'b-' + el.id;
     const tag = el.localName;
     if (tag === 'aside' && /footnote|endnote|rearnote/.test(attrType(el))) el.dataset.fn = '1';
