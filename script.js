@@ -34,4 +34,35 @@ document.querySelectorAll('.lamp-switch').forEach(sw => sw.addEventListener('cli
   const on = wrap.classList.toggle('is-on');
   sw.setAttribute('aria-pressed', String(on));
   sw.setAttribute('aria-label', on ? '關燈' : '開燈');
+  document.querySelectorAll('.recent-card').forEach(c => c.classList.toggle('is-real', on));
 }));
+
+// 首頁書桌：點咖啡杯多冒一陣熱氣、點素描本裡的妞妞會「汪！」
+const deskFx = document.querySelector('.desk-fx');
+if (deskFx) {
+  let woofTimer;
+  document.querySelector('.hit-cup')?.addEventListener('click', () => {
+    deskFx.classList.remove('puff'); void deskFx.getBoundingClientRect();
+    deskFx.classList.add('puff');
+    setTimeout(() => deskFx.classList.remove('puff'), 3600);
+  });
+  document.querySelector('.hit-dog')?.addEventListener('click', () => {
+    deskFx.classList.remove('woof'); void deskFx.getBoundingClientRect();
+    deskFx.classList.add('woof');
+    clearTimeout(woofTimer);
+    woofTimer = setTimeout(() => deskFx.classList.remove('woof'), 1800);
+  });
+}
+
+// 鬱金香：游標碰到或點一下就搖一搖
+const tulips = document.querySelector('.hero-tulips');
+const hitTulip = document.querySelector('.hit-tulip');
+if (tulips && hitTulip) {
+  const sway = () => {
+    if (tulips.classList.contains('sway')) return;
+    tulips.classList.add('sway');
+    tulips.addEventListener('animationend', () => tulips.classList.remove('sway'), { once: true });
+  };
+  hitTulip.addEventListener('mouseenter', sway);
+  hitTulip.addEventListener('click', sway);
+}

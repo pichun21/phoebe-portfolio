@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=Iansui&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=74" />
+  <link rel="stylesheet" href="styles.css?v=76" />
 </head>
 <body>
   <header class="site-header">
@@ -35,11 +35,26 @@
   <main id="top">
     <section class="hero shell" aria-labelledby="hero-title">
       <div class="hero-copy">
-        <h1 id="hero-title" lang="en">Decorate<br>everyday life.</h1>
+        <h1 id="hero-title" lang="en"><span class="ink-line">Decorate</span><br><span class="ink-line">everyday life.</span></h1>
         <p class="hero-zh">把喜歡的東西，一個一個做出來。</p>
         <p class="hero-sub" lang="en">small but potent.</p>
       </div>
-      <div class="hero-art-wrap"><span class="lamp-glow" aria-hidden="true"></span><button type="button" class="lamp-switch" aria-pressed="false" aria-label="開燈"></button><img class="hero-art" src="assets/hero-desk.webp" alt="手繪線稿：書桌上有鬱金香、書本、盆栽、筆筒、吊燈、畫著妞妞的素描本和寫著 Good Day 的咖啡杯" width="1800" height="630" /></div>
+      <div class="hero-art-wrap"><span class="lamp-glow" aria-hidden="true"></span><button type="button" class="lamp-switch" aria-pressed="false" aria-label="開燈"></button><svg class="desk-fx" viewBox="0 0 1800 630" preserveAspectRatio="none" aria-hidden="true">
+          <g class="steam" fill="none" stroke="#3e3630" stroke-width="7" stroke-linecap="round">
+            <path class="wisp w1" d="M1446 404 q-9 -12 0 -24 q9 -12 0 -24"/>
+            <path class="wisp w2" d="M1478 402 q9 -13 0 -26 q-9 -13 0 -26"/>
+            <path class="wisp w3" d="M1510 405 q-8 -11 0 -22 q8 -11 0 -22"/>
+          </g>
+          <g class="bubble">
+            <image href="assets/woof-bubble.webp" x="925" y="352" width="200" height="160.5"/>
+            <image class="heart" href="assets/woof-heart.webp" x="1112" y="340" width="54" height="44"/>
+          </g>
+        </svg>
+        <button type="button" class="desk-hit hit-cup" aria-label="咖啡杯，點一下冒熱氣"></button>
+        <button type="button" class="desk-hit hit-tulip" aria-label="鬱金香，碰一下會搖一搖"></button>
+        <button type="button" class="desk-hit hit-dog" aria-label="素描本裡的妞妞，點一下跟她打招呼"></button>
+        <img class="hero-tulips" src="assets/hero-tulips.webp" alt="" aria-hidden="true" width="265" height="228" />
+        <img class="hero-art" src="assets/hero-desk-base.webp" alt="手繪線稿：書桌上有鬱金香、書本、盆栽、筆筒、吊燈、畫著妞妞的素描本和寫著 Good Day 的咖啡杯" width="1800" height="630" /></div>
     </section>
 
     <section class="shell cats" aria-label="作品分類">
@@ -123,6 +138,6 @@
     </div>
     <p class="shell copyright">© 2026 need to deco. All rights reserved.</p>
   </footer>
-  <script src="script.js?v=72"></script>
+  <script src="script.js?v=74"></script>
 </body>
 </html>

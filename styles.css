@@ -255,3 +255,41 @@ a.line-product:hover{box-shadow:0 0 0 2px var(--sky)}
 .page-en{font-size:24px;letter-spacing:.03em}
 .footer-motto:lang(en){font-size:20px;letter-spacing:.03em}
 .tool-kicker:lang(en),.tool-kicker [lang="en"]{font-size:1.25em;letter-spacing:.02em}
+
+/* 首頁書桌小互動：咖啡蒸氣、素描本裡的妞妞、手寫標題 */
+.desk-fx{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:none;overflow:visible}
+.desk-hit{position:absolute;z-index:3;pointer-events:auto;background:transparent;border:0;padding:0;cursor:pointer;border-radius:30%;-webkit-tap-highlight-color:transparent}
+.desk-hit:focus-visible{outline:2px dashed var(--clay);outline-offset:3px}
+.hit-cup{left:76.6%;top:50%;width:11%;height:38%}
+.hit-dog{left:48.4%;top:79%;width:7.2%;height:14%}
+.wisp{opacity:0;transform-box:fill-box;transform-origin:50% 100%;animation:steam 3.6s ease-in-out infinite}
+.w2{animation-delay:1.2s}.w3{animation-delay:2.4s}
+@keyframes steam{0%{opacity:0;transform:translateY(10px) scaleY(.8)}30%{opacity:.75}100%{opacity:0;transform:translateY(-14px) scaleY(1.05)}}
+.desk-fx.puff .wisp{animation:steamPuff 1.1s ease-out 3}
+.desk-fx.puff .w2{animation-delay:.15s}.desk-fx.puff .w3{animation-delay:.3s}
+@keyframes steamPuff{0%{opacity:0;transform:translateY(6px) scale(.9)}25%{opacity:1}100%{opacity:0;transform:translateY(-20px) scale(1.08)}}
+.bubble{opacity:0;transform-box:fill-box;transform-origin:20% 100%;transform:scale(.4);transition:opacity .18s,transform .35s cubic-bezier(.3,1.6,.5,1)}
+.desk-fx.woof .bubble{opacity:1;transform:scale(1)}
+.heart{transform-box:fill-box;transform-origin:50% 100%}
+.desk-fx.woof .heart{animation:heartUp 1.4s ease-out forwards}
+@keyframes heartUp{0%{transform:translateY(0) scale(.6);opacity:0}30%{opacity:1;transform:translateY(-6px) scale(1)}100%{transform:translateY(-40px) scale(1.05);opacity:0}}
+.hit-dog:active~.hero-art,.hit-cup:active~.hero-art{transform:none}
+.ink-line{display:inline-block;clip-path:inset(-10% 100% -20% 0);animation:inkWrite 1.3s cubic-bezier(.55,.1,.35,1) .25s forwards}
+.ink-line+br+.ink-line{animation-delay:1.25s;animation-duration:1.6s}
+@keyframes inkWrite{to{clip-path:inset(-10% -4% -20% 0)}}
+.hero-zh,.hero-sub{animation:inkFade .7s ease 2.7s both}
+@keyframes inkFade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.wisp{animation:none;opacity:0}.ink-line{animation:none;clip-path:none}.hero-zh,.hero-sub{animation:none}.desk-fx.puff .wisp{animation:none}.bubble{transition:none}.desk-fx.woof .heart{animation:none}}
+
+/* 鬱金香：游標碰到（手機點一下）會被風吹得搖兩下 */
+.hero-tulips{position:absolute;z-index:1;left:0;top:26.984%;width:14.722%;height:36.19%;transform-origin:47% 100%;pointer-events:none}
+.hero-tulips.sway{animation:tulipSway 1.6s ease-in-out}
+@keyframes tulipSway{0%,100%{transform:rotate(0)}18%{transform:rotate(-2.4deg)}40%{transform:rotate(1.8deg)}62%{transform:rotate(-1.1deg)}82%{transform:rotate(.5deg)}}
+.hit-tulip{left:0;top:26%;width:15%;height:62%;border-radius:40%}
+/* 開燈連動：書桌變傍晚的暖色，最近更新的線稿一起變成實際畫面 */
+.hero{transition:background-color .6s ease}
+.hero:has(.hero-art-wrap.is-on){background:#f6e6c4}
+/* 在書桌插畫上，游標變成一支小鉛筆 */
+.hero-art{pointer-events:auto;cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cg stroke='%233e3630' stroke-width='2' stroke-linejoin='round' stroke-linecap='round'%3E%3Cpath d='M22 3l7 7L11 28l-8 1 1-8z' fill='%23f5d46b'/%3E%3Cpath d='M18 7l7 7' fill='none'/%3E%3Cpath d='M4 21l7 7' fill='none'/%3E%3Cpath d='M3 29l2-5 3 3z' fill='%233e3630'/%3E%3C/g%3E%3C/svg%3E") 3 29,crosshair}
+@media (hover:hover){.desk-hit,.lamp-switch{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cg stroke='%233e3630' stroke-width='2' stroke-linejoin='round' stroke-linecap='round'%3E%3Cpath d='M22 3l7 7L11 28l-8 1 1-8z' fill='%23f5d46b'/%3E%3Cpath d='M18 7l7 7' fill='none'/%3E%3Cpath d='M4 21l7 7' fill='none'/%3E%3Cpath d='M3 29l2-5 3 3z' fill='%233e3630'/%3E%3C/g%3E%3C/svg%3E") 3 29,pointer}}
+@media (prefers-reduced-motion:reduce){.hero-tulips.sway{animation:none}.hero{transition:none}}
