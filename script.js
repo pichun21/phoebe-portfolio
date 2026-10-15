@@ -91,7 +91,7 @@ if (tulips && hitTulip) {
 
   const modal = document.createElement('div');
   modal.className = 'niu-modal'; modal.hidden = true;
-  modal.innerHTML = `<div class="niu-card" role="dialog" aria-modal="true" aria-labelledby="niu-title"><img src="assets/niuniu-secret.webp" alt="隱藏插畫：妞妞坐在筆電前，旁邊是遊戲手把、畫板和咖啡" width="900" height="675" /><h2 id="niu-title">五隻妞妞全部找到了！</h2><p>謝謝你逛完整個小角落，這張是送給你的隱藏插畫。</p><button type="button">收下了</button></div>`;
+  modal.innerHTML = `<div class="niu-card" role="dialog" aria-modal="true" aria-labelledby="niu-title"><img src="assets/niuniu-secret.webp" alt="隱藏插畫：戴著藍色蝴蝶結的妞妞在餐桌前吃布丁，旁邊有蜂蜜、草莓果醬和熊熊馬克杯" width="900" height="1183" /><h2 id="niu-title">五隻妞妞全部找到了！</h2><p>謝謝你逛完整個小角落，這張是送給你的隱藏插畫。</p><button type="button">收下了</button></div>`;
   document.body.appendChild(modal);
   const close = () => { modal.hidden = true; peek.focus(); };
   modal.querySelector('button').addEventListener('click', close);
