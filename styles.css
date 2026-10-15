@@ -293,3 +293,41 @@ a.line-product:hover{box-shadow:0 0 0 2px var(--sky)}
 .hero-art{pointer-events:auto;cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cg stroke='%233e3630' stroke-width='2' stroke-linejoin='round' stroke-linecap='round'%3E%3Cpath d='M22 3l7 7L11 28l-8 1 1-8z' fill='%23f5d46b'/%3E%3Cpath d='M18 7l7 7' fill='none'/%3E%3Cpath d='M4 21l7 7' fill='none'/%3E%3Cpath d='M3 29l2-5 3 3z' fill='%233e3630'/%3E%3C/g%3E%3C/svg%3E") 3 29,crosshair}
 @media (hover:hover){.desk-hit,.lamp-switch{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cg stroke='%233e3630' stroke-width='2' stroke-linejoin='round' stroke-linecap='round'%3E%3Cpath d='M22 3l7 7L11 28l-8 1 1-8z' fill='%23f5d46b'/%3E%3Cpath d='M18 7l7 7' fill='none'/%3E%3Cpath d='M4 21l7 7' fill='none'/%3E%3Cpath d='M3 29l2-5 3 3z' fill='%233e3630'/%3E%3C/g%3E%3C/svg%3E") 3 29,pointer}}
 @media (prefers-reduced-motion:reduce){.hero-tulips.sway{animation:none}.hero{transition:none}}
+
+/* 分類卡片：滑過時線稿圖示動一下 */
+.cat-icon img{transition:transform .5s cubic-bezier(.3,1.6,.5,1)}
+@media (hover:hover){
+  .cat-card:hover .cat-icon img,.cat-card:focus-visible .cat-icon img{animation:var(--icon-move) .9s ease-in-out}
+}
+.cat-card[href="illustrations.html"]{--icon-move:iconBloom}
+.cat-card[href="reading.html"]{--icon-move:iconFlip}
+.cat-card[href="tools.html"]{--icon-move:iconSketch}
+.cat-card[href="games.html"]{--icon-move:iconPlay}
+@keyframes iconBloom{0%,100%{transform:none}40%{transform:translateY(-8px) scale(1.06)}70%{transform:translateY(-2px) scale(.99)}}
+@keyframes iconFlip{0%,100%{transform:none}30%{transform:rotate(-5deg) translateY(-4px)}60%{transform:rotate(3deg)}}
+@keyframes iconSketch{0%,100%{transform:none}25%{transform:rotate(6deg)}50%{transform:rotate(-4deg)}75%{transform:rotate(2deg)}}
+@keyframes iconPlay{0%,100%{transform:none}15%{transform:translateX(-4px) rotate(-3deg)}30%{transform:translateX(4px) rotate(3deg)}45%{transform:translateX(-3px) rotate(-2deg)}60%{transform:translateX(2px)}}
+/* 找妞妞彩蛋 */
+main{position:relative}
+.niu-peek{position:absolute;z-index:5;width:clamp(30px,3.2vw,42px);padding:0;border:0;background:transparent;cursor:pointer;opacity:.8;transform:rotate(var(--rot,0deg));transition:transform .3s,opacity .3s}
+.niu-peek img{width:100%;height:auto;display:block}
+.niu-peek:hover{opacity:1;transform:rotate(0) scale(1.12)}
+.niu-peek:focus-visible{outline:2px dashed var(--clay);outline-offset:4px}
+.niu-peek.found{opacity:.35;cursor:default}
+.niu-peek.found::after{content:"✓";position:absolute;right:-6px;bottom:-4px;width:18px;height:18px;border-radius:50%;background:var(--sun);color:var(--ink);font-size:11px;line-height:18px;text-align:center}
+.niu-toast{position:fixed;z-index:60;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);opacity:0;pointer-events:none;background:var(--paper);color:var(--ink);border:1.5px solid var(--ink);border-radius:999px;padding:10px 20px;display:flex;align-items:center;gap:12px;box-shadow:0 8px 24px -8px rgba(62,54,48,.35);font-family:var(--hand);font-size:15px;transition:opacity .3s,transform .3s;white-space:nowrap}
+.niu-toast.show{opacity:1;transform:translate(-50%,0)}
+.niu-paws{display:flex;gap:4px}
+.niu-paws i{width:18px;height:18px;border-radius:50%;border:1.5px dashed var(--clay);display:grid;place-items:center;font-style:normal;font-size:11px}
+.niu-paws i.on{border:1.5px solid var(--ink);background:var(--puff)}
+.niu-paws i.on::before{content:"🐾"}
+.niu-paws i.new{animation:stampIn .5s cubic-bezier(.3,1.8,.5,1)}
+@keyframes stampIn{0%{transform:scale(2.2) rotate(-20deg);opacity:0}100%{transform:none;opacity:1}}
+.niu-modal{position:fixed;inset:0;z-index:70;display:grid;place-items:center;background:rgba(62,54,48,.45);padding:20px}
+.niu-modal[hidden]{display:none}
+.niu-card{background:var(--paper);border-radius:var(--r-lg);max-width:520px;width:100%;padding:22px 22px 18px;text-align:center;box-shadow:0 20px 50px -20px rgba(0,0,0,.4);animation:stampIn .45s ease-out}
+.niu-card img{width:100%;height:auto;border-radius:14px;background:#fff}
+.niu-card h2{font-size:24px;margin:14px 0 4px}
+.niu-card p{color:var(--clay-ink);font-size:14.5px;margin:0 0 14px}
+.niu-card button{font:inherit;font-size:14px;padding:8px 22px;border-radius:999px;border:0;background:var(--ink);color:var(--paper);cursor:pointer}
+@media (prefers-reduced-motion:reduce){.cat-card .cat-icon img{animation:none!important}.niu-paws i.new,.niu-card{animation:none}}

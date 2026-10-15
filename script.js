@@ -66,3 +66,50 @@ if (tulips && hitTulip) {
   hitTulip.addEventListener('mouseenter', sway);
   hitTulip.addEventListener('click', sway);
 }
+
+// 找妞妞彩蛋：遊戲館、插畫、閱讀、小工具、關於我各藏一隻，全部找到會解鎖隱藏插畫
+(() => {
+  const SPOTS = ['games', 'illustrations', 'reading', 'tools', 'about'];
+  const KEY = 'ntd-found-niuniu';
+  const load = () => { try { return JSON.parse(localStorage.getItem(KEY)) || []; } catch { return []; } };
+  const save = v => { try { localStorage.setItem(KEY, JSON.stringify(v)); } catch {} };
+  let found = load().filter(s => SPOTS.includes(s));
+  const peek = document.querySelector('.niu-peek');
+  if (!peek) return;
+  const spot = peek.dataset.spot;
+  if (found.includes(spot)) peek.classList.add('found');
+
+  const toast = document.createElement('div');
+  toast.className = 'niu-toast'; toast.setAttribute('role', 'status');
+  document.body.appendChild(toast);
+  let timer;
+  const showToast = (msg, fresh) => {
+    toast.innerHTML = `<span>${msg}</span><span class="niu-paws">${SPOTS.map(s => `<i class="${found.includes(s) ? 'on' : ''}${s === fresh ? ' new' : ''}"></i>`).join('')}</span>`;
+    toast.classList.add('show');
+    clearTimeout(timer); timer = setTimeout(() => toast.classList.remove('show'), 3200);
+  };
+
+  const modal = document.createElement('div');
+  modal.className = 'niu-modal'; modal.hidden = true;
+  modal.innerHTML = `<div class="niu-card" role="dialog" aria-modal="true" aria-labelledby="niu-title"><img src="assets/niuniu-secret.webp" alt="隱藏插畫：妞妞坐在筆電前，旁邊是遊戲手把、畫板和咖啡" width="900" height="675" /><h2 id="niu-title">五隻妞妞全部找到了！</h2><p>謝謝你逛完整個小角落，這張是送給你的隱藏插畫。</p><button type="button">收下了</button></div>`;
+  document.body.appendChild(modal);
+  const close = () => { modal.hidden = true; peek.focus(); };
+  modal.querySelector('button').addEventListener('click', close);
+  modal.addEventListener('click', e => { if (e.target === modal) close(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && !modal.hidden) close(); });
+
+  peek.addEventListener('click', () => {
+    if (found.includes(spot)) {
+      if (found.length === SPOTS.length) { modal.hidden = false; modal.querySelector('button').focus(); }
+      else showToast(`這隻已經找過囉，還差 ${SPOTS.length - found.length} 隻`);
+      return;
+    }
+    found.push(spot); save(found); peek.classList.add('found');
+    if (found.length === SPOTS.length) {
+      showToast('全部找到了！', spot);
+      setTimeout(() => { modal.hidden = false; modal.querySelector('button').focus(); }, 900);
+    } else {
+      showToast(`找到妞妞了！還差 ${SPOTS.length - found.length} 隻`, spot);
+    }
+  });
+})();
