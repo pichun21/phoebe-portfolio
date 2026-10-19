@@ -404,6 +404,15 @@ html[data-theme=dark] .mbox.finish h3{color:var(--fg)}
 .install-tip .btn{padding:8px 16px;font-size:14px}
 .install-tip .ib{width:36px;height:36px;color:var(--muted)}
 
+/* 可下載字型 */
+.fonts button.dl{border:2px dashed var(--line);background:none;color:var(--muted)}
+.fonts button.dl:hover{border-color:var(--accent);color:var(--accent)}
+.fonts button.dl big{display:flex;align-items:center;justify-content:center;height:29px;font-size:15px;font-variant-numeric:tabular-nums}
+.fonts button.dl big svg.i{width:22px;height:22px}
+.fonts button.dl small{color:var(--fg)}
+.fonts button.dl em{display:block;font-style:normal;font-size:10.5px;color:var(--muted);font-family:var(--ui)}
+.fonts button.dl.busy{border-style:solid;border-color:var(--accent);color:var(--accent)}
+
 </style>
 </head>
 <body>
@@ -568,7 +577,7 @@ html[data-theme=dark] .mbox.finish h3{color:var(--fg)}
 
   <h4 class="sgh">文字</h4>
   <div class="srow"><div class="lab">字型</div><div class="ctl"><div class="fonts" id="fontChips"></div></div></div>
-  <div class="srow"><div class="lab"></div><div class="ctl"><button class="btn" id="btnLoadFont">載入自己的字型檔</button><input type="file" id="fontInput" accept=".ttf,.otf,.woff,.woff2" hidden></div></div>
+  <div class="srow"><div class="lab"></div><div class="ctl"><button class="btn" id="btnLoadFont">載入自己的字型檔</button><span class="sub">虛線框的是開源字型，點一下下載，之後離線也能用。</span><input type="file" id="fontInput" accept=".ttf,.otf,.woff,.woff2" hidden></div></div>
   <div class="srow"><label>字級</label><div class="ctl"><input type="range" data-set="fontSize" min="12" max="40" step="1"><span class="val" data-val="fontSize"></span></div></div>
   <div class="srow"><label>字距</label><div class="ctl"><input type="range" data-set="letterSpacing" min="0" max="0.3" step="0.01"><span class="val" data-val="letterSpacing"></span></div></div>
   <div class="srow"><label>行距</label><div class="ctl"><input type="range" data-set="lineHeight" min="1.2" max="3" step="0.05"><span class="val" data-val="lineHeight"></span></div></div>
@@ -744,8 +753,36 @@ const FONTS = [
   { id: 'system', name: '系統預設', css: 'system-ui,-apple-system,"PingFang TC","Microsoft JhengHei",sans-serif' },
 ];
 let userFonts = []; // {id,name,css}
+/* 可下載的開源字型（SIL OFL）：點一下才下載，存在這台裝置，之後離線也能用 */
+const FONT_HOME = 'https://pichun21.github.io/phoebe-portfolio/readays/fonts/';
+const DLFONTS = [
+  { id: 'genwan', name: '源雲明體', file: 'genwan.woff', size: '7 MB', css: '"dl-genwan",serif' },
+  { id: 'gensen', name: '源泉圓體', file: 'gensen.woff', size: '4 MB', css: '"dl-gensen",sans-serif' },
+  { id: 'plex', name: 'IBM Plex 黑體', file: 'plex.woff', size: '2.5 MB', css: '"dl-plex",sans-serif' },
+];
+const dlReady = new Set(), dlBusy = {};
+async function loadDlFont(f, blob) {
+  const ff = new FontFace('dl-' + f.id, await blob.arrayBuffer()); await ff.load(); document.fonts.add(ff); dlReady.add(f.id);
+}
+async function downloadDlFont(f) {
+  if (dlBusy[f.id] != null) return;
+  dlBusy[f.id] = 0; syncSettingsUI();
+  try {
+    // 網站上用同一個資料夾的檔案；離線版（直接打開檔案）就從作品集網站下載
+    const url = (/^https?:$/.test(location.protocol) ? 'fonts/' : FONT_HOME) + f.file;
+    const res = await fetch(url); if (!res.ok) throw new Error('HTTP ' + res.status);
+    const total = +res.headers.get('content-length') || 0, reader = res.body.getReader(), parts = []; let got = 0;
+    for (;;) { const { done, value } = await reader.read(); if (done) break; parts.push(value); got += value.length; if (total) { dlBusy[f.id] = Math.round(got / total * 100); syncSettingsUI(); } }
+    const blob = new Blob(parts, { type: 'font/woff' });
+    await loadDlFont(f, blob); await DB.put('kv', blob, 'dlfont:' + f.id);
+    delete dlBusy[f.id]; await setSetting('font', f.id); toast(`已下載「${f.name}」，之後離線也能用`);
+  } catch (err) {
+    delete dlBusy[f.id]; syncSettingsUI();
+    toast(navigator.onLine === false ? '需要連上網路才能下載字型' : '字型下載失敗，請稍後再試', 3200);
+  }
+}
 const darkMQ = matchMedia('(prefers-color-scheme: dark)');
-function fontCss() { const f = FONTS.concat(userFonts).find(f => f.id === S.font) || FONTS[0]; return f.css; }
+function fontCss() { const f = FONTS.concat(DLFONTS.filter(d => dlReady.has(d.id)), userFonts).find(f => f.id === S.font) || FONTS[0]; return f.css; }
 function applyLook() {
   const theme = S.theme === 'auto' ? (darkMQ.matches ? 'dark' : 'light') : S.theme;
   document.documentElement.dataset.theme = theme;
@@ -1636,7 +1673,10 @@ function syncSettingsUI() {
   $$('[data-tog]').forEach(t => t.classList.toggle('on', !!S[t.dataset.tog]));
   $$('[data-seg]').forEach(g => $$('button', g).forEach(b => b.classList.toggle('on', S[g.dataset.seg] === b.dataset.v)));
   $$('#themeSw button').forEach(b => b.classList.toggle('on', S.theme === b.dataset.v));
-  $('#fontChips').innerHTML = FONTS.concat(userFonts).map(f => `<button data-f="${f.id}" class="${S.font === f.id ? 'on' : ''}" style="font-family:${esc(f.css)}"><big>閱讀</big><small>${esc(f.name)}${f.user ? ' ✕' : ''}</small></button>`).join('');
+  const chip = f => `<button data-f="${f.id}" class="${S.font === f.id ? 'on' : ''}" style="font-family:${esc(f.css)}"><big>閱讀</big><small>${esc(f.name)}${f.user ? ' ✕' : ''}</small></button>`;
+  const dl = f => dlReady.has(f.id) ? chip(f)
+    : `<button data-dl="${f.id}" class="dl${dlBusy[f.id] != null ? ' busy' : ''}" title="開源字型，點一下下載（${f.size}），之後離線也能用"><big>${dlBusy[f.id] != null ? (dlBusy[f.id] ? dlBusy[f.id] + '%' : '…') : '<svg class="i"><use href="#i-download"/></svg>'}</big><small>${esc(f.name)}</small><em>${dlBusy[f.id] != null ? '下載中' : f.size}</em></button>`;
+  $('#fontChips').innerHTML = FONTS.map(chip).join('') + DLFONTS.map(dl).join('') + userFonts.map(chip).join('');
 }
 $$('[data-set]').forEach(inp => {
   inp.addEventListener('input', () => { const k = inp.dataset.set; S[k] = +inp.value; $(`[data-val="${k}"]`).textContent = fmtVal(k, S[k]); applyLook(); saveSettings(); liveRelayout(); });
@@ -1647,6 +1687,7 @@ $$('[data-seg]').forEach(g => g.addEventListener('click', e => { const b = e.tar
 $('#themeSw').addEventListener('click', e => { const b = e.target.closest('button'); if (b) setSetting('theme', b.dataset.v); });
 $('#fontChips').addEventListener('click', async e => {
   const b = e.target.closest('button'); if (!b) return;
+  if (b.dataset.dl) { downloadDlFont(DLFONTS.find(x => x.id === b.dataset.dl)); return; }
   const f = userFonts.find(x => x.id === b.dataset.f);
   if (f && e.target.closest('small') && confirm(`移除字型「${f.name}」？`)) {
     userFonts = userFonts.filter(x => x !== f); const list = (await DB.get('kv', 'fonts')) || []; await DB.put('kv', list.filter(x => x.id !== f.id), 'fonts');
@@ -2032,6 +2073,7 @@ if (ON_WEB && navigator.storage && navigator.storage.persist) navigator.storage.
 (async () => {
   await DB.open();
   const saved = await DB.get('kv', 'settings'); if (saved) S = { ...DEFAULTS, ...saved };
+  for (const f of DLFONTS) { try { const blob = await DB.get('kv', 'dlfont:' + f.id); if (blob) await loadDlFont(f, blob); } catch (e) { } }
   const fonts = (await DB.get('kv', 'fonts')) || [];
   for (const f of fonts) { try { await registerFont(f); } catch (e) { } }
   applyLook(); syncSettingsUI();
