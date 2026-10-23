@@ -417,16 +417,21 @@ html[data-theme=dark] .mbox.finish h3{color:var(--fg)}
 .card{min-width:0}
 .card .t,.card .a,.card .meta{min-width:0;max-width:100%}
 
-/* 翻書效果 */
-.flipper{position:absolute;inset:0;z-index:3;pointer-events:none;perspective:2400px}
-.flipper .under,.flipper .leaf{position:absolute;inset:0}
-.flipper .under{background:var(--bg);overflow:hidden}
-.flipper .leaf{transform-style:preserve-3d;will-change:transform}
-.flipper .front,.flipper .back{position:absolute;inset:0;overflow:hidden;background:var(--bg);-webkit-backface-visibility:hidden;backface-visibility:hidden}
-.flipper .front{box-shadow:0 0 18px rgba(0,0,0,.12)}
-.flipper .back{transform:rotateY(180deg);background:linear-gradient(90deg,rgba(0,0,0,.07),rgba(0,0,0,.02) 40%,rgba(0,0,0,.06)),var(--bg)}
-.flipper .shade{position:absolute;inset:0;z-index:2;opacity:0}
-.flipper .cast{position:absolute;top:0;bottom:0;width:80px;opacity:0}
+/* 翻書效果（紙張捲頁：平放 → 圓筒捲起 → 翻過去的紙背） */
+.flipper{position:absolute;inset:0;z-index:3;pointer-events:none;overflow:hidden;contain:strict;--back:color-mix(in srgb,var(--bg) 94%,#000)}
+html[data-theme=dark] .flipper{--back:color-mix(in srgb,var(--bg) 90%,#fff)}
+.flipper>div{position:absolute;inset:0}
+.flipper .under,.flipper .top{background:var(--bg);overflow:hidden}
+.flipper .top{will-change:clip-path}
+.flipper .flapw{filter:drop-shadow(0 1px 5px rgba(0,0,0,.20))}
+.flipper .flap{position:absolute;inset:0;transform-origin:0 0;will-change:transform;overflow:hidden;background:var(--back)}
+.flipper .flap .bk{position:absolute;inset:0;opacity:.13}
+.flipper .flap b,.flipper .tube b,.flipper .cast i{position:absolute;left:0;top:0;height:400vh;margin-top:-200vh;transform-origin:0 50%}
+.flipper .flap b{background:linear-gradient(90deg,rgba(255,255,255,.35),rgba(255,255,255,0) 30%,rgba(0,0,0,0) 70%,rgba(0,0,0,.05))}
+.flipper .tube{background:var(--back)}
+.flipper .tube b{background:linear-gradient(90deg,rgba(255,255,255,.30) 0%,rgba(255,255,255,.65) 22%,rgba(255,255,255,.18) 45%,rgba(0,0,0,.06) 70%,rgba(0,0,0,.20) 92%,rgba(0,0,0,.30) 100%)}
+html[data-theme=dark] .flipper .tube b{background:linear-gradient(90deg,rgba(255,255,255,.06),rgba(255,255,255,.16) 22%,rgba(255,255,255,.04) 45%,rgba(0,0,0,.15) 75%,rgba(0,0,0,.40))}
+.flipper .cast i{background:linear-gradient(90deg,rgba(0,0,0,.34),rgba(0,0,0,.20) 18%,rgba(0,0,0,.08) 50%,rgba(0,0,0,.02) 80%,rgba(0,0,0,0))}
 
 </style>
 </head>
@@ -619,7 +624,7 @@ html[data-theme=dark] .mbox.finish h3{color:var(--fg)}
   <div class="srow"><div class="lab">簡轉繁</div><div class="ctl"><div class="togrow"><div>轉成繁體（台灣用語）<div class="sub">视频→影片、软件→軟體</div></div><button class="tog" data-tog="convert" aria-label="簡轉繁"></button></div></div></div>
   <div class="srow"><div class="lab">引號</div><div class="ctl"><div class="togrow"><div>“ ” 換成「 」</div><button class="tog" data-tog="quotes" aria-label="引號轉換"></button></div></div></div>
 
-  <div class="sfoot"><button class="btn" id="btnReset">恢復預設值</button><span class="sub">點畫面左右兩側翻頁，點中間或右下角的「⋯」叫出選單。也能滑動、按方向鍵或滾動滑鼠；Enter 鍵可開關選單，快速點兩下圖片（或按上方放大鏡）可進入看圖模式，自由放大、拖曳。</span></div>
+  <div class="sfoot"><button class="btn" id="btnReset">恢復預設值</button><span class="sub">點畫面左右兩側翻頁，點中間或右下角的「⋯」叫出選單。也能滑動、按方向鍵或滾動滑鼠；Enter 鍵可開關選單，快速點兩下圖片（或按上方放大鏡）可進入看圖模式，自由放大、拖曳。<br>版本 2026.10.23（捲頁）</span></div>
 </div>
 
 <div id="selpop" hidden></div>
@@ -1362,40 +1367,113 @@ function prev() {
   return bookOn() ? bookTurn(-1, change) : change();
 }
 
-/* ================= 翻書效果：書頁沿著書背立體翻起，手指可以拖著翻 ================= */
+/* ================= 翻書效果：紙張捲頁 =================
+   想像紙張沿一條「捲軸線」往上捲成半徑 R 的圓筒：線的一側還平放著；捲起來的部分從上方看，
+   是一段圓筒（看到的是紙背，有光影），再過去是翻到背面、平貼在上方的紙（看得到透過來的反字）。
+   C：開始翻的頁緣點；P：頁角被拉到的位置。n 由 P 指向 C，d 是點到捲軸線沿 n 的距離。 */
 const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
 const bookOn = () => S.flip === 'book' && String(content.style.columnCount) !== '2' && !reduceMotion.matches;
 let flip = null, drag = null;
-function snapPage() {
+function snapPage() { // 只複製目前這一頁的內容（整章複製在長章節會卡）
   const c = content.cloneNode(true); c.classList.remove('anim');
   c.querySelectorAll('[id]').forEach(e => e.removeAttribute('id'));
+  try {
+    if (!R.ti || !R.ti.nodes.length || content.querySelector('img,svg,image,video,table')) return c;
+    const s = firstOffsetOfPage(R.page), e = R.page < R.total - 1 ? firstOffsetOfPage(R.page + 1) : R.ti.len;
+    if (!(e > s)) return c;
+    const cn = [], w = document.createTreeWalker(c, NodeFilter.SHOW_TEXT); let n;
+    while ((n = w.nextNode())) if (n.data.length) cn.push(n);
+    if (cn.length !== R.ti.nodes.length) return c;
+    const ls = locate(s), r = document.createRange();
+    const BLK = 'p,div,li,blockquote,h1,h2,h3,h4,h5,h6,pre,dd,dt,figcaption,section,article';
+    if (e < R.ti.len) {
+      const le = locate(e), endBlk = cn[le.idx].parentElement.closest(BLK);
+      if (endBlk && endBlk !== c && c.contains(endBlk)) { // 這頁最後一行其實還沒到段尾：保持左右對齊
+        const post = document.createRange(); post.setStart(cn[le.idx], le.off); post.setEnd(endBlk, endBlk.childNodes.length);
+        const lb = R.ti.nodes[le.idx].parentElement.closest(BLK);
+        if (post.toString().trim() && lb && getComputedStyle(lb).textAlign === 'justify') endBlk.style.textAlignLast = 'justify';
+      }
+      r.setStart(cn[le.idx], le.off); r.setEnd(c, c.childNodes.length); r.deleteContents();
+    }
+    const first = cn[ls.idx];
+    let blk = first.parentElement.closest(BLK);
+    if (!blk || !c.contains(blk) || blk === c) blk = null;
+    const pre = document.createRange(); pre.setStart(blk || c, 0); pre.setEnd(first, ls.off);
+    const partial = pre.toString().length > 0;
+    r.setStart(c, 0); r.setEnd(first, ls.off); r.deleteContents();
+    for (let el = first.parentElement; el && el !== c; el = el.parentElement) { el.style.marginBlockStart = '0'; el.style.paddingBlockStart = '0'; el.style.breakBefore = 'auto'; }
+    if (partial && blk) blk.style.textIndent = '0';
+    c.style.transform = 'none';
+  } catch (err) { const f = content.cloneNode(true); f.classList.remove('anim'); f.querySelectorAll('[id]').forEach(e => e.removeAttribute('id')); return f; }
   return c;
 }
-function makeFlip() {
+function clipPts(pts, M, n, keepNeg) { // 多邊形沿直線切開，留下其中一側（Sutherland–Hodgman）
+  const side = p => ((p[0] - M[0]) * n[0] + (p[1] - M[1]) * n[1]) * (keepNeg ? -1 : 1), out = [];
+  for (let i = 0; i < pts.length; i++) {
+    const A = pts[i], B = pts[(i + 1) % pts.length], sa = side(A), sb = side(B);
+    if (sa >= 0) out.push(A);
+    if ((sa >= 0) !== (sb >= 0)) { const t = sa / (sa - sb); out.push([A[0] + (B[0] - A[0]) * t, A[1] + (B[1] - A[1]) * t]); }
+  }
+  return out;
+}
+const poly = pts => pts.length > 2 ? 'polygon(' + pts.map(p => p[0].toFixed(1) + 'px ' + p[1].toFixed(1) + 'px').join(',') + ')' : 'polygon(0 0,0 0,0 0)';
+function makeFlip(dir) {
   const el = document.createElement('div'); el.className = 'flipper';
-  el.innerHTML = '<div class="under" hidden></div><div class="cast"></div><div class="leaf"><div class="front"><div class="shade"></div></div><div class="back"></div></div>';
+  el.innerHTML = '<div class="under" hidden></div><div class="cast"><i></i></div><div class="top"></div><div class="flapw"><div class="flap"><div class="bk"></div><b></b></div></div><div class="tube"><b></b></div>';
   pagesEl.appendChild(el);
-  const leaf = el.querySelector('.leaf'), shade = el.querySelector('.shade'), cast = el.querySelector('.cast');
-  const rtl = R.vert, W = pagesEl.clientWidth; // 直排書的書背在右邊
-  leaf.style.transformOrigin = rtl ? 'right center' : 'left center';
-  shade.style.background = `linear-gradient(${rtl ? 'to right' : 'to left'}, rgba(0,0,0,.24), rgba(0,0,0,0) 60%)`;
-  cast.style.background = `linear-gradient(${rtl ? 'to left' : 'to right'}, rgba(0,0,0,.22), rgba(0,0,0,0))`;
+  const q = s => el.querySelector(s);
+  const top = q('.top'), flapw = q('.flapw'), flap = q('.flap'), bk = q('.bk'), fshade = q('.flap b'), cast = q('.cast'), cshade = q('.cast i'), tube = q('.tube'), tshade = q('.tube b');
+  const W = pagesEl.clientWidth, H = pagesEl.clientHeight, rtl = R.vert, rect = [[0, 0], [W, 0], [W, H], [0, H]];
+  const C = [rtl ? 0 : W, H * 0.62], END = [C[0] + (rtl ? 2 : -2) * W, C[1]];
+  const RMAX = Math.max(26, Math.min(64, W * 0.11));
   const f = {
-    el, under: el.querySelector('.under'), a: 0, raf: 0,
-    put(node) { el.querySelector('.front').insertBefore(node, shade); },
-    set(a) {
-      f.a = a; const r = a * Math.PI / 180;
-      leaf.style.transform = `rotateY(${rtl ? a : -a}deg)`;
-      shade.style.opacity = a < 90 ? Math.min(1, a / 80) : 0;
-      const edge = Math.max(0, W * Math.cos(r));
-      cast.style.opacity = a < 90 ? Math.sin(r) : 0;
-      cast.style[rtl ? 'right' : 'left'] = edge + 'px'; cast.style[rtl ? 'left' : 'right'] = 'auto';
+    el, under: q('.under'), C, END, P: C.slice(), raf: 0, W, H, cy: C[1],
+    put(node) { top.appendChild(node); const b = node.cloneNode(true); bk.appendChild(b); },
+    setP(px, py) {
+      f.P = [px, py];
+      const dx = C[0] - px, dy = f.cy - py, L = Math.hypot(dx, dy);
+      if (L < 0.5) { top.style.clipPath = 'none'; flapw.style.display = tube.style.display = cast.style.display = 'none'; return; }
+      flapw.style.display = tube.style.display = cast.style.display = '';
+      const n = [dx / L, dy / L];
+      const Rr = Math.max(0, Math.min(L / Math.PI, RMAX * Math.min(1, (2 * W - L) / (0.7 * W)))); // 圓筒半徑：剛掀起與快翻完時變小
+      const D = (L + Math.PI * Rr) / 2;                                   // 頁角離捲軸線的距離
+      const A = [C[0] - n[0] * D, f.cy - n[1] * D], at = k => [A[0] + n[0] * k, A[1] + n[1] * k];
+      top.style.clipPath = poly(clipPts(rect, A, n, true));               // 還平放的部分
+      cast.style.clipPath = poly(clipPts(rect, A, n, false));
+      flap.style.clipPath = poly(clipPts(rect, at(Math.PI * Rr), n, false)); // 翻到背面的部分（原位置座標）
+      const Mf = at(Math.PI * Rr / 2), u = [-n[1], n[0]], a = 2 * u[0] * u[0] - 1, b = 2 * u[0] * u[1], d = 2 * u[1] * u[1] - 1;
+      flap.style.transform = `matrix(${a},${b},${b},${d},${Mf[0] - (a * Mf[0] + b * Mf[1])},${Mf[1] - (b * Mf[0] + d * Mf[1])})`;
+      // 圓筒：原本 d∈[πR/2, πR] 的紙，從上方看落在捲軸線外 0~R 的帶狀區
+      const band = clipPts(clipPts(rect, at(Math.PI * Rr / 2), n, false), at(Math.PI * Rr), n, true).map(p => {
+        const dd = (p[0] - A[0]) * n[0] + (p[1] - A[1]) * n[1], x = Rr * Math.sin(Math.min(Math.PI, Math.max(0, dd / Math.max(Rr, 1e-3))));
+        return [p[0] + n[0] * (x - dd), p[1] + n[1] * (x - dd)];
+      });
+      tube.style.clipPath = poly(band);
+      const ang = Math.atan2(n[1], n[0]) * 180 / Math.PI, strip = `translate(${A[0]}px,${A[1]}px) rotate(${ang}deg)`;
+      tshade.style.transform = strip; tshade.style.width = (Rr + 1) + 'px';
+      fshade.style.transform = `translate(${Mf[0]}px,${Mf[1]}px) rotate(${ang}deg)`; fshade.style.width = Math.max(1, D - Math.PI * Rr) + 'px';
+      // 投在下一頁上的影子：捲得越高越寬越淡
+      cshade.style.transform = `translate(${A[0] + n[0] * Rr * 0.85}px,${A[1] + n[1] * Rr * 0.85}px) rotate(${ang}deg)`;
+      cshade.style.width = (18 + Rr * 1.4) + 'px';
+      cshade.style.opacity = Math.min(1, L / (W * 0.15)) * (0.55 + 0.45 * Math.min(1, Rr / RMAX));
     },
-    to(target, ms) {
+    setT(t) { // 0 = 平放，1 = 完全翻過去；路徑稍微往上拱，像手把紙往上帶
+      t = Math.max(0, Math.min(1, t));
+      f.setP(C[0] + (END[0] - C[0]) * t, f.cy - Math.sin(Math.PI * t) * H * 0.06);
+    },
+    t() { return Math.abs(f.P[0] - C[0]) / (2 * W); },
+    to(tTarget, ms, ease) {
       cancelAnimationFrame(f.raf);
+      const P0 = f.P.slice(), P1 = [C[0] + (END[0] - C[0]) * tTarget, f.cy];
+      const d = Math.max(180, ms * Math.abs(tTarget - f.t()));
       return new Promise(res => {
-        const from = f.a, t0 = performance.now(), d = Math.max(140, ms * Math.abs(target - from) / 180);
-        const step = now => { const k = Math.min(1, (now - t0) / d), e = k < .5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2; f.set(from + (target - from) * e); if (k < 1) f.raf = requestAnimationFrame(step); else res(); };
+        const t0 = performance.now();
+        const step = now => {
+          const k = Math.min(1, (now - t0) / d), e = ease === 'inout' ? (k < .5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2) : 1 - Math.pow(1 - k, 3);
+          const lift = ease === 'inout' ? Math.sin(Math.PI * k) * H * 0.08 : 0;
+          f.setP(P0[0] + (P1[0] - P0[0]) * e, P0[1] + (P1[1] - P0[1]) * e - lift);
+          if (k < 1) f.raf = requestAnimationFrame(step); else res();
+        };
         f.raf = requestAnimationFrame(step);
       });
     },
@@ -1405,26 +1483,37 @@ function makeFlip() {
 }
 async function bookTurn(dir, change) {
   if (flip) flip.remove();
-  const f = flip = makeFlip();
-  if (dir > 0) { f.put(snapPage()); f.set(0); await change(); }               // 下一頁：舊頁翻起，露出底下的新頁
-  else { f.under.hidden = false; f.under.appendChild(snapPage()); f.set(180); await change(); f.put(snapPage()); } // 上一頁：新頁從書背翻回來蓋上
+  const f = flip = makeFlip(dir);
+  if (dir > 0) { f.put(snapPage()); f.setT(0); await change(); }            // 下一頁：目前這頁被翻走，底下是新頁
+  else { f.under.hidden = false; f.under.appendChild(snapPage()); f.setT(1); await change(); f.put(snapPage()); f.setT(1); } // 上一頁：前一頁從旁邊翻回來
   if (flip !== f) return;
-  await f.to(dir > 0 ? 180 : 0, 720);
+  await f.to(dir > 0 ? 1 : 0, 760, 'inout');
   f.remove();
 }
-function startDrag(dir, x0) {
+function startDrag(dir, x0, y0) {
   if (flip) flip.remove();
   hidePop();
-  const f = flip = makeFlip(), old = R.page;
-  if (dir > 0) { f.put(snapPage()); goPage(old + 1, { noAnim: true }); f.set(0); }
-  else { f.under.hidden = false; f.under.appendChild(snapPage()); goPage(old - 1, { noAnim: true }); f.put(snapPage()); f.set(180); }
-  drag = { f, dir, old, x0, p: 0 };
+  const f = flip = makeFlip(dir), old = R.page;
+  f.cy = Math.max(f.H * 0.15, Math.min(f.H * 0.9, y0 - pagesEl.getBoundingClientRect().top));
+  if (dir > 0) { f.put(snapPage()); goPage(old + 1, { noAnim: true }); f.setT(0); }
+  else { f.under.hidden = false; f.under.appendChild(snapPage()); goPage(old - 1, { noAnim: true }); f.put(snapPage()); f.setT(1); }
+  drag = { f, dir, old, x0, y0, p: 0, v: 0, lastX: x0, lastT: performance.now() };
+}
+function moveDrag(x, y) {
+  const d = drag, f = d.f, s = R.vert ? 1 : -1;          // s：往「下一頁」方向手指移動的正負號
+  const now = performance.now(); d.v = (x - d.lastX) / Math.max(1, now - d.lastT); d.lastX = x; d.lastT = now;
+  const moved = (x - d.x0) * s;
+  const py = f.cy + Math.max(-f.H * 0.25, Math.min(f.H * 0.25, (y - d.y0) * 0.6));
+  if (d.dir > 0) { const m = Math.max(0, moved); f.setP(f.C[0] + s * m, py); d.p = m / f.W; }   // 頁角跟著手指
+  else { const m = Math.max(0, -moved); f.setP(f.END[0] - s * 2 * m, py); d.p = m / f.W; }    // 摺線跟著手指
 }
 function endDrag(commit) {
   const d = drag; drag = null; lastSwipe = Date.now();
+  const flick = Math.abs(d.v) > 0.5 && Math.sign(d.v) === (R.vert ? 1 : -1) * d.dir;
+  const go = commit || flick;
   (async () => {
-    if (commit) await d.f.to(d.dir > 0 ? 180 : 0, 640);
-    else { await d.f.to(d.dir > 0 ? 0 : 180, 420); goPage(d.old, { noAnim: true }); }
+    if (go) await d.f.to(d.dir > 0 ? 1 : 0, 520);
+    else { await d.f.to(d.dir > 0 ? 0 : 1, 420); goPage(d.old, { noAnim: true }); }
     d.f.remove();
   })();
 }
@@ -1808,18 +1897,18 @@ pagesEl.addEventListener('touchmove', e => {
     if (Math.abs(dx) < 12 || Math.abs(dx) < Math.abs(dy) * 1.2 || !getSelection().isCollapsed) return;
     const dir = (R.vert ? dx > 0 : dx < 0) ? 1 : -1;
     if (dir > 0 ? R.page >= R.total - 1 : R.page <= 0) return; // 章節交界：放手後再翻
-    startDrag(dir, swipe.x);
+    startDrag(dir, swipe.x, swipe.y);
   }
-  const moved = (t.clientX - drag.x0) * (R.vert ? 1 : -1) * drag.dir;
-  // 讓翻起的頁緣剛好停在手指的位置
-  drag.p = Math.min(1, Math.max(0, moved / pagesEl.clientWidth));
-  drag.f.set((drag.dir > 0 ? Math.acos(1 - drag.p) : Math.acos(drag.p)) * 180 / Math.PI);
-}, { passive: true });
+  if (e.cancelable) e.preventDefault();
+  if (!drag.queued) { drag.queued = true; const x = t.clientX, y = t.clientY; requestAnimationFrame(() => { if (drag) { drag.queued = false; moveDrag(drag.nx ?? x, drag.ny ?? y); } }); }
+  drag.nx = t.clientX; drag.ny = t.clientY;
+}, { passive: false });
 pagesEl.addEventListener('touchcancel', () => { swipe = null; if (drag) endDrag(false); }, { passive: true });
 pagesEl.addEventListener('touchend', e => {
   if (drag) {
     const dt = Date.now() - (swipe ? swipe.t : 0); swipe = null;
-    endDrag(drag.p > 0.25 || (dt < 320 && drag.p > 0.06)); return;
+    if (drag.nx != null) moveDrag(drag.nx, drag.ny);
+    endDrag(drag.p > 0.3 || (dt < 320 && drag.p > 0.05)); return;
   }
   if (!swipe) return; const t = e.changedTouches[0]; const dx = t.clientX - swipe.x, dy = t.clientY - swipe.y, dt = Date.now() - swipe.t; swipe = null;
   if (dt < 700 && Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.3 && getSelection().isCollapsed) {
