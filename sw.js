@@ -1,20 +1,7 @@
-// 讀日子 Readays 離線快取（只管 /readays/ 這個資料夾，不影響作品集其他頁面）
-// 先用網路拿最新版；沒有網路時，改用上次存下來的版本。
-const CACHE = 'readays-v9';
-const FILES = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './apple-touch-icon.png'];
-self.addEventListener('install', e => {
-  e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES)).then(() => self.skipWaiting()));
-});
+// 這個檔案只用來清掉之前誤放在網站最外層的離線快取，清完會自動停用，不影響任何頁面。
+self.addEventListener('install', () => self.skipWaiting());
 self.addEventListener('activate', e => {
-  e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k.startsWith('readays-') && k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim()));
-});
-self.addEventListener('fetch', e => {
-  const req = e.request;
-  if (req.method !== 'GET' || new URL(req.url).origin !== location.origin) return;
-  e.respondWith(
-    fetch(req).then(res => {
-      if (res.ok) { const copy = res.clone(); caches.open(CACHE).then(c => c.put(req, copy)); }
-      return res;
-    }).catch(() => caches.match(req, { ignoreSearch: true }).then(r => r || (req.mode === 'navigate' ? caches.match('./index.html') : undefined)))
-  );
+  e.waitUntil(self.registration.unregister()
+    .then(() => self.clients.matchAll({ type: 'window' }))
+    .then(cs => cs.forEach(c => c.navigate(c.url))));
 });
