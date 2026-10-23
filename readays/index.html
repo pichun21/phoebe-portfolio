@@ -624,7 +624,7 @@ html[data-theme=dark] .flipper .tube b{background:linear-gradient(90deg,rgba(255
   <div class="srow"><div class="lab">簡轉繁</div><div class="ctl"><div class="togrow"><div>轉成繁體（台灣用語）<div class="sub">视频→影片、软件→軟體</div></div><button class="tog" data-tog="convert" aria-label="簡轉繁"></button></div></div></div>
   <div class="srow"><div class="lab">引號</div><div class="ctl"><div class="togrow"><div>“ ” 換成「 」</div><button class="tog" data-tog="quotes" aria-label="引號轉換"></button></div></div></div>
 
-  <div class="sfoot"><button class="btn" id="btnReset">恢復預設值</button><span class="sub">點畫面左右兩側翻頁，點中間或右下角的「⋯」叫出選單。也能滑動、按方向鍵或滾動滑鼠；Enter 鍵可開關選單，快速點兩下圖片（或按上方放大鏡）可進入看圖模式，自由放大、拖曳。<br>版本 2026.10.23b（捲頁）</span></div>
+  <div class="sfoot"><button class="btn" id="btnReset">恢復預設值</button><span class="sub">點畫面左右兩側翻頁，點中間或右下角的「⋯」叫出選單。也能滑動、按方向鍵或滾動滑鼠；Enter 鍵可開關選單，快速點兩下圖片（或按上方放大鏡）可進入看圖模式，自由放大、拖曳。<br>版本 2026.10.23c（捲頁）</span></div>
 </div>
 
 <div id="selpop" hidden></div>
@@ -1472,7 +1472,7 @@ function makeFlip(dir) {
     },
     setT(t) { // 0 = 平放，1 = 完全翻過去；路徑稍微往上拱，像手把紙往上帶
       t = Math.max(0, Math.min(1, t));
-      f.setP(C[0] + (END[0] - C[0]) * t, f.cy - Math.sin(Math.PI * t) * H * 0.06);
+      f.setP(C[0] + (END[0] - C[0]) * t, f.cy - Math.sin(Math.PI * t) * H * 0.2);
     },
     t() { return Math.abs(f.P[0] - C[0]) / (2 * W); },
     to(tTarget, ms, ease) {
@@ -1483,7 +1483,7 @@ function makeFlip(dir) {
         const t0 = performance.now();
         const step = now => {
           const k = Math.min(1, (now - t0) / d), e = ease === 'inout' ? (k < .5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2) : 1 - Math.pow(1 - k, 3);
-          const lift = ease === 'inout' ? Math.sin(Math.PI * k) * H * 0.08 : 0;
+          const lift = ease === 'inout' ? Math.sin(Math.PI * k) * H * 0.2 : 0;
           f.setP(P0[0] + (P1[0] - P0[0]) * e, P0[1] + (P1[1] - P0[1]) * e - lift);
           if (k < 1) f.raf = requestAnimationFrame(step); else res();
         };
@@ -1497,6 +1497,7 @@ function makeFlip(dir) {
 async function bookTurn(dir, change) {
   if (flip) flip.remove();
   const f = flip = makeFlip(dir);
+  f.cy = f.H;                                                                // 點一下翻頁：像用手指捏住右下角翻
   if (dir > 0) { f.put(snapPage()); f.setT(0); await change(); }            // 下一頁：目前這頁被翻走，底下是新頁
   else { f.under.hidden = false; f.under.appendChild(snapPage()); f.setT(1); await change(); f.put(snapPage()); f.setT(1); } // 上一頁：前一頁從旁邊翻回來
   if (flip !== f) return;
@@ -1507,7 +1508,9 @@ function startDrag(dir, x0, y0) {
   if (flip) flip.remove();
   hidePop();
   const f = flip = makeFlip(dir), old = R.page;
-  f.cy = Math.max(f.H * 0.15, Math.min(f.H * 0.9, y0 - pagesEl.getBoundingClientRect().top));
+  const ry = y0 - pagesEl.getBoundingClientRect().top;
+  // 往後翻：像從書脊那側捏住前一頁的下角（或上角）拉回來，頁角會先帶出來，不是整片直直推過來
+  f.cy = dir > 0 ? Math.max(f.H * 0.15, Math.min(f.H * 0.9, ry)) : (ry > f.H * 0.4 ? f.H : 0);
   if (dir > 0) { f.put(snapPage()); goPage(old + 1, { noAnim: true }); f.setT(0); }
   else { f.under.hidden = false; f.under.appendChild(snapPage()); goPage(old - 1, { noAnim: true }); f.put(snapPage()); f.setT(1); }
   drag = { f, dir, old, x0, y0, p: 0, v: 0, lastX: x0, lastT: performance.now() };
@@ -1518,7 +1521,10 @@ function moveDrag(x, y) {
   const moved = (x - d.x0) * s;
   const py = f.cy + Math.max(-f.H * 0.25, Math.min(f.H * 0.25, (y - d.y0) * 0.6));
   if (d.dir > 0) { const m = Math.max(0, moved); f.setP(f.C[0] + s * m, py); d.p = m / f.W; }   // 頁角跟著手指
-  else { const m = Math.max(0, -moved); f.setP(f.END[0] - s * 2 * m, py); d.p = m / f.W; }    // 摺線跟著手指
+  else {                                                                                       // 摺線跟著手指，頁角稍微往內拱
+    const m = Math.min(f.W, Math.max(0, -moved)), t = 1 - m / f.W, up = f.cy > f.H / 2 ? -1 : 1;
+    f.setP(f.END[0] - s * 2 * m, py + up * Math.sin(Math.PI * t) * f.H * 0.18); d.p = m / f.W;
+  }
 }
 function endDrag(commit) {
   const d = drag; drag = null; lastSwipe = Date.now();
