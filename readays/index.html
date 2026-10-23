@@ -624,7 +624,7 @@ html[data-theme=dark] .flipper .tube b{background:linear-gradient(90deg,rgba(255
   <div class="srow"><div class="lab">簡轉繁</div><div class="ctl"><div class="togrow"><div>轉成繁體（台灣用語）<div class="sub">视频→影片、软件→軟體</div></div><button class="tog" data-tog="convert" aria-label="簡轉繁"></button></div></div></div>
   <div class="srow"><div class="lab">引號</div><div class="ctl"><div class="togrow"><div>“ ” 換成「 」</div><button class="tog" data-tog="quotes" aria-label="引號轉換"></button></div></div></div>
 
-  <div class="sfoot"><button class="btn" id="btnReset">恢復預設值</button><span class="sub">點畫面左右兩側翻頁，點中間或右下角的「⋯」叫出選單。也能滑動、按方向鍵或滾動滑鼠；Enter 鍵可開關選單，快速點兩下圖片（或按上方放大鏡）可進入看圖模式，自由放大、拖曳。<br>版本 2026.10.23（捲頁）</span></div>
+  <div class="sfoot"><button class="btn" id="btnReset">恢復預設值</button><span class="sub">點畫面左右兩側翻頁，點中間或右下角的「⋯」叫出選單。也能滑動、按方向鍵或滾動滑鼠；Enter 鍵可開關選單，快速點兩下圖片（或按上方放大鏡）可進入看圖模式，自由放大、拖曳。<br>版本 2026.10.23b（捲頁）</span></div>
 </div>
 
 <div id="selpop" hidden></div>
@@ -1430,14 +1430,27 @@ function makeFlip(dir) {
     el, under: q('.under'), C, END, P: C.slice(), raf: 0, W, H, cy: C[1],
     put(node) { top.appendChild(node); const b = node.cloneNode(true); bk.appendChild(b); },
     setP(px, py) {
+      px = Math.max(Math.min(C[0], END[0]), Math.min(Math.max(C[0], END[0]), px));
+      const geo = (x, y) => {
+        const dx = C[0] - x, dy = f.cy - y, L = Math.hypot(dx, dy);
+        if (L < 0.5) return { L };
+        const n = [dx / L, dy / L], Rr = Math.max(0, Math.min(L / Math.PI, RMAX * Math.min(1, (2 * W - L) / (0.7 * W))));
+        const D = (L + Math.PI * Rr) / 2;
+        return { L, n, Rr, D, A: [C[0] - n[0] * D, f.cy - n[1] * D] };
+      };
+      // 紙是釘在書脊上的：書脊（左緣，直排是右緣）的上下兩端必須留在平放的那一側，不然整張紙會像散頁一樣飛出去
+      const SX = rtl ? W : 0, bad = g => g.n && [0, H].some(y => (SX - g.A[0]) * g.n[0] + (y - g.A[1]) * g.n[1] > 0.5);
+      let g = geo(px, py);
+      if (bad(g)) {
+        let lo = 0, hi = 1;
+        for (let i = 0; i < 12; i++) { const m = (lo + hi) / 2; if (bad(geo(px, f.cy + (py - f.cy) * m))) hi = m; else lo = m; }
+        py = f.cy + (py - f.cy) * lo; g = geo(px, py);
+      }
       f.P = [px, py];
-      const dx = C[0] - px, dy = f.cy - py, L = Math.hypot(dx, dy);
+      const L = g.L;
       if (L < 0.5) { top.style.clipPath = 'none'; flapw.style.display = tube.style.display = cast.style.display = 'none'; return; }
       flapw.style.display = tube.style.display = cast.style.display = '';
-      const n = [dx / L, dy / L];
-      const Rr = Math.max(0, Math.min(L / Math.PI, RMAX * Math.min(1, (2 * W - L) / (0.7 * W)))); // 圓筒半徑：剛掀起與快翻完時變小
-      const D = (L + Math.PI * Rr) / 2;                                   // 頁角離捲軸線的距離
-      const A = [C[0] - n[0] * D, f.cy - n[1] * D], at = k => [A[0] + n[0] * k, A[1] + n[1] * k];
+      const { n, Rr, D, A } = g, at = k => [A[0] + n[0] * k, A[1] + n[1] * k]; // Rr：圓筒半徑（剛掀起與快翻完時變小）；D：頁角離捲軸線的距離
       top.style.clipPath = poly(clipPts(rect, A, n, true));               // 還平放的部分
       cast.style.clipPath = poly(clipPts(rect, A, n, false));
       flap.style.clipPath = poly(clipPts(rect, at(Math.PI * Rr), n, false)); // 翻到背面的部分（原位置座標）
