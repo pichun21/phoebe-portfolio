@@ -1,310 +1,143 @@
 <!doctype html>
 <html lang="zh-Hant">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>番茄手札 Tomato Notes｜明天煮什麼、要退冰什麼、要買什麼</title>
-<meta name="description" content="番茄手札是一本放在手機裡的料理手札：排好明天的菜，前一晚自動提醒你要退冰、要切、要買的東西。">
-<meta property="og:title" content="番茄手札 Tomato Notes">
-<meta property="og:description" content="明天煮什麼、要先退冰什麼、要買什麼，一本手札記好。">
-<meta property="og:image" content="shot-open.webp">
-<meta name="theme-color" content="#f8f1e7">
-<link rel="icon" type="image/png" href="logo.png">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,500;1,600&family=Noto+Serif+TC:wght@500;700;900&display=swap" rel="stylesheet">
-<style>
-:root{
-  --bg:#f8f1e7;--paper:#fffaf3;--ink:#3d2b25;--muted:#9a8576;--line:#ecdcc8;
-  --red:#cf4038;--red-d:#a8362f;--gold:#d9a35b;--green:#5f8a46;--blue:#3f7a9c;
-  --serif:'Noto Serif TC','Songti TC',serif;--script:'Playfair Display',Georgia,serif;
-  --sans:-apple-system,BlinkMacSystemFont,'PingFang TC','Noto Sans TC','Microsoft JhengHei',sans-serif;
-}
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.75 var(--sans);-webkit-font-smoothing:antialiased;overflow-x:hidden}
-img{display:block;max-width:100%}
-a{color:inherit}
-.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
-.eyebrow{font-family:var(--script);font-style:italic;color:var(--gold);font-size:15px;letter-spacing:.02em}
-h1,h2,h3{font-family:var(--serif);margin:0;letter-spacing:.06em;font-weight:700}
-h2{font-size:clamp(26px,4.4vw,36px);color:var(--red);line-height:1.35}
-.lead{color:#6e584c;font-size:clamp(15px,2.2vw,17px)}
-.btn{display:inline-flex;align-items:center;gap:8px;text-decoration:none;font-weight:700;letter-spacing:.08em;border-radius:999px;padding:14px 26px;transition:transform .15s ease,box-shadow .2s ease}
-.btn:active{transform:scale(.97)}
-.btn-main{background:var(--red);color:#fff;box-shadow:0 8px 20px rgba(207,64,56,.25)}
-.btn-main:hover{box-shadow:0 10px 26px rgba(207,64,56,.33)}
-.btn-ghost{border:1.5px solid #e3cdb9;color:#7d5f52;background:var(--paper)}
-
-/* ===== 頁首 ===== */
-.top{position:sticky;top:0;z-index:20;background:rgba(248,241,231,.9);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px dashed #e6cfb9}
-.top .wrap{display:flex;align-items:center;gap:10px;height:60px}
-.top img{width:34px;height:34px}
-.top b{font-family:var(--serif);font-size:18px;letter-spacing:.12em}
-.top i{font-family:var(--script);color:var(--red);font-size:12.5px;display:block;line-height:1;margin-top:2px}
-.top .btn{margin-left:auto;padding:8px 16px;font-size:13.5px}
-
-/* ===== 主視覺 ===== */
-.hero{padding:56px 0 40px}
-.hero .wrap{display:grid;grid-template-columns:1.05fr .95fr;gap:40px;align-items:center}
-.hero h1{font-size:clamp(40px,7vw,64px);letter-spacing:.14em;line-height:1.15}
-.hero h1 small{display:block;font-family:var(--script);font-style:italic;font-weight:500;color:var(--red);font-size:.36em;letter-spacing:.02em;margin-top:8px}
-.hero .say{font-family:var(--serif);font-size:clamp(19px,3vw,24px);line-height:1.7;margin:22px 0 10px;letter-spacing:.06em}
-.hero .say em{font-style:normal;color:var(--red);background:linear-gradient(transparent 62%,#f9d9cf 62%)}
-.hero .cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px}
-.hero .note{font-size:13px;color:var(--muted);margin-top:14px}
-.hero-art{position:relative;justify-self:center;width:min(100%,380px)}
-.hero-art .scene{border-radius:28px;box-shadow:0 30px 60px rgba(90,50,30,.22);aspect-ratio:9/16;object-fit:cover;width:100%}
-.hero-art .peek{position:absolute;left:-58px;top:-34px;right:auto;bottom:auto;width:40%;transform:rotate(-5deg)!important;border-radius:20px;border:6px solid #fff;box-shadow:0 18px 36px rgba(90,50,30,.25);transform:rotate(4deg)}
-
-/* ===== 三件事 ===== */
-.three{padding:56px 0 30px}
-.three .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:28px}
-.card{background:var(--paper);border:1px solid #efdfcf;border-radius:22px;padding:24px 22px;box-shadow:0 10px 26px rgba(150,95,60,.06)}
-.card .ic{font-size:30px;width:56px;height:56px;border-radius:50%;background:#fbefe6;display:grid;place-items:center;margin-bottom:12px}
-.card h3{font-size:20px;color:var(--ink);margin-bottom:6px}
-.card p{margin:0;color:#6e584c;font-size:15px}
-
-/* ===== 手札：怎麼用 ===== */
-.how{padding:60px 0}
-.how-head{text-align:center;max-width:620px;margin:0 auto 10px}
-.step{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;padding:42px 0;border-bottom:1px dashed var(--line)}
-.step:last-child{border-bottom:0}
-.step:nth-child(even) .phone{order:2}
-.step .num{font-family:var(--script);font-style:italic;font-size:46px;color:var(--gold);line-height:1}
-.step h3{font-size:clamp(22px,3.4vw,28px);color:var(--red);margin:6px 0 12px}
-.step p{margin:0 0 10px;color:#5d4a40}
-.step ul{margin:12px 0 0;padding:0;list-style:none}
-.step li{padding:6px 0 6px 26px;position:relative;color:#5d4a40;font-size:15px}
-.step li::before{content:'';position:absolute;left:4px;top:15px;width:9px;height:9px;border-radius:50%;background:var(--red);box-shadow:0 0 0 3px #fbe2dc}
-.tag{display:inline-block;font-size:12.5px;padding:1px 10px;border-radius:999px;border:1px solid;margin:0 2px}
-.tag.thaw{color:var(--blue);border-color:#bcd8e6;background:#eef6fa}
-.tag.buy{color:var(--red);border-color:#f0c4bd;background:#fff1ee}
-.tag.cut{color:var(--green);border-color:#cfe0bd;background:#f2f8ec}
-.phone{justify-self:center;width:min(100%,300px);border-radius:40px;padding:10px;background:#3d2b25;box-shadow:0 28px 56px rgba(60,35,22,.25)}
-.phone img{border-radius:31px;width:100%;aspect-ratio:390/844;object-fit:cover;object-position:top;background:var(--bg)}
-.duo{display:flex;gap:14px;justify-self:center}
-.duo .phone{width:min(46vw,230px)}
-.duo .phone:last-child{margin-top:40px}
-
-/* ===== 小細節 ===== */
-.more{padding:56px 0}
-.feat{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:26px}
-.feat div{background:var(--paper);border:1px solid #efdfcf;border-radius:18px;padding:18px}
-.feat b{display:block;font-family:var(--serif);font-size:16.5px;letter-spacing:.05em;margin-bottom:4px}
-.feat span{font-size:14px;color:#6e584c}
-
-/* ===== 開始使用 ===== */
-.start{padding:60px 0}
-.start .box{background:#b8473d;color:#fbe9c6;border-radius:30px;padding:44px clamp(22px,5vw,56px);position:relative;overflow:hidden;
-  background-image:repeating-linear-gradient(45deg,rgba(255,255,255,.05) 0 2px,transparent 2px 6px)}
-.start .box::after{content:'';position:absolute;right:46px;top:0;bottom:0;width:14px;background:#e7b46a;opacity:.9}
-.start h2{color:#fff3e4}
-.start .eyebrow{color:#f3cf98}
-.start .cols{display:grid;grid-template-columns:1fr 1fr;gap:26px;margin:24px 0 28px;max-width:860px}
-.start h4{margin:0 0 8px;font-family:var(--serif);font-size:17px;letter-spacing:.08em;color:#fff3e4}
-.start ol{margin:0;padding-left:20px;font-size:15px;line-height:1.9}
-.start .btn-main{background:#fffaf3;color:var(--red);box-shadow:0 8px 20px rgba(0,0,0,.15)}
-.start .small{font-size:13px;opacity:.85;margin-top:14px}
-
-/* ===== 隱私 ===== */
-.privacy{padding:10px 0 60px}
-.privacy .card{display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:start}
-.privacy .ic{margin:0}
-
-footer{border-top:1px dashed #e6cfb9;padding:28px 0 calc(34px + env(safe-area-inset-bottom));text-align:center;color:var(--muted);font-size:13px}
-footer .sig{font-family:var(--script);font-style:italic;color:var(--red);font-size:15px}
-
-/* 進場 */
-.reveal{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.2,1)}
-.reveal.on{opacity:1;transform:none}
-@media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}html{scroll-behavior:auto}}
-
-@media (max-width:820px){
-  .hero{padding:34px 0 20px}
-  .hero .wrap{grid-template-columns:1fr;gap:34px;text-align:center}
-  .hero .cta{justify-content:center}
-  .hero-art{width:min(78%,320px)}
-  .hero-art .peek{left:-26px;top:-22px;width:38%}
-  .three .grid,.feat{grid-template-columns:1fr}
-  .step{grid-template-columns:1fr;gap:26px;padding:34px 0}
-  .step:nth-child(even) .phone{order:0}
-  .phone{width:min(76%,280px)}
-  .duo .phone{width:min(40vw,200px)}
-  .start .cols{grid-template-columns:1fr}
-  .start .box::after{right:22px;width:10px}
-  .top .wrap{height:56px}
-}
-.hero-art .peek{left:-64px!important;top:-44px!important;width:40%!important;border:0!important;border-radius:0!important;box-shadow:none!important;transform:rotate(-9deg)!important;filter:drop-shadow(0 18px 22px rgba(70,35,15,.32)) drop-shadow(0 4px 6px rgba(70,35,15,.2))}
-@media (max-width:820px){.hero-art .peek{left:-26px!important;top:-26px!important;width:36%!important}}
-.duo{align-items:flex-start}.duo .phone{height:auto}</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#f7f5ee" />
+  <title>need to deco｜Phoebe 的遊戲、插畫與小工具</title>
+  <meta name="description" content="need to deco：Phoebe 的作品小屋，收著妞妞系列遊戲、插畫、LINE 貼圖和自己做的網頁小工具。" />
+  <meta property="og:title" content="need to deco｜Phoebe 的遊戲、插畫與小工具" />
+  <meta property="og:description" content="need to deco：Phoebe 的作品小屋，收著妞妞系列遊戲、插畫、LINE 貼圖和自己做的網頁小工具。" />
+  <link rel="icon" type="image/png" sizes="64x64" href="assets/needtodeco-mark-64.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/needtodeco-mark-192.png" />
+  <link rel="apple-touch-icon" href="assets/needtodeco-touch-180.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=Iansui&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=77" />
 </head>
 <body>
-
-<header class="top">
-  <div class="wrap">
-    <img src="logo.png" alt="">
-    <div><b>番茄手札</b><i>Tomato Notes</i></div>
-    <a class="btn btn-main" href="https://tomorrow-table.needtodeco.com/">打開手札</a>
-  </div>
-</header>
-
-<section class="hero">
-  <div class="wrap">
-    <div class="reveal">
-      <span class="eyebrow">A little notebook for tomorrow's dinner</span>
-      <h1>番茄手札<small>Tomato Notes</small></h1>
-      <p class="say">明天煮什麼、<em>要先退冰什麼</em>、<br>要買什麼，一本手札記好。</p>
-      <p class="lead">下班回家才發現肉還凍著、少買了一樣菜？<br>前一晚翻開手札，該做的事都替你列好了。</p>
-      <div class="cta">
-        <a class="btn btn-main" href="https://tomorrow-table.needtodeco.com/">🍅 開始使用</a>
-        <a class="btn btn-ghost" href="#how">看看怎麼用</a>
+  <header class="site-header">
+    <div class="shell header-inner">
+      <a class="brand" href="index.html" aria-label="need to deco 首頁">
+        <img src="assets/needtodeco-logo.png" alt="need to deco" width="1000" height="213" />
+      </a>
+      <nav class="nav" aria-label="主要導覽">
+        <a href="games.html">遊戲館</a>
+        <a href="illustrations.html">插畫</a>
+        <a href="reading.html">閱讀</a>
+        <a href="tools.html">小工具</a>
+        <a href="about.html">關於我</a>
+      </nav>
+      <button class="menu-btn" aria-label="開啟選單" aria-expanded="false">選單</button>
+    </div>
+  </header>
+  <main id="top">
+    <section class="hero shell" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <h1 id="hero-title" lang="en"><span class="ink-line">Decorate</span><br><span class="ink-line">everyday life.</span></h1>
+        <p class="hero-zh">把喜歡的東西，一個一個做出來。</p>
+        <p class="hero-sub" lang="en">small but potent.</p>
       </div>
-      <p class="note">免下載、免註冊，用手機瀏覽器就能開，資料只存在你的手機裡。</p>
-    </div>
-    <div class="hero-art reveal">
-      <img class="scene" src="shot-open.webp" alt="翻開手札，紙雕的小廚房從書頁裡立起來，下方紙條寫著明天的菜">
-      <img class="peek" src="book-cut.webp" alt="木頭桌上放著一本紅色布面、燙金字的番茄手札">
-    </div>
-  </div>
-</section>
+      <div class="hero-art-wrap"><span class="lamp-glow" aria-hidden="true"></span><button type="button" class="lamp-switch" aria-pressed="false" aria-label="開燈"></button><svg class="desk-fx" viewBox="0 0 1800 630" preserveAspectRatio="none" aria-hidden="true">
+          <g class="steam" fill="none" stroke="#3e3630" stroke-width="7" stroke-linecap="round">
+            <path class="wisp w1" d="M1446 404 q-9 -12 0 -24 q9 -12 0 -24"/>
+            <path class="wisp w2" d="M1478 402 q9 -13 0 -26 q-9 -13 0 -26"/>
+            <path class="wisp w3" d="M1510 405 q-8 -11 0 -22 q8 -11 0 -22"/>
+          </g>
+          <g class="bubble">
+            <image href="assets/woof-bubble.webp" x="925" y="352" width="200" height="160.5"/>
+            <image class="heart" href="assets/woof-heart.webp" x="1112" y="340" width="54" height="44"/>
+          </g>
+        </svg>
+        <button type="button" class="desk-hit hit-cup" aria-label="咖啡杯，點一下冒熱氣"></button>
+        <button type="button" class="desk-hit hit-tulip" aria-label="鬱金香，碰一下會搖一搖"></button>
+        <button type="button" class="desk-hit hit-dog" aria-label="素描本裡的妞妞，點一下跟她打招呼"></button>
+        <img class="hero-tulips" src="assets/hero-tulips.webp" alt="" aria-hidden="true" width="265" height="228" />
+        <img class="hero-art" src="assets/hero-desk-base.webp" alt="手繪線稿：書桌上有鬱金香、書本、盆栽、筆筒、吊燈、畫著妞妞的素描本和寫著 Good Day 的咖啡杯" width="1800" height="630" /></div>
+    </section>
 
-<section class="three">
-  <div class="wrap">
-    <div class="reveal" style="text-align:center">
-      <span class="eyebrow">Only three things</span>
-      <h2>它只做三件事</h2>
-      <p class="lead">沒有複雜的分類，也不用研究食譜。就是把明天的餐桌準備好。</p>
-    </div>
-    <div class="grid">
-      <div class="card reveal"><div class="ic">🍽️</div><h3>明天煮什麼</h3><p>打菜名就加進菜單，煮過的菜會記住，下次打兩個字就找得到。早餐、午餐、晚餐都能排。</p></div>
-      <div class="card reveal"><div class="ic">🧊</div><h3>要先退冰什麼</h3><p>在菜上記一次「前一天要退冰雞腿」，之後每次排到它，提醒都會自己出現在對的日子。</p></div>
-      <div class="card reveal"><div class="ic">🛒</div><h3>要買什麼</h3><p>幾天內要買的東西合併成一張清單，去超市邊買邊勾，也能一鍵複製傳 LINE 給家人。</p></div>
-    </div>
-  </div>
-</section>
-
-<section class="how" id="how">
-  <div class="wrap">
-    <div class="how-head reveal">
-      <span class="eyebrow">How it works</span>
-      <h2>翻開手札，一天三分鐘</h2>
-    </div>
-
-    <div class="step">
-      <div class="phone reveal"><img src="shot-menu.webp" alt="每日菜單頁，晚餐排了四道菜，菜名下標出要退冰的食材" loading="lazy"></div>
-      <div class="reveal">
-        <span class="num">01</span>
-        <h3>排好明天的菜</h3>
-        <p>選日期、選哪一餐，再把菜名打進去就好。有設定備料的菜，名字下面會直接標出要先準備什麼。</p>
-        <ul>
-          <li>早餐、午餐、晚餐分開排，平常只排晚餐也可以</li>
-          <li>菜色會自動配上 emoji，一眼就認得</li>
-          <li>往右滑勾完成，往左滑移除</li>
-        </ul>
+    <section class="shell cats" aria-label="作品分類">
+      <div class="cat-grid">
+        <a class="cat-card c-puff" href="illustrations.html">
+          <span class="cat-icon"><img src="assets/icon-illustrations.png" alt="" loading="lazy" /></span>
+          <span class="cat-en" lang="en">Illustrations</span>
+          <span class="cat-zh">插畫與貼圖</span>
+          <span class="cat-desc">日常裡的柔和顏色，還有 LINE 作品。</span>
+          <span class="cat-go" aria-hidden="true">→</span>
+        </a>
+        <a class="cat-card c-sun" href="reading.html">
+          <span class="cat-icon"><img src="assets/icon-reading.png" alt="" loading="lazy" /></span>
+          <span class="cat-en" lang="en">Reading</span>
+          <span class="cat-zh">閱讀</span>
+          <span class="cat-desc">記錄讀過的書，也在網頁上讀電子書。</span>
+          <span class="cat-go" aria-hidden="true">→</span>
+        </a>
+        <a class="cat-card c-stone" href="tools.html">
+          <span class="cat-icon"><img src="assets/icon-tools.png" alt="" loading="lazy" /></span>
+          <span class="cat-en" lang="en">Creative Tools</span>
+          <span class="cat-zh">小工具與實驗</span>
+          <span class="cat-desc">為自己做的工具，和一些新的嘗試。</span>
+          <span class="cat-go" aria-hidden="true">→</span>
+        </a>
+        <a class="cat-card c-sky" href="games.html">
+          <span class="cat-icon"><img src="assets/icon-games.png" alt="" loading="lazy" /></span>
+          <span class="cat-en" lang="en">Games</span>
+          <span class="cat-zh">遊戲館</span>
+          <span class="cat-desc">妞妞系列小遊戲，短短玩一下也好。</span>
+          <span class="cat-go" aria-hidden="true">→</span>
+        </a>
       </div>
-    </div>
+    </section>
 
-    <div class="step">
-      <div class="phone reveal"><img src="shot-dish.webp" alt="編輯菜色畫面，佛手瓜雞湯設定了前一天退冰雞肉、當天切備佛手瓜" loading="lazy"></div>
-      <div class="reveal">
-        <span class="num">02</span>
-        <h3>設定一次，以後自動提醒</h3>
-        <p>每道菜可以記下「需要先準備什麼」。例如佛手瓜雞湯：<span class="tag thaw">前一天退冰雞肉</span><span class="tag cut">當天切佛手瓜</span></p>
-        <p>之後只要把這道菜排進菜單，提醒就會自動算好日期，出現在備料清單裡。從當天到前一週都可以設定。</p>
+    <section class="shell recent" aria-labelledby="recent-title">
+      <div class="row-head">
+        <h2 id="recent-title">最近更新</h2>
+        <p class="row-hint"><span class="hint-hover">游標移上去，看看實際畫面</span><span class="hint-touch">滑到卡片時，線稿會變成實際畫面</span></p>
       </div>
-    </div>
-
-    <div class="step">
-      <div class="duo reveal">
-        <div class="phone"><img src="shot-home.webp" alt="首頁的「明天準備好了嗎？」摘要卡" loading="lazy"></div>
-        <div class="phone"><img src="shot-prep.webp" alt="備料清單依今天、明天分組" loading="lazy"></div>
+      <div class="recent-grid">
+        <a class="recent-card" href="tomato-notes.html">
+          <span class="recent-img c-puff">
+            <img class="sketch" style="inset:6% 4%;width:92%;height:88%" src="assets/tomato/sketch-tomato.webp" alt="" loading="lazy" />
+            <img class="real" src="assets/tomato/tomato-card.webp" alt="番茄手札的實際畫面：紅色布面手札和手機上的明天菜單" loading="lazy" />
+          </span>
+          <span class="recent-kind">小工具</span>
+          <span class="recent-name">番茄手札</span>
+          <span class="recent-desc">明天煮什麼、要退冰什麼，一本手札記好。</span>
+        </a>
+        <a class="recent-card" href="pet-sound-archive.html">
+          <span class="recent-img c-stone">
+            <img class="sketch" style="inset:6% 3%;width:94%;height:88%" src="assets/sketch-pet-sound.webp" alt="" loading="lazy" />
+            <img class="real" src="assets/pet-sound-shot.webp" alt="毛孩聲音收藏館的實際畫面：四張毛孩聲音標本卡" loading="lazy" />
+          </span>
+          <span class="recent-kind">小工具</span>
+          <span class="recent-name">毛孩聲音收藏館</span>
+          <span class="recent-desc">把呼嚕、腳步、撒嬌的小聲音收藏起來。</span>
+        </a>
+        <a class="recent-card" href="pages-between-days.html">
+          <span class="recent-img c-sun">
+            <img class="sketch" src="assets/sketch-pages-between-days.webp" alt="" loading="lazy" />
+            <img class="real" src="assets/pages-between-days-shelf.webp" alt="頁間日子的實際畫面：依月份排列、放滿書封的木書架" loading="lazy" />
+          </span>
+          <span class="recent-kind">閱讀紀錄</span>
+          <span class="recent-name">頁間日子</span>
+          <span class="recent-desc">把讀過的書，放上自己的時光書架。</span>
+        </a>
       </div>
-      <div class="reveal">
-        <span class="num">03</span>
-        <h3>前一晚，看一眼就好</h3>
-        <p>首頁最上面的「明天準備好了嗎？」，把明天的菜、今晚要退冰的、還沒買的整理成幾行。</p>
-        <ul>
-          <li><span class="tag thaw">退冰</span><span class="tag buy">採買</span><span class="tag cut">切備</span> 用顏色分清楚</li>
-          <li>勾掉的會先留著，確定了再一次清除，不怕誤刪</li>
-          <li>全部準備好，會跟你說一聲「安心睡覺吧 🌙」</li>
-        </ul>
-      </div>
+    </section>
+  </main>
+  <footer class="site-footer">
+    <div class="shell footer-inner">
+      <a class="footer-brand" href="index.html"><img src="assets/needtodeco-logo.png" alt="need to deco" width="1000" height="213" loading="lazy" /></a>
+      <p class="footer-motto" lang="en">small ideas, brighter days.</p>
+      <nav class="footer-links" aria-label="外部連結">
+        <a href="https://www.instagram.com/needtodeco/" target="_blank" rel="noreferrer">Instagram</a>
+        <a href="about.html">關於我</a>
+        <a href="#top" class="to-top" aria-label="回到最上面">↑</a>
+      </nav>
     </div>
-
-    <div class="step">
-      <div class="phone reveal"><img src="shot-remind.webp" alt="提醒設定畫面，勾選要加到行事曆的備料並設定時間" loading="lazy"></div>
-      <div class="reveal">
-        <span class="num">04</span>
-        <h3>怕忘記？交給行事曆</h3>
-        <p>勾選要提醒的事、設定時間，一鍵加進手機的行事曆，時間到就會跳通知。</p>
-        <ul>
-          <li>iPhone 直接加入內建行事曆</li>
-          <li>Android 可以加到 Google 日曆</li>
-          <li>預設退冰晚上 8:30、採買早上 9:00，可以自己改</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="more">
-  <div class="wrap">
-    <div class="reveal" style="text-align:center">
-      <span class="eyebrow">Little things</span>
-      <h2>一些貼心的小地方</h2>
-    </div>
-    <div class="feat">
-      <div class="reveal"><b>📖 翻開手札的儀式感</b><span>打開時先看到桌上的紅色手札，點一下翻開，紙雕的小廚房會從書頁裡立起來，紙條上寫著明天要吃什麼。</span></div>
-      <div class="reveal"><b>🧊 冷凍庫隨手記</b><span>不用算數量，想到就打一句「雞腿兩包、蝦仁」，排菜時參考。</span></div>
-      <div class="reveal"><b>🛒 採買清單</b><span>今天、三天內、一週內要買的一次列出，同樣的東西會自動合併。</span></div>
-      <div class="reveal"><b>↩️ 刪錯也能復原</b><span>刪除或清除後五秒內按「復原」，就能救回來。</span></div>
-      <div class="reveal"><b>❓ 內建使用說明</b><span>第一次打開會帶你走一遍，之後隨時按右上角的「?」重看。</span></div>
-      <div class="reveal"><b>💾 一鍵備份</b><span>資料可以匯出成檔案，換手機時再匯入，菜單一道都不會少。</span></div>
-    </div>
-  </div>
-</section>
-
-<section class="start" id="start">
-  <div class="wrap">
-    <div class="box reveal">
-      <span class="eyebrow">Get started</span>
-      <h2>把手札放進你的手機</h2>
-      <div class="cols">
-        <div>
-          <h4>iPhone</h4>
-          <ol><li>用 <b>Safari</b> 打開番茄手札</li><li>點下方的「分享」</li><li>選「<b>加入主畫面</b>」</li></ol>
-        </div>
-        <div>
-          <h4>Android</h4>
-          <ol><li>用 <b>Chrome</b> 打開番茄手札</li><li>點右上角的「⋮」</li><li>選「<b>加到主畫面</b>」</li></ol>
-        </div>
-      </div>
-      <a class="btn btn-main" href="https://tomorrow-table.needtodeco.com/">🍅 打開番茄手札</a>
-      <p class="small">之後從主畫面的番茄圖示打開，就像一個 App。建議不要從 LINE 等 App 裡的連結直接使用，資料會存在那個 App 裡。</p>
-    </div>
-  </div>
-</section>
-
-<section class="privacy">
-  <div class="wrap">
-    <div class="card reveal">
-      <div class="ic">🔒</div>
-      <div>
-        <h3 style="font-size:19px;margin-bottom:6px">你的菜單，只在你的手機裡</h3>
-        <p style="margin:0;color:#6e584c;font-size:15px">番茄手札不用註冊帳號，也不會把資料上傳到雲端。所有菜色、菜單和備料都只存在你這支手機的瀏覽器裡。換手機或清除瀏覽器資料前，記得先到首頁最下方「匯出備份」。</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<footer>
-  <div class="sig">See you at the table ♥</div>
-  番茄手札 Tomato Notes · made by need to deco.
-</footer>
-
-<script>
-(()=>{const els=document.querySelectorAll('.reveal');if(!('IntersectionObserver' in window)){els.forEach(e=>e.classList.add('on'));return}
-const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target)}}),{rootMargin:'0px 0px -8% 0px'});els.forEach(e=>io.observe(e))})();
-</script>
+    <p class="shell copyright">© 2026 need to deco. All rights reserved.</p>
+  </footer>
+  <script src="script.js?v=75"></script>
 </body>
 </html>
