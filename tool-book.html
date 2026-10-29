@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#f7f5ee" />
+  <title>小工具手帳｜need to deco</title>
+  <meta name="description" content="Phoebe 自己做的網頁小工具與實驗。" />
+  <meta property="og:title" content="小工具與實驗｜need to deco" />
+  <meta property="og:description" content="Phoebe 自己做的網頁小工具與實驗。" />
+  <link rel="icon" type="image/png" sizes="64x64" href="assets/needtodeco-mark-64.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/needtodeco-mark-192.png" />
+  <link rel="apple-touch-icon" href="assets/needtodeco-touch-180.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=Iansui&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=77" />
+<style>
+/* 小工具手帳：桌上一本攤開的手帳，一個小工具一個跨頁，點右頁照片或按鈕進入工具 */
+.book-desk{position:relative;padding-block:10px 70px}
+.book-desk::before{content:"";position:absolute;inset:-40px -10% 0;pointer-events:none;
+  background:linear-gradient(115deg,transparent 0 38%,rgba(62,54,48,.035) 38% 46%,transparent 46% 52%,rgba(62,54,48,.025) 52% 58%,transparent 58%);z-index:0}
+.book{--w:min(1040px,100%);position:relative;z-index:1;width:var(--w);aspect-ratio:1.5/1;margin:0 auto;perspective:2600px}
+.leaves{position:absolute;inset:0}
+.leaf{position:absolute;top:0;left:50%;width:50%;height:100%;transform-origin:left center;transform-style:preserve-3d;transition:transform .9s cubic-bezier(.45,.05,.25,1)}
+.leaf.flipped{transform:rotateY(-180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;overflow:hidden}
+.face.back{transform:rotateY(180deg)}
+.pg{position:absolute;inset:0;background:#fffdf7;
+  background-image:radial-gradient(rgba(62,54,48,.13) 1px,transparent 1.2px);background-size:22px 22px;background-position:11px 11px}
+.pg-right{border-radius:0 10px 10px 0;box-shadow:inset 18px 0 22px -16px rgba(62,54,48,.28),0 14px 30px -18px rgba(62,54,48,.45)}
+.pg-left{border-radius:10px 0 0 10px;box-shadow:inset -18px 0 22px -16px rgba(62,54,48,.28),0 14px 30px -18px rgba(62,54,48,.45)}
+.pg-in{position:absolute;inset:8% 10% 8% 11%;display:flex;flex-direction:column;gap:10px;min-width:0}
+.pg-right .pg-in{inset:8% 11% 8% 10%;align-items:center;justify-content:center;gap:22px}
+.pg-no{font-size:12.5px;color:var(--clay);letter-spacing:.08em;margin:0}
+.pg-en{font-family:var(--en);font-size:clamp(20px,2.2vw,28px);color:var(--sky-ink);margin:0;line-height:1}
+.pg-title{font-family:var(--hand);font-weight:400;font-size:clamp(24px,3vw,38px);line-height:1.25;margin:0 0 4px;text-wrap:balance}
+.pg-line{font-size:clamp(13.5px,1.3vw,15.5px);color:var(--clay-ink);line-height:1.8;margin:0;max-width:22em}
+.pg-notes{list-style:none;padding:0;margin:8px 0 0;display:flex;flex-direction:column;gap:6px}
+.pg-notes li{font-size:13.5px;color:var(--ink);padding-left:22px;position:relative}
+.pg-notes li::before{content:"";position:absolute;left:2px;top:.45em;width:11px;height:11px;border:1.5px solid var(--ink);border-radius:3px}
+.pg-notes li::after{content:"";position:absolute;left:5px;top:.3em;width:8px;height:5px;border-left:2px solid var(--sky-ink);border-bottom:2px solid var(--sky-ink);transform:rotate(-45deg)}
+.pg-date{margin-top:auto;font-size:12px;color:var(--clay);letter-spacing:.06em}
+.snap{position:relative;display:block;width:88%;padding:10px 10px 30px;background:#fff;border-radius:4px;transform:rotate(var(--rot));
+  box-shadow:0 1px 2px rgba(62,54,48,.12),0 12px 26px -12px rgba(62,54,48,.4);transition:transform .35s cubic-bezier(.3,1.5,.5,1),box-shadow .35s}
+.snap img{display:block;width:100%;aspect-ratio:16/10;object-fit:cover;object-position:center top;background:var(--tint);border-radius:2px}
+.snap:hover,.snap:focus-visible{transform:rotate(0) translateY(-6px) scale(1.02);box-shadow:0 2px 4px rgba(62,54,48,.1),0 22px 36px -14px rgba(62,54,48,.45)}
+.snap:focus-visible{outline:2px dashed var(--clay);outline-offset:6px}
+.tape{position:absolute;top:-12px;left:50%;width:84px;height:24px;transform:translateX(-50%) rotate(-3deg);background:rgba(243,224,167,.82);box-shadow:0 1px 2px rgba(62,54,48,.12)}
+.bk-actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+.bk-btn{display:inline-flex;align-items:center;gap:6px;font-size:14px;padding:8px 18px;border-radius:999px;border:1.5px solid var(--ink);color:var(--ink);background:transparent;transition:background .2s,color .2s}
+.bk-btn.is-main{background:var(--ink);color:var(--paper)}
+.bk-btn:hover{background:var(--puff);color:var(--ink)}
+.bk-btn:focus-visible{outline:2px dashed var(--clay);outline-offset:3px}
+.pg-intro{justify-content:center;gap:16px}
+.intro-txt{font-family:var(--hand);font-size:clamp(15px,1.5vw,18px);line-height:1.9;color:var(--clay-ink);margin:0;max-width:20em}
+.intro-sign{font-family:var(--en);font-size:24px;color:var(--ink);margin:6px 0 0}
+.toc{list-style:none;padding:0;margin:14px 0 0;display:flex;flex-direction:column;gap:4px}
+.toc button{width:100%;display:grid;grid-template-columns:auto auto 1fr auto;align-items:baseline;gap:10px;padding:10px 4px;border:0;background:transparent;font:inherit;color:var(--ink);cursor:pointer;text-align:left;border-radius:8px}
+.toc button:hover,.toc button:focus-visible{background:rgba(243,224,167,.45)}
+.toc-no{font-family:var(--en);font-size:20px;color:var(--sky-ink)}
+.toc-name{font-family:var(--hand);font-size:clamp(16px,1.6vw,20px)}
+.toc-dots{border-bottom:1.5px dotted var(--stone);transform:translateY(-4px)}
+.toc-kind{font-size:12.5px;color:var(--clay)}
+.pg-empty{align-items:center;justify-content:center}
+.pg-empty img{width:34%;opacity:.55;transform:rotate(-8deg)}
+.pg-empty p{font-family:var(--en);font-size:22px;color:var(--clay);margin:0}
+.pg-cover,.pg-back{background:#e6dccb;background-image:radial-gradient(rgba(62,54,48,.08) 1px,transparent 1.3px);background-size:6px 6px;border-radius:0 12px 12px 0;
+  box-shadow:inset 10px 0 14px -10px rgba(0,0,0,.25),0 18px 36px -18px rgba(62,54,48,.55)}
+.pg-back{border-radius:12px 0 0 12px;box-shadow:inset -10px 0 14px -10px rgba(0,0,0,.25),0 18px 36px -18px rgba(62,54,48,.55)}
+.cover-in{position:absolute;inset:12% 12%;display:flex;flex-direction:column;justify-content:center;gap:12px}
+.pg-cover .cover-in::before{content:"";position:absolute;inset:-6% -6%;border:1.5px solid rgba(62,54,48,.35);border-radius:6px}
+.cv-en{font-family:var(--en);font-size:clamp(22px,2.6vw,32px);color:var(--sky-ink);margin:0}
+.cv-title{font-family:var(--hand);font-weight:400;font-size:clamp(32px,4.2vw,54px);margin:0;line-height:1.2}
+.cv-sub{font-size:clamp(13px,1.3vw,15px);color:var(--clay-ink);margin:0;line-height:1.8;max-width:18em}
+.cv-mark{width:42%;max-width:180px;margin-top:22px;opacity:.85}
+.cv-hint{position:absolute;right:-4%;bottom:-6%;font-size:12px;color:var(--clay);margin:0}
+.pg-back .cover-in{align-items:center;text-align:center}
+.turn{position:absolute;bottom:-58px;width:44px;height:44px;border-radius:50%;border:1.5px solid var(--ink);background:var(--paper);color:var(--ink);font-size:22px;line-height:1;cursor:pointer;transition:background .2s,opacity .2s}
+.turn.prev{left:calc(50% - 60px)}.turn.next{left:calc(50% + 16px)}
+.turn:hover{background:var(--puff)}
+.turn:disabled{opacity:.3;cursor:default;background:var(--paper)}
+.turn:focus-visible{outline:2px dashed var(--clay);outline-offset:3px}
+.book-pager{text-align:center;margin:70px 0 0;font-size:13px;color:var(--clay);position:relative;z-index:1}
+.book[data-spread="0"] .leaves{transform:translateX(-25%)}
+.book.at-end .leaves{transform:translateX(25%)}
+.leaves{transition:transform .9s cubic-bezier(.45,.05,.25,1)}
+.m-strip{display:none}
+@media (max-width:760px){
+  .book,.book-pager{display:none}
+  .book-desk::before{display:none}
+  .m-strip{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;margin-inline:-16px;padding:6px 16px 24px;scrollbar-width:none}
+  .m-strip::-webkit-scrollbar{display:none}
+  .m-page{position:relative;flex:0 0 86%;aspect-ratio:3/4.2;scroll-snap-align:center}
+  .m-page .pg{border-radius:12px;box-shadow:0 12px 26px -16px rgba(62,54,48,.5)}
+  .m-page .pg-in,.m-page .pg-right .pg-in{inset:9% 9%}
+  .m-page .toc button{padding:8px 2px}
+}
+@media (prefers-reduced-motion:reduce){.leaf,.leaves{transition:none}.snap{transition:none}}
+
+</style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="shell header-inner">
+      <a class="brand" href="index.html" aria-label="need to deco 首頁">
+        <img src="assets/needtodeco-logo.png" alt="need to deco" width="1000" height="213" />
+      </a>
+      <nav class="nav" aria-label="主要導覽">
+        <a href="games.html">遊戲館</a>
+        <a href="illustrations.html">插畫</a>
+        <a href="reading.html">閱讀</a>
+        <a href="tools.html" aria-current="page">小工具</a>
+        <a href="about.html">關於我</a>
+      </nav>
+      <button class="menu-btn" aria-label="開啟選單" aria-expanded="false">選單</button>
+    </div>
+  </header>
+    <main id="top">
+    <section class="page-head shell">
+      <p class="page-en" lang="en">Creative Tools</p>
+      <h1>小工具手帳</h1>
+      <p class="page-lead">翻開手帳，點喜歡的那一頁進去看看。</p>
+    </section>
+    <section class="shell book-desk" aria-label="小工具手帳">
+      <div class="book" id="book" data-spread="0">
+        <div class="leaves">
+<div class="leaf" data-i="0"><div class="face front"><div class="pg pg-cover"><div class="cover-in"><p class="cv-en" lang="en">Tool Notebook</p><h2 class="cv-title">小工具手帳</h2><p class="cv-sub">把生活裡的需求與好奇心，一頁一頁做成能用的小東西。</p><img class="cv-mark" src="assets/needtodeco-logo.png" alt="need to deco" width="1000" height="213" /><p class="cv-hint">翻開看看 →</p></div></div></div><div class="face back"><div class="pg pg-left"><div class="pg-in pg-intro"><p class="pg-en" lang="en">Hello!</p><p class="intro-txt">這本手帳收著我為自己做的小工具。有的拿來記錄讀過的書，有的把妞妞的聲音存起來，有的只是因為好奇。</p><p class="intro-txt">翻到喜歡的那一頁，點照片或「打開工具」就能直接使用。</p><p class="intro-sign" lang="en">— Phoebe</p></div></div></div></div>
+<div class="leaf" data-i="1"><div class="face front"><div class="pg pg-right"><div class="pg-in"><p class="pg-en" lang="en">Contents</p><h2 class="pg-title">目錄</h2><ol class="toc"><li><button type="button" data-go="1"><span class="toc-no">01</span><span class="toc-name">頁間日子</span><span class="toc-dots" aria-hidden="true"></span><span class="toc-kind">閱讀紀錄</span></button></li><li><button type="button" data-go="2"><span class="toc-no">02</span><span class="toc-name">讀日子</span><span class="toc-dots" aria-hidden="true"></span><span class="toc-kind">電子書</span></button></li><li><button type="button" data-go="3"><span class="toc-no">03</span><span class="toc-name">毛孩聲音收藏館</span><span class="toc-dots" aria-hidden="true"></span><span class="toc-kind">聲音收藏</span></button></li><li><button type="button" data-go="4"><span class="toc-no">04</span><span class="toc-name">番茄手札</span><span class="toc-dots" aria-hidden="true"></span><span class="toc-kind">料理手札</span></button></li><li><button type="button" data-go="5"><span class="toc-no">05</span><span class="toc-name">VCPulse</span><span class="toc-dots" aria-hidden="true"></span><span class="toc-kind">資料專案</span></button></li></ol></div></div></div><div class="face back"><div class="pg pg-left"><div class="pg-in"><p class="pg-no"><span lang="en">No.</span> 01 ・ 閱讀紀錄</p><p class="pg-en" lang="en">Pages Between Days</p><h2 class="pg-title">頁間日子</h2><p class="pg-line">讀過的每一本書，都值得留在自己的時光書架。</p><ul class="pg-notes"><li>依月份排列的木頭書架</li><li>年度閱讀回顧</li><li>書摘收藏</li></ul><p class="pg-date">need to deco ・ tool notebook</p></div></div></div></div>
+<div class="leaf" data-i="2"><div class="face front"><div class="pg pg-right"><div class="pg-in"><a class="snap" href="pages-between-days.html" style="--rot:-2deg;--tint:#fbeab0" aria-label="看頁間日子的作品介紹"><span class="tape" aria-hidden="true"></span><img src="assets/pages-between-days-shelf.webp" alt="頁間日子的畫面" loading="lazy" /></a><div class="bk-actions"><a class="bk-btn is-main" href="https://pages.needtodeco.com/" target="_blank" rel="noreferrer">打開工具 <span aria-hidden="true">↗</span></a><a class="bk-btn" href="pages-between-days.html">作品介紹 <span aria-hidden="true">→</span></a></div></div></div></div><div class="face back"><div class="pg pg-left"><div class="pg-in"><p class="pg-no"><span lang="en">No.</span> 02 ・ 電子書</p><p class="pg-en" lang="en">Readays</p><h2 class="pg-title">讀日子</h2><p class="pg-line">自在閱讀、筆記與收藏。</p><ul class="pg-notes"><li>EPUB 閱讀</li><li>劃線與書籤</li><li>離線也能用</li></ul><p class="pg-date">need to deco ・ tool notebook</p></div></div></div></div>
+<div class="leaf" data-i="3"><div class="face front"><div class="pg pg-right"><div class="pg-in"><a class="snap" href="readays.html" style="--rot:1.6deg;--tint:#deedf2" aria-label="看讀日子的作品介紹"><span class="tape" aria-hidden="true"></span><img src="assets/readays-cover.webp" alt="讀日子的畫面" loading="lazy" /></a><div class="bk-actions"><a class="bk-btn" href="readays.html">作品介紹 <span aria-hidden="true">→</span></a></div></div></div></div><div class="face back"><div class="pg pg-left"><div class="pg-in"><p class="pg-no"><span lang="en">No.</span> 03 ・ 聲音收藏</p><p class="pg-en" lang="en">Pet Sound Archive</p><h2 class="pg-title">毛孩聲音收藏館</h2><p class="pg-line">把熟悉的聲音，收藏成永遠的日常。</p><ul class="pg-notes"><li>錄音與裁切</li><li>聲音標本卡</li><li>離線備份</li></ul><p class="pg-date">need to deco ・ tool notebook</p></div></div></div></div>
+<div class="leaf" data-i="4"><div class="face front"><div class="pg pg-right"><div class="pg-in"><a class="snap" href="pet-sound-archive.html" style="--rot:-1.2deg;--tint:#e8e6df" aria-label="看毛孩聲音收藏館的作品介紹"><span class="tape" aria-hidden="true"></span><img src="assets/pet-sound-shot.webp" alt="毛孩聲音收藏館的畫面" loading="lazy" /></a><div class="bk-actions"><a class="bk-btn is-main" href="https://petsound.needtodeco.com/" target="_blank" rel="noreferrer">打開工具 <span aria-hidden="true">↗</span></a><a class="bk-btn" href="pet-sound-archive.html">作品介紹 <span aria-hidden="true">→</span></a></div></div></div></div><div class="face back"><div class="pg pg-left"><div class="pg-in"><p class="pg-no"><span lang="en">No.</span> 04 ・ 料理手札</p><p class="pg-en" lang="en">Tomato Notes</p><h2 class="pg-title">番茄手札</h2><p class="pg-line">明天煮什麼、要先退冰什麼、要買什麼，一本手札記好。</p><ul class="pg-notes"><li>排好明天的菜</li><li>前一晚自動提醒退冰、採買</li><li>一鍵加到行事曆</li></ul><p class="pg-date">need to deco ・ tool notebook</p></div></div></div></div>
+<div class="leaf" data-i="5"><div class="face front"><div class="pg pg-right"><div class="pg-in"><a class="snap" href="tomato-notes.html" style="--rot:-1.6deg;--tint:#f8f1e7" aria-label="看番茄手札的作品介紹"><span class="tape" aria-hidden="true"></span><img src="assets/tomato/tomato-card.webp" alt="番茄手札的畫面" loading="lazy" /></a><div class="bk-actions"><a class="bk-btn is-main" href="https://tomorrow-table.needtodeco.com/" target="_blank" rel="noreferrer">打開工具 <span aria-hidden="true">↗</span></a><a class="bk-btn" href="tomato-notes.html">作品介紹 <span aria-hidden="true">→</span></a></div></div></div></div><div class="face back"><div class="pg pg-left"><div class="pg-in"><p class="pg-no"><span lang="en">No.</span> 05 ・ 資料專案</p><p class="pg-en" lang="en">VCPulse</p><h2 class="pg-title">VCPulse</h2><p class="pg-line">從資料中觀察市場型態。私人使用、授權制。</p><ul class="pg-notes"><li>台美股</li><li>資料分析</li><li>技術案例</li></ul><p class="pg-date">need to deco ・ tool notebook</p></div></div></div></div>
+<div class="leaf" data-i="6"><div class="face front"><div class="pg pg-right"><div class="pg-in"><a class="snap" href="vcpulse.html" style="--rot:1.8deg;--tint:#deedf2" aria-label="看VCPulse的作品介紹"><span class="tape" aria-hidden="true"></span><img src="assets/vcpulse-actual.png" alt="VCPulse的畫面" loading="lazy" /></a><div class="bk-actions"><a class="bk-btn" href="vcpulse.html">作品介紹 <span aria-hidden="true">→</span></a></div></div></div></div><div class="face back"><div class="pg pg-left"><div class="pg-in pg-intro"><p class="pg-en" lang="en">To be continued</p><p class="intro-txt">下一頁還空著。新的小工具做好了，就會貼進來。</p></div></div></div></div>
+<div class="leaf" data-i="7"><div class="face front"><div class="pg pg-right"><div class="pg-in pg-empty"><img src="assets/niuniu-peek.webp" alt="" width="180" height="181" /><p lang="en">coming soon…</p></div></div></div><div class="face back"><div class="pg pg-back"><div class="cover-in"><img class="cv-mark" src="assets/needtodeco-logo.png" alt="need to deco" width="1000" height="213" /><p class="cv-sub" lang="en">small ideas, brighter days.</p></div></div></div></div>
+        </div>
+        <button type="button" class="turn prev" aria-label="上一頁">‹</button>
+        <button type="button" class="turn next" aria-label="下一頁">›</button>
+      </div>
+      <p class="book-pager"><span id="pager">封面</span></p>
+      <div class="m-strip" aria-label="小工具手帳，可左右滑動"><div class="m-page"><div class="pg pg-cover"><div class="cover-in"><p class="cv-en" lang="en">Tool Notebook</p><h2 class="cv-title">小工具手帳</h2><p class="cv-sub">把生活裡的需求與好奇心，一頁一頁做成能用的小東西。</p><img class="cv-mark" src="assets/needtodeco-logo.png" alt="need to deco" width="1000" height="213" /><p class="cv-hint">翻開看看 →</p></div></div></div><div class="m-page"><div class="pg pg-left"><div class="pg-in pg-intro"><p class="pg-en" lang="en">Hello!</p><p class="intro-txt">這本手帳收著我為自己做的小工具。有的拿來記錄讀過的書，有的把妞妞的聲音存起來，有的只是因為好奇。</p><p class="intro-txt">翻到喜歡的那一頁，點照片或「打開工具」就能直接使用。</p><p class="intro-sign" lang="en">— Phoebe</p></div></div></div><div class="m-page"><div class="pg pg-right"><div class="pg-in"><p class="pg-en" lang="en">Contents</p><h2 class="pg-title">目錄</h2><ol class="toc"><li><button type="button" data-go="1"><span class="toc-no">01</span><span class="toc-name">頁間日子</span><span class="toc-dots" aria-hidden="true"></span><span class="toc-kind">閱讀紀錄</span></button></li><li><button type="button" data-go="2"><span class="toc-no">02</span><span class="toc-name">讀日子</span><span class="toc-dots" aria-hidden="true"></span><span class="toc-kind">電子書</span></button></li><li><button type="button" data-go="3"><span class="toc-no">03</span><span class="toc-name">毛孩聲音收藏館</span><span class="toc-dots" aria-hidden="true"></span><span class="toc-kind">聲音收藏</span></button></li><li><button type="button" data-go="4"><span class="toc-no">04</span><span class="toc-name">番茄手札</span><span class="toc-dots" aria-hidden="true"></span><span class="toc-kind">料理手札</span></button></li><li><button type="button" data-go="5"><span class="toc-no">05</span><span class="toc-name">VCPulse</span><span class="toc-dots" aria-hidden="true"></span><span class="toc-kind">資料專案</span></button></li></ol></div></div></div><div class="m-page"><div class="pg pg-left"><div class="pg-in"><p class="pg-no"><span lang="en">No.</span> 01 ・ 閱讀紀錄</p><p class="pg-en" lang="en">Pages Between Days</p><h2 class="pg-title">頁間日子</h2><p class="pg-line">讀過的每一本書，都值得留在自己的時光書架。</p><ul class="pg-notes"><li>依月份排列的木頭書架</li><li>年度閱讀回顧</li><li>書摘收藏</li></ul><p class="pg-date">need to deco ・ tool notebook</p></div></div></div><div class="m-page"><div class="pg pg-right"><div class="pg-in"><a class="snap" href="pages-between-days.html" style="--rot:-2deg;--tint:#fbeab0" aria-label="看頁間日子的作品介紹"><span class="tape" aria-hidden="true"></span><img src="assets/pages-between-days-shelf.webp" alt="頁間日子的畫面" loading="lazy" /></a><div class="bk-actions"><a class="bk-btn is-main" href="https://pages.needtodeco.com/" target="_blank" rel="noreferrer">打開工具 <span aria-hidden="true">↗</span></a><a class="bk-btn" href="pages-between-days.html">作品介紹 <span aria-hidden="true">→</span></a></div></div></div></div><div class="m-page"><div class="pg pg-left"><div class="pg-in"><p class="pg-no"><span lang="en">No.</span> 02 ・ 電子書</p><p class="pg-en" lang="en">Readays</p><h2 class="pg-title">讀日子</h2><p class="pg-line">自在閱讀、筆記與收藏。</p><ul class="pg-notes"><li>EPUB 閱讀</li><li>劃線與書籤</li><li>離線也能用</li></ul><p class="pg-date">need to deco ・ tool notebook</p></div></div></div><div class="m-page"><div class="pg pg-right"><div class="pg-in"><a class="snap" href="readays.html" style="--rot:1.6deg;--tint:#deedf2" aria-label="看讀日子的作品介紹"><span class="tape" aria-hidden="true"></span><img src="assets/readays-cover.webp" alt="讀日子的畫面" loading="lazy" /></a><div class="bk-actions"><a class="bk-btn" href="readays.html">作品介紹 <span aria-hidden="true">→</span></a></div></div></div></div><div class="m-page"><div class="pg pg-left"><div class="pg-in"><p class="pg-no"><span lang="en">No.</span> 03 ・ 聲音收藏</p><p class="pg-en" lang="en">Pet Sound Archive</p><h2 class="pg-title">毛孩聲音收藏館</h2><p class="pg-line">把熟悉的聲音，收藏成永遠的日常。</p><ul class="pg-notes"><li>錄音與裁切</li><li>聲音標本卡</li><li>離線備份</li></ul><p class="pg-date">need to deco ・ tool notebook</p></div></div></div><div class="m-page"><div class="pg pg-right"><div class="pg-in"><a class="snap" href="pet-sound-archive.html" style="--rot:-1.2deg;--tint:#e8e6df" aria-label="看毛孩聲音收藏館的作品介紹"><span class="tape" aria-hidden="true"></span><img src="assets/pet-sound-shot.webp" alt="毛孩聲音收藏館的畫面" loading="lazy" /></a><div class="bk-actions"><a class="bk-btn is-main" href="https://petsound.needtodeco.com/" target="_blank" rel="noreferrer">打開工具 <span aria-hidden="true">↗</span></a><a class="bk-btn" href="pet-sound-archive.html">作品介紹 <span aria-hidden="true">→</span></a></div></div></div></div><div class="m-page"><div class="pg pg-left"><div class="pg-in"><p class="pg-no"><span lang="en">No.</span> 04 ・ 料理手札</p><p class="pg-en" lang="en">Tomato Notes</p><h2 class="pg-title">番茄手札</h2><p class="pg-line">明天煮什麼、要先退冰什麼、要買什麼，一本手札記好。</p><ul class="pg-notes"><li>排好明天的菜</li><li>前一晚自動提醒退冰、採買</li><li>一鍵加到行事曆</li></ul><p class="pg-date">need to deco ・ tool notebook</p></div></div></div><div class="m-page"><div class="pg pg-right"><div class="pg-in"><a class="snap" href="tomato-notes.html" style="--rot:-1.6deg;--tint:#f8f1e7" aria-label="看番茄手札的作品介紹"><span class="tape" aria-hidden="true"></span><img src="assets/tomato/tomato-card.webp" alt="番茄手札的畫面" loading="lazy" /></a><div class="bk-actions"><a class="bk-btn is-main" href="https://tomorrow-table.needtodeco.com/" target="_blank" rel="noreferrer">打開工具 <span aria-hidden="true">↗</span></a><a class="bk-btn" href="tomato-notes.html">作品介紹 <span aria-hidden="true">→</span></a></div></div></div></div><div class="m-page"><div class="pg pg-left"><div class="pg-in"><p class="pg-no"><span lang="en">No.</span> 05 ・ 資料專案</p><p class="pg-en" lang="en">VCPulse</p><h2 class="pg-title">VCPulse</h2><p class="pg-line">從資料中觀察市場型態。私人使用、授權制。</p><ul class="pg-notes"><li>台美股</li><li>資料分析</li><li>技術案例</li></ul><p class="pg-date">need to deco ・ tool notebook</p></div></div></div><div class="m-page"><div class="pg pg-right"><div class="pg-in"><a class="snap" href="vcpulse.html" style="--rot:1.8deg;--tint:#deedf2" aria-label="看VCPulse的作品介紹"><span class="tape" aria-hidden="true"></span><img src="assets/vcpulse-actual.png" alt="VCPulse的畫面" loading="lazy" /></a><div class="bk-actions"><a class="bk-btn" href="vcpulse.html">作品介紹 <span aria-hidden="true">→</span></a></div></div></div></div><div class="m-page"><div class="pg pg-left"><div class="pg-in pg-intro"><p class="pg-en" lang="en">To be continued</p><p class="intro-txt">下一頁還空著。新的小工具做好了，就會貼進來。</p></div></div></div><div class="m-page"><div class="pg pg-right"><div class="pg-in pg-empty"><img src="assets/niuniu-peek.webp" alt="" width="180" height="181" /><p lang="en">coming soon…</p></div></div></div></div>
+    </section>
+  </main>
+  <footer class="site-footer">
+    <div class="shell footer-inner">
+      <a class="footer-brand" href="index.html"><img src="assets/needtodeco-logo.png" alt="need to deco" width="1000" height="213" loading="lazy" /></a>
+      <p class="footer-motto" lang="en">small ideas, brighter days.</p>
+      <nav class="footer-links" aria-label="外部連結">
+        <a href="https://www.instagram.com/needtodeco/" target="_blank" rel="noreferrer">Instagram</a>
+        <a href="about.html">關於我</a>
+        <a href="#top" class="to-top" aria-label="回到最上面">↑</a>
+      </nav>
+    </div>
+    <p class="shell copyright">© 2026 need to deco. All rights reserved.</p>
+  </footer>
+  <script src="script.js?v=75"></script>
+<script>
+// 小工具手帳：翻頁（按鈕、鍵盤、點目錄、在書上左右滑）
+(() => {
+  const book = document.getElementById('book');
+  if (!book) return;
+  const leaves = [...book.querySelectorAll('.leaf')];
+  const prev = book.querySelector('.prev'), next = book.querySelector('.next');
+  const pager = document.getElementById('pager');
+  const N = leaves.length;
+  let spread = 0; // 0 = 封面；N = 封底
+  const labels = ['封面', '前言・目錄'];
+  const render = () => {
+    leaves.forEach((lf, i) => {
+      const flipped = i < spread;
+      lf.classList.toggle('flipped', flipped);
+      // 疊放順序：已翻過的越後翻越上面，沒翻的越前面越上面
+      lf.style.zIndex = flipped ? i + 1 : N - i;
+      lf.querySelectorAll('a,button').forEach(el => {
+        const onFront = el.closest('.front');
+        const visible = (onFront && i === spread) || (!onFront && i === spread - 1);
+        el.tabIndex = visible ? 0 : -1;
+      });
+    });
+    book.dataset.spread = spread;
+    book.classList.toggle('at-end', spread === N);
+    prev.disabled = spread === 0; next.disabled = spread === N;
+    pager.textContent = spread === 0 ? '封面' : spread === N ? '封底' : spread === 1 ? '前言・目錄' : spread === N - 1 ? '下一頁還空著' : `第 ${spread - 1} 個小工具`;
+  };
+  const go = s => { spread = Math.max(0, Math.min(N, s)); render(); };
+  prev.addEventListener('click', () => go(spread - 1));
+  next.addEventListener('click', () => go(spread + 1));
+  // 點封面也能翻開
+  book.querySelector('.pg-cover')?.addEventListener('click', () => { if (spread === 0) go(1); });
+  book.querySelectorAll('[data-go]').forEach(b => b.addEventListener('click', () => go(+b.dataset.go + 1)));
+  document.querySelectorAll('.m-strip [data-go]').forEach(b => b.addEventListener('click', () => {
+    const strip = b.closest('.m-strip'); const pages = strip.querySelectorAll('.m-page');
+    pages[+b.dataset.go * 2 + 1]?.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+  }));
+  document.addEventListener('keydown', e => {
+    if (getComputedStyle(book).display === 'none') return;
+    if (e.key === 'ArrowRight') go(spread + 1);
+    if (e.key === 'ArrowLeft') go(spread - 1);
+  });
+  let x0 = null;
+  book.addEventListener('pointerdown', e => { x0 = e.clientX; });
+  book.addEventListener('pointerup', e => {
+    if (x0 === null) return; const dx = e.clientX - x0; x0 = null;
+    if (Math.abs(dx) > 50) go(spread + (dx < 0 ? 1 : -1));
+  });
+  render();
+})();
+
+</script>
+</body>
+</html>
