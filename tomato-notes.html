@@ -7,9 +7,9 @@
 <meta name="description" content="番茄手札是一本放在手機裡的料理手札：排好明天的菜，前一晚自動提醒你要退冰、要切、要買的東西。">
 <meta property="og:title" content="番茄手札 Tomato Notes">
 <meta property="og:description" content="明天煮什麼、要先退冰什麼、要買什麼，一本手札記好。">
-<meta property="og:image" content="shot-open.webp">
+<meta property="og:image" content="https://needtodeco.com/assets/tomato/shot-open.webp">
 <meta name="theme-color" content="#f8f1e7">
-<link rel="icon" type="image/png" href="logo.png">
+<link rel="icon" type="image/png" href="assets/tomato/logo.png?v=2">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,500;1,600&family=Noto+Serif+TC:wght@500;700;900&display=swap" rel="stylesheet">
 <style>
@@ -41,7 +41,8 @@ h2{font-size:clamp(26px,4.4vw,36px);color:var(--red);line-height:1.35}
 .top img{width:34px;height:34px}
 .top b{font-family:var(--serif);font-size:18px;letter-spacing:.12em}
 .top i{font-family:var(--script);color:var(--red);font-size:12.5px;display:block;line-height:1;margin-top:2px}
-.top .btn{margin-left:auto;padding:8px 16px;font-size:13.5px}
+.top .back{margin-left:auto;font-size:13.5px;color:var(--muted);text-decoration:none}.top .back:hover{color:var(--ink)}
+.top .btn{margin-left:12px;padding:8px 16px;font-size:13.5px}
 
 /* ===== 主視覺 ===== */
 .hero{padding:56px 0 40px}
@@ -142,8 +143,9 @@ footer .sig{font-family:var(--script);font-style:italic;color:var(--red);font-si
 
 <header class="top">
   <div class="wrap">
-    <img src="logo.png" alt="">
+    <img src="assets/tomato/logo.png?v=2" alt="">
     <div><b>番茄手札</b><i>Tomato Notes</i></div>
+    <a class="back" href="tools.html">← 回到作品集</a>
     <a class="btn btn-main" href="https://tomorrow-table.needtodeco.com/">打開手札</a>
   </div>
 </header>
@@ -162,8 +164,8 @@ footer .sig{font-family:var(--script);font-style:italic;color:var(--red);font-si
       <p class="note">免下載、免註冊，用手機瀏覽器就能開，資料只存在你的手機裡。</p>
     </div>
     <div class="hero-art reveal">
-      <img class="scene" src="shot-open.webp" alt="翻開手札，紙雕的小廚房從書頁裡立起來，下方紙條寫著明天的菜">
-      <img class="peek" src="book-cut.webp" alt="木頭桌上放著一本紅色布面、燙金字的番茄手札">
+      <img class="scene" src="assets/tomato/shot-open.webp?v=2" alt="翻開手札，紙雕的小廚房從書頁裡立起來，下方紙條寫著明天的菜">
+      <img class="peek" src="assets/tomato/book-cut.webp?v=2" alt="木頭桌上放著一本紅色布面、燙金字的番茄手札">
     </div>
   </div>
 </section>
@@ -191,7 +193,7 @@ footer .sig{font-family:var(--script);font-style:italic;color:var(--red);font-si
     </div>
 
     <div class="step">
-      <div class="phone reveal"><img src="shot-menu.webp" alt="每日菜單頁，晚餐排了四道菜，菜名下標出要退冰的食材" loading="lazy"></div>
+      <div class="phone reveal"><img src="assets/tomato/shot-menu.webp?v=2" alt="每日菜單頁，晚餐排了四道菜，菜名下標出要退冰的食材" loading="lazy"></div>
       <div class="reveal">
         <span class="num">01</span>
         <h3>排好明天的菜</h3>
@@ -205,7 +207,7 @@ footer .sig{font-family:var(--script);font-style:italic;color:var(--red);font-si
     </div>
 
     <div class="step">
-      <div class="phone reveal"><img src="shot-dish.webp" alt="編輯菜色畫面，佛手瓜雞湯設定了前一天退冰雞肉、當天切備佛手瓜" loading="lazy"></div>
+      <div class="phone reveal"><img src="assets/tomato/shot-dish.webp?v=2" alt="編輯菜色畫面，佛手瓜雞湯設定了前一天退冰雞肉、當天切備佛手瓜" loading="lazy"></div>
       <div class="reveal">
         <span class="num">02</span>
         <h3>設定一次，以後自動提醒</h3>
@@ -216,8 +218,8 @@ footer .sig{font-family:var(--script);font-style:italic;color:var(--red);font-si
 
     <div class="step">
       <div class="duo reveal">
-        <div class="phone"><img src="shot-home.webp" alt="首頁的「明天準備好了嗎？」摘要卡" loading="lazy"></div>
-        <div class="phone"><img src="shot-prep.webp" alt="備料清單依今天、明天分組" loading="lazy"></div>
+        <div class="phone"><img src="assets/tomato/shot-home.webp?v=2" alt="首頁的「明天準備好了嗎？」摘要卡" loading="lazy"></div>
+        <div class="phone"><img src="assets/tomato/shot-prep.webp?v=2" alt="備料清單依今天、明天分組" loading="lazy"></div>
       </div>
       <div class="reveal">
         <span class="num">03</span>
@@ -232,7 +234,7 @@ footer .sig{font-family:var(--script);font-style:italic;color:var(--red);font-si
     </div>
 
     <div class="step">
-      <div class="phone reveal"><img src="shot-remind.webp" alt="提醒設定畫面，勾選要加到行事曆的備料並設定時間" loading="lazy"></div>
+      <div class="phone reveal"><img src="assets/tomato/shot-remind.webp?v=2" alt="提醒設定畫面，勾選要加到行事曆的備料並設定時間" loading="lazy"></div>
       <div class="reveal">
         <span class="num">04</span>
         <h3>怕忘記？交給行事曆</h3>
@@ -299,7 +301,7 @@ footer .sig{font-family:var(--script);font-style:italic;color:var(--red);font-si
 
 <footer>
   <div class="sig">See you at the table ♥</div>
-  番茄手札 Tomato Notes · made by need to deco.
+  番茄手札 Tomato Notes · made by <a href="index.html">need to deco.</a>
 </footer>
 
 <script>
