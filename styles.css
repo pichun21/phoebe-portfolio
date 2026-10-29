@@ -332,3 +332,18 @@ main{position:relative}
 .niu-card p{color:var(--clay-ink);font-size:14.5px;margin:0 0 14px}
 .niu-card button{font:inherit;font-size:14px;padding:8px 22px;border-radius:999px;border:0;background:var(--ink);color:var(--paper);cursor:pointer}
 @media (prefers-reduced-motion:reduce){.cat-card .cat-icon img{animation:none!important}.niu-paws i.new,.niu-card{animation:none}}
+
+/* 朝のスケッチ晨光版：書桌換成藍→黃的晨光漸層，加一道斜斜的窗光；分類卡改白底，顏色只留在圖示後面 */
+.hero{background:linear-gradient(165deg,#d9eaf1 0%,#e8f0ee 42%,#f5efdc 78%,#f8ecc9 100%)}
+.hero::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:0;
+  background:linear-gradient(118deg,transparent 0 52%,rgba(255,255,255,.42) 52% 60%,transparent 60% 64%,rgba(255,255,255,.3) 64% 69%,transparent 69%)}
+.hero:has(.hero-art-wrap.is-on){background:linear-gradient(165deg,#f3dfb8 0%,#f6e6c4 60%,#f8e2b0 100%)}
+.hero-copy,.hero-art-wrap{position:relative;z-index:1}
+.cat-card{background:#fffdf7!important;border:1px solid #ece6d8;box-shadow:0 1px 2px rgba(62,54,48,.04),0 10px 24px -18px rgba(62,54,48,.28)}
+.cat-card:hover{box-shadow:0 2px 4px rgba(62,54,48,.05),0 18px 30px -18px rgba(62,54,48,.32)}
+.cat-icon{position:relative}
+.cat-icon::before{content:"";position:absolute;width:118px;height:118px;border-radius:50%;background:var(--tint);left:50%;top:50%;transform:translate(-50%,-46%)}
+.cat-icon img{position:relative}
+.c-sky{--tint:var(--sky-soft)} .c-puff{--tint:var(--puff-soft)} .c-sun{--tint:var(--sun-soft)} .c-stone{--tint:var(--stone-soft)}
+.recent-img{background-image:linear-gradient(165deg,rgba(255,255,255,.35),transparent 60%)}
+@media (max-width:640px){.cat-icon::before{width:80px;height:80px}}
