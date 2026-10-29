@@ -441,6 +441,7 @@ html[data-theme=dark] .flipper .tube b{background:linear-gradient(90deg,rgba(255
 .flipper .bs .bw{position:absolute;left:0;top:0;width:100vw;height:100%;transform-origin:0 0}
 .flipper .bs .bw.ghost{opacity:.13}
 .flipper .bs>i{position:absolute;inset:0}
+.flipper .bs.k.sp{background:var(--bg)}
 
 </style>
 </head>
@@ -633,7 +634,7 @@ html[data-theme=dark] .flipper .tube b{background:linear-gradient(90deg,rgba(255
   <div class="srow"><div class="lab">簡轉繁</div><div class="ctl"><div class="togrow"><div>轉成繁體（台灣用語）<div class="sub">视频→影片、软件→軟體</div></div><button class="tog" data-tog="convert" aria-label="簡轉繁"></button></div></div></div>
   <div class="srow"><div class="lab">引號</div><div class="ctl"><div class="togrow"><div>“ ” 換成「 」</div><button class="tog" data-tog="quotes" aria-label="引號轉換"></button></div></div></div>
 
-  <div class="sfoot"><button class="btn" id="btnReset">恢復預設值</button><span class="sub">點畫面左右兩側翻頁，點中間或右下角的「⋯」叫出選單。也能滑動、按方向鍵或滾動滑鼠；Enter 鍵可開關選單，快速點兩下圖片（或按上方放大鏡）可進入看圖模式，自由放大、拖曳。<br>版本 2026.10.23d（雙頁立體翻頁）</span></div>
+  <div class="sfoot"><button class="btn" id="btnReset">恢復預設值</button><span class="sub">點畫面左右兩側翻頁，點中間或右下角的「⋯」叫出選單。也能滑動、按方向鍵或滾動滑鼠；Enter 鍵可開關選單，快速點兩下圖片（或按上方放大鏡）可進入看圖模式，自由放大、拖曳。<br>版本 2026.10.29</span></div>
 </div>
 
 <div id="selpop" hidden></div>
@@ -1528,7 +1529,7 @@ function makeBend(dir, A, B) {
     const F = document.createElement('div'); F.className = 'bs f'; F.style.width = (bw + 0.8) + 'px';
     const fw = document.createElement('div'); fw.className = 'bw'; fw.style.width = W + 'px'; fw.style.transform = `translateX(${-fStart}px)`; fw.appendChild(A.cloneNode(true)); F.appendChild(fw);
     const fsh = document.createElement('i'); F.appendChild(fsh);
-    const Bk = document.createElement('div'); Bk.className = 'bs k'; Bk.style.width = (bw + 0.8) + 'px';
+    const Bk = document.createElement('div'); Bk.className = spread ? 'bs k sp' : 'bs k'; Bk.style.width = (bw + 0.8) + 'px';
     const kw = document.createElement('div'); kw.className = 'bw'; kw.style.width = W + 'px';
     if (spread) { kw.style.transform = `translateX(${-(rtl ? spX + s0 : spX - s1)}px)`; kw.appendChild(B.cloneNode(true)); }
     else { kw.classList.add('ghost'); kw.style.transform = `translateX(${bw}px) scaleX(-1) translateX(${-fStart}px)`; kw.appendChild(A.cloneNode(true)); }
@@ -1538,17 +1539,23 @@ function makeBend(dir, A, B) {
   }
   const f = {
     el, W, H, PW, spX, rtl, tv: dir > 0 ? 0 : 1, raf: 0, bend: true,
-    geo(t) { const be = 1.25 * Math.sin(Math.PI * t), al = Math.PI * t - be / 2; return { be, al }; },
-    X(g, s) { const k = s / PW; return Math.abs(g.be) < 1e-4 ? [s * Math.cos(g.al), s * Math.sin(g.al)] : [(Math.sin(g.al + g.be * k) - Math.sin(g.al)) * PW / g.be, (Math.cos(g.al) - Math.cos(g.al + g.be * k)) * PW / g.be]; },
-    edge(t) { return spX + sg * f.X(f.geo(t), PW)[0]; },        // 外緣在螢幕上的位置（不計透視）
+    // 紙的彎法：一段平滑的「S 形」從書脊往外推進——靠書脊那側還平貼、中段彎成弧、外緣先翻到另一邊，
+    // 所以整張紙是軟軟地拱起來，而不是一片硬板立起來。BEND 越小，弧形越寬越軟。
+    phi(t, k) { const BEND = 0.85, u = Math.max(0, Math.min(1, t * (1 + BEND) - BEND * (1 - k))); return Math.PI * u * u * (3 - 2 * u); },
+    pts(t) { // 沿紙面累加出每個切點的位置 [X, Z]
+      const out = [[0, 0]]; let x = 0, z = 0;
+      for (let i = 0; i < N; i++) { const a = f.phi(t, (i + 0.5) / N); x += Math.cos(a) * bw; z += Math.sin(a) * bw; out.push([x, z]); }
+      return out;
+    },
+    edge(t) { return spX + sg * f.pts(t)[N][0]; },        // 外緣在螢幕上的位置（不計透視）
     setT(t) {
       t = Math.max(0, Math.min(1, t)); f.tv = t;
-      const g = f.geo(t), phi = s => g.al + g.be * s / PW;
+      const P = f.pts(t), phi = sv => f.phi(t, sv / PW);
       const fr = a => Math.min(0.55, 0.5 * Math.pow(Math.max(0, 1 - Math.cos(a)), 1.15)).toFixed(3);   // 正面越立起來越暗
       const bk = a => Math.min(0.5, 0.42 * Math.max(0, 1 + Math.cos(a))).toFixed(3);                     // 紙背剛翻過來時最暗
       let maxX = 0;
-      for (const st of strips) {
-        const [X0, Z0] = f.X(g, st.s0), [X1, Z1] = f.X(g, st.s1); maxX = Math.max(maxX, X1);
+      strips.forEach((st, i) => {
+        const [X0, Z0] = P[i], [X1, Z1] = P[i + 1]; maxX = Math.max(maxX, X1);
         let ox, oz, ax = (X1 - X0) / bw, az;
         if (!rtl) { ox = spX + X0; oz = Z0; az = (Z1 - Z0) / bw; } else { ox = spX - X1; oz = Z1; az = (Z0 - Z1) / bw; }
         const L = Math.hypot(ax, az) || 1, nx = ax / L, nz = az / L;
@@ -1557,7 +1564,7 @@ function makeBend(dir, A, B) {
         const pa = phi(rtl ? st.s1 : st.s0), pb = phi(rtl ? st.s0 : st.s1);    // 這一條左右兩端的角度
         st.fsh.style.background = `linear-gradient(90deg,rgba(0,0,0,${fr(pa)}),rgba(0,0,0,${fr(pb)}))`;
         st.ksh.style.background = `linear-gradient(90deg,rgba(0,0,0,${bk(pb)}),rgba(0,0,0,${bk(pa)}))`;
-      }
+      });
       const a = (0.2 * Math.sin(Math.PI * t)).toFixed(3), w = Math.max(40, Math.min(PW, maxX + PW * 0.25));
       const onOut = (t < 0.5) !== rtl;   // 紙還沒過書脊前，影子落在原本那一側的下一頁上；過了書脊就落在另一側
       shade.style.background = onOut ? `linear-gradient(90deg,transparent ${spX}px,rgba(0,0,0,${a}) ${spX}px,transparent ${spX + w}px)` : `linear-gradient(90deg,transparent ${spX - w}px,rgba(0,0,0,${a}) ${spX}px,transparent ${spX}px)`;
@@ -2137,6 +2144,9 @@ document.addEventListener('keydown', e => {
   else if (k === 'ArrowLeft') { e.preventDefault(); R.vert ? next() : prev(); }
   else if (k === 'ArrowDown' || k === 'PageDown' || k === ' ') { e.preventDefault(); next(); }
   else if (k === 'ArrowUp' || k === 'PageUp') { e.preventDefault(); prev(); }
+  // 電子書閱讀器的實體翻頁鍵、藍牙翻頁器：有些會送出音量鍵或媒體鍵，瀏覽器有轉給網頁時就拿來翻頁
+  else if (k === 'AudioVolumeDown' || k === 'VolumeDown' || k === 'MediaTrackNext' || k === 'MediaFastForward' || e.keyCode === 25) { e.preventDefault(); next(); }
+  else if (k === 'AudioVolumeUp' || k === 'VolumeUp' || k === 'MediaTrackPrevious' || k === 'MediaRewind' || e.keyCode === 24) { e.preventDefault(); prev(); }
   else if ((k === 'Enter' || k === 'm' || k === 'M') && !e.target.closest('button')) { e.preventDefault(); setBars(!barsOn()); }
 });
 $('#btnMenu').onclick = () => setBars(true);
