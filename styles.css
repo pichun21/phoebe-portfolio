@@ -287,7 +287,7 @@ a.line-product:hover{box-shadow:0 0 0 2px var(--sky)}
 @keyframes tulipSway{0%,100%{transform:rotate(0)}18%{transform:rotate(-2.4deg)}40%{transform:rotate(1.8deg)}62%{transform:rotate(-1.1deg)}82%{transform:rotate(.5deg)}}
 .hit-tulip{left:0;top:26%;width:15%;height:62%;border-radius:40%}
 /* 開燈連動：書桌變傍晚的暖色，最近更新的線稿一起變成實際畫面 */
-.hero{transition:background-color .6s ease}
+.hero{transition:none}
 .hero:has(.hero-art-wrap.is-on){background:#f6e6c4}
 /* 在書桌插畫上，游標變成一支小鉛筆 */
 .hero-art{pointer-events:auto;cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cg stroke='%233e3630' stroke-width='2' stroke-linejoin='round' stroke-linecap='round'%3E%3Cpath d='M22 3l7 7L11 28l-8 1 1-8z' fill='%23f5d46b'/%3E%3Cpath d='M18 7l7 7' fill='none'/%3E%3Cpath d='M4 21l7 7' fill='none'/%3E%3Cpath d='M3 29l2-5 3 3z' fill='%233e3630'/%3E%3C/g%3E%3C/svg%3E") 3 29,crosshair}
@@ -337,7 +337,13 @@ main{position:relative}
 .hero{background:linear-gradient(165deg,#d9eaf1 0%,#e8f0ee 42%,#f5efdc 78%,#f8ecc9 100%)}
 .hero::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:0;
   background:linear-gradient(118deg,transparent 0 52%,rgba(255,255,255,.42) 52% 60%,transparent 60% 64%,rgba(255,255,255,.3) 64% 69%,transparent 69%)}
-.hero:has(.hero-art-wrap.is-on){background:linear-gradient(165deg,#f3dfb8 0%,#f6e6c4 60%,#f8e2b0 100%)}
+/* 開燈＝傍晚：晨光漸層保留，上面慢慢罩一層暖橘的夕色，窗光淡出，只剩檯燈的光 */
+.hero:has(.hero-art-wrap.is-on){background:linear-gradient(165deg,#d9eaf1 0%,#e8f0ee 42%,#f5efdc 78%,#f8ecc9 100%)}
+.hero::before{content:"";position:absolute;inset:0;pointer-events:none;z-index:0;opacity:0;transition:opacity .9s ease;
+  background:linear-gradient(165deg,rgba(246,214,170,.82) 0%,rgba(246,220,172,.62) 55%,rgba(246,216,156,.42) 100%)}
+.hero:has(.hero-art-wrap.is-on)::before{opacity:1}
+.hero::after{transition:opacity .9s ease}
+.hero:has(.hero-art-wrap.is-on)::after{opacity:0}
 .hero-copy,.hero-art-wrap{position:relative;z-index:1}
 .cat-card{background:#fffdf7!important;border:1px solid #ece6d8;box-shadow:0 1px 2px rgba(62,54,48,.04),0 10px 24px -18px rgba(62,54,48,.28)}
 .cat-card:hover{box-shadow:0 2px 4px rgba(62,54,48,.05),0 18px 30px -18px rgba(62,54,48,.32)}
