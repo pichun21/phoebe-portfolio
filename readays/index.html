@@ -435,12 +435,12 @@ html[data-theme=dark] .flipper .tube b{background:linear-gradient(90deg,rgba(255
 /* 立體翻頁 */
 .flipper .stat{position:absolute;inset:0;background:var(--bg);overflow:hidden}
 .flipper.bend{contain:layout paint;perspective-origin:50% 50%}
-.flipper.bend>.bshadow{position:absolute;inset:0;pointer-events:none}
-.flipper .bs{position:absolute;left:0;top:0;bottom:0;overflow:hidden;transform-origin:0 0;backface-visibility:hidden;-webkit-backface-visibility:hidden;will-change:transform;background:var(--bg)}
+.flipper.bend>.bshadow{position:absolute;top:0;bottom:0;left:0;right:auto;width:100px;pointer-events:none;transform-origin:0 0;background:linear-gradient(90deg,#000,rgba(0,0,0,0));opacity:0;will-change:transform,opacity}
+.flipper .bs{position:absolute;left:0;top:0;bottom:0;overflow:hidden;contain:strict;transform-origin:0 0;backface-visibility:hidden;-webkit-backface-visibility:hidden;will-change:transform;background:var(--bg)}
 .flipper .bs.k{background:var(--back)}
 .flipper .bs .bw{position:absolute;left:0;top:0;width:100vw;height:100%;transform-origin:0 0}
 .flipper .bs .bw.ghost{opacity:.13}
-.flipper .bs>i{position:absolute;inset:0}
+.flipper .bs>i{position:absolute;inset:0;background:linear-gradient(90deg,#000,rgba(0,0,0,0));opacity:0;will-change:opacity}.flipper .bs>i.r{background:linear-gradient(90deg,rgba(0,0,0,0),#000)}
 .flipper .bs.k.sp{background:var(--bg)}
 
 </style>
@@ -634,7 +634,7 @@ html[data-theme=dark] .flipper .tube b{background:linear-gradient(90deg,rgba(255
   <div class="srow"><div class="lab">簡轉繁</div><div class="ctl"><div class="togrow"><div>轉成繁體（台灣用語）<div class="sub">视频→影片、软件→軟體</div></div><button class="tog" data-tog="convert" aria-label="簡轉繁"></button></div></div></div>
   <div class="srow"><div class="lab">引號</div><div class="ctl"><div class="togrow"><div>“ ” 換成「 」</div><button class="tog" data-tog="quotes" aria-label="引號轉換"></button></div></div></div>
 
-  <div class="sfoot"><button class="btn" id="btnReset">恢復預設值</button><span class="sub">點畫面左右兩側翻頁，點中間或右下角的「⋯」叫出選單。也能滑動、按方向鍵或滾動滑鼠；Enter 鍵可開關選單，快速點兩下圖片（或按上方放大鏡）可進入看圖模式，自由放大、拖曳。<br>版本 2026.10.29</span></div>
+  <div class="sfoot"><button class="btn" id="btnReset">恢復預設值</button><span class="sub">點畫面左右兩側翻頁，點中間或右下角的「⋯」叫出選單。也能滑動、按方向鍵或滾動滑鼠；Enter 鍵可開關選單，快速點兩下圖片（或按上方放大鏡）可進入看圖模式，自由放大、拖曳。<br>版本 2026.11.09b</span></div>
 </div>
 
 <div id="selpop" hidden></div>
@@ -772,7 +772,7 @@ const DB = (() => {
 })();
 
 /* ================= 設定 ================= */
-const DEFAULTS = { fontSize: 20, letterSpacing: 0.04, lineHeight: 1.85, paraSpacing: 0.5, margin: 30, indent: true, align: 'justify', font: 'huninn', theme: 'auto', mode: 'h', spread: 'auto', convert: true, quotes: true, anim: true, flip: 'book' };
+const DEFAULTS = { fontSize: 20, letterSpacing: 0.04, lineHeight: 1.85, paraSpacing: 0.5, margin: 30, indent: true, align: 'justify', font: 'huninn', theme: 'auto', mode: 'h', spread: 'auto', convert: true, quotes: true, anim: true, flip: 'none' };
 let S = { ...DEFAULTS };
 const FONTS = [
   { id: 'huninn', name: '粉圓體', css: '"HuninnEmbed","jf-openhuninn-2.1","jf open 粉圓 2.1",sans-serif' },
@@ -1512,7 +1512,7 @@ function makeFlip(dir) {
 function makeBend(dir, A, B) {
   const W = pagesEl.clientWidth, H = pagesEl.clientHeight, rtl = R.vert, spread = isSpread(), sg = rtl ? -1 : 1;
   const spX = spread ? W / 2 : (rtl ? W : 0), PW = spread ? W / 2 : W;
-  const N = Math.max(14, Math.min(28, Math.round(PW / 22))), bw = PW / N;
+  const N = Math.max(12, Math.min(20, Math.round(PW / 34))), bw = PW / N;
   const el = document.createElement('div'); el.className = 'flipper bend';
   el.style.perspective = Math.round(PW * 4 + 900) + 'px';
   pagesEl.appendChild(el);
@@ -1528,14 +1528,14 @@ function makeBend(dir, A, B) {
     const fStart = rtl ? spX - s1 : spX + s0;             // 正面這一條在螢幕上的位置
     const F = document.createElement('div'); F.className = 'bs f'; F.style.width = (bw + 0.8) + 'px';
     const fw = document.createElement('div'); fw.className = 'bw'; fw.style.width = W + 'px'; fw.style.transform = `translateX(${-fStart}px)`; fw.appendChild(A.cloneNode(true)); F.appendChild(fw);
-    const fsh = document.createElement('i'); F.appendChild(fsh);
+    const fsh = document.createElement('i'), fsh2 = document.createElement('i'); fsh2.className = 'r'; F.append(fsh, fsh2);
     const Bk = document.createElement('div'); Bk.className = spread ? 'bs k sp' : 'bs k'; Bk.style.width = (bw + 0.8) + 'px';
     const kw = document.createElement('div'); kw.className = 'bw'; kw.style.width = W + 'px';
     if (spread) { kw.style.transform = `translateX(${-(rtl ? spX + s0 : spX - s1)}px)`; kw.appendChild(B.cloneNode(true)); }
     else { kw.classList.add('ghost'); kw.style.transform = `translateX(${bw}px) scaleX(-1) translateX(${-fStart}px)`; kw.appendChild(A.cloneNode(true)); }
-    Bk.appendChild(kw); const ksh = document.createElement('i'); Bk.appendChild(ksh);
+    Bk.appendChild(kw); const ksh = document.createElement('i'), ksh2 = document.createElement('i'); ksh2.className = 'r'; Bk.append(ksh, ksh2);
     el.appendChild(F); el.appendChild(Bk);
-    strips.push({ s0, s1, F, Bk, fsh, ksh });
+    strips.push({ s0, s1, F, Bk, fsh, fsh2, ksh, ksh2 });
   }
   const f = {
     el, W, H, PW, spX, rtl, tv: dir > 0 ? 0 : 1, raf: 0, bend: true,
@@ -1562,12 +1562,12 @@ function makeBend(dir, A, B) {
         st.F.style.transform = `matrix3d(${ax},0,${az},0,0,1,0,0,${-nz},0,${nx},0,${ox},0,${oz},1)`;
         st.Bk.style.transform = `matrix3d(${-ax},0,${-az},0,0,1,0,0,${nz},0,${-nx},0,${ox + ax * bw},0,${oz + az * bw},1)`;
         const pa = phi(rtl ? st.s1 : st.s0), pb = phi(rtl ? st.s0 : st.s1);    // 這一條左右兩端的角度
-        st.fsh.style.background = `linear-gradient(90deg,rgba(0,0,0,${fr(pa)}),rgba(0,0,0,${fr(pb)}))`;
-        st.ksh.style.background = `linear-gradient(90deg,rgba(0,0,0,${bk(pb)}),rgba(0,0,0,${bk(pa)}))`;
+        st.fsh.style.opacity = fr(pa); st.fsh2.style.opacity = fr(pb);   // 左右兩層漸層只改透明度：不用重畫整條文字，電腦上比較順
+        st.ksh.style.opacity = bk(pb); st.ksh2.style.opacity = bk(pa);
       });
       const a = (0.2 * Math.sin(Math.PI * t)).toFixed(3), w = Math.max(40, Math.min(PW, maxX + PW * 0.25));
       const onOut = (t < 0.5) !== rtl;   // 紙還沒過書脊前，影子落在原本那一側的下一頁上；過了書脊就落在另一側
-      shade.style.background = onOut ? `linear-gradient(90deg,transparent ${spX}px,rgba(0,0,0,${a}) ${spX}px,transparent ${spX + w}px)` : `linear-gradient(90deg,transparent ${spX - w}px,rgba(0,0,0,${a}) ${spX}px,transparent ${spX}px)`;
+      shade.style.opacity = a; shade.style.transform = `translateX(${spX}px) scaleX(${((onOut ? 1 : -1) * w / 100).toFixed(3)})`;
     },
     t() { return f.tv; },
     tAtEdge(x) { let lo = 0, hi = 1; const dec = sg > 0; for (let i = 0; i < 22; i++) { const m = (lo + hi) / 2, e = f.edge(m); if ((e > x) === dec) lo = m; else hi = m; } return (lo + hi) / 2; },
@@ -2134,9 +2134,13 @@ pagesEl.addEventListener('wheel', e => {
   const d = Math.abs(e.deltaY) > Math.abs(e.deltaX) ? e.deltaY : e.deltaX; if (Math.abs(d) < 8) return;
   wheelT = now; d > 0 ? next() : prev();
 }, { passive: false });
+document.addEventListener('pointerup', e => { if (e.target.matches && e.target.matches('#slider')) setTimeout(() => e.target.blur(), 0); });
 document.addEventListener('keydown', e => {
   if (!$('#viewer').hidden) { viewerKey(e); return; }
-  if (e.target.matches('input,textarea')) { if (e.key === 'Escape') e.target.blur(); return; }
+  const tg = e.target;
+  // 拉過進度條之後焦點會停在進度條上：工具列收起來時，方向鍵還是拿來翻頁
+  if (tg.matches && tg.matches('input[type=range]') && R.book && !barsOn() && !$('#settings').classList.contains('on') && /^(Arrow|Page)/.test(e.key)) tg.blur();
+  else if (tg.matches && tg.matches('input,textarea')) { if (e.key === 'Escape') tg.blur(); return; }
   if (e.key === 'Escape') { if (!$('#modal').hidden) closeModal(); else if (!pop.hidden) hidePop(); else if ($('#drawer').classList.contains('on')) closeDrawer(); else if ($('#settings').classList.contains('on')) closeSettings(); else setBars(false); return; }
   if (!R.book || !$('#modal').hidden) return;
   const k = e.key;
@@ -2411,7 +2415,7 @@ if (ON_WEB && navigator.storage && navigator.storage.persist) navigator.storage.
 /* ================= 啟動 ================= */
 (async () => {
   await DB.open();
-  const saved = await DB.get('kv', 'settings'); if (saved) { S = { ...DEFAULTS, ...saved }; if (!saved.flip) S.flip = saved.anim === false ? 'none' : 'book'; }
+  const saved = await DB.get('kv', 'settings'); if (saved) { S = { ...DEFAULTS, ...saved }; if (!saved.flipV2) { S.flip = 'none'; S.flipV2 = 1; saveSettings(); } }   // 2026.11：預設改成不要翻頁效果（想要可在設定打開）
   for (const f of DLFONTS) { try { const blob = await DB.get('kv', 'dlfont:' + f.id); if (blob) await loadDlFont(f, blob); } catch (e) { } }
   const fonts = (await DB.get('kv', 'fonts')) || [];
   for (const f of fonts) { try { await registerFont(f); } catch (e) { } }
