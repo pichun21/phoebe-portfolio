@@ -575,6 +575,11 @@ html[data-theme=dark] .mbox.finish h3{color:var(--fg)}
   <div class="srow"><div class="lab">簡轉繁</div><div class="ctl"><div class="togrow"><div>轉成繁體（台灣用語）<div class="sub">视频→影片、软件→軟體</div></div><button class="tog" data-tog="convert" aria-label="簡轉繁"></button></div></div></div>
   <div class="srow"><div class="lab">引號</div><div class="ctl"><div class="togrow"><div>“ ” 換成「 」</div><button class="tog" data-tog="quotes" aria-label="引號轉換"></button></div></div></div>
 
+  <h4 class="sgh">翻頁鍵</h4>
+  <div class="srow"><div class="lab">下一頁</div><div class="ctl"><button class="btn" id="kbNext">設定按鍵</button><span class="sub" id="kbNextV"></span></div></div>
+  <div class="srow"><div class="lab">上一頁</div><div class="ctl"><button class="btn" id="kbPrev">設定按鍵</button><span class="sub" id="kbPrevV"></span></div></div>
+  <div class="srow"><div class="lab"></div><div class="ctl"><button class="btn" id="kbClear">清除自訂</button><span class="sub">點「設定按鍵」後按一下藍牙翻頁器，就會記住那顆鍵。手機的音量鍵網頁收不到，翻頁器若在音量模式請切到方向鍵或翻頁模式。</span></div></div>
+
   <div class="sfoot"><button class="btn" id="btnReset">恢復預設值</button><span class="sub">點畫面左右兩側翻頁，點中間或右下角的「⋯」叫出選單。也能滑動、按方向鍵或滾動滑鼠；Enter 鍵可開關選單，快速點兩下圖片（或按上方放大鏡）可進入看圖模式，自由放大、拖曳。</span></div>
 </div>
 
@@ -1677,6 +1682,44 @@ pagesEl.addEventListener('wheel', e => {
   const d = Math.abs(e.deltaY) > Math.abs(e.deltaX) ? e.deltaY : e.deltaX; if (Math.abs(d) < 8) return;
   wheelT = now; d > 0 ? next() : prev();
 }, { passive: false });
+/* 自訂翻頁鍵（藍牙翻頁器） */
+const KB = (() => { try { return Object.assign({ next: [], prev: [] }, JSON.parse(localStorage.getItem('readays-keys') || '{}')); } catch (e) { return { next: [], prev: [] }; } })();
+let kbLearn = null, kbT = 0;
+const kbId = e => (e.key || '') + '|' + (e.code || '') + '|' + (e.keyCode || 0);
+const kbName = id => { const [k, c, n] = id.split('|'); const m = { ' ': '空白鍵', ArrowRight: '→', ArrowLeft: '←', ArrowUp: '↑', ArrowDown: '↓', PageDown: 'PageDown', PageUp: 'PageUp', Enter: 'Enter', AudioVolumeUp: '音量＋', AudioVolumeDown: '音量－' }; return m[k] || (k && k !== 'Unidentified' ? k : c || ('鍵碼 ' + n)); };
+function kbSave() { try { localStorage.setItem('readays-keys', JSON.stringify(KB)); } catch (e) { } }
+function kbShow() {
+  $('#kbNextV').textContent = KB.next.length ? '目前：' + KB.next.map(kbName).join('、') : '使用預設（→ ↓ PageDown 空白鍵）';
+  $('#kbPrevV').textContent = KB.prev.length ? '目前：' + KB.prev.map(kbName).join('、') : '使用預設（← ↑ PageUp）';
+  $('#kbNext').textContent = kbLearn === 'next' ? '請按翻頁器…' : '設定按鍵';
+  $('#kbPrev').textContent = kbLearn === 'prev' ? '請按翻頁器…' : '設定按鍵';
+}
+function kbStart(w) {
+  kbLearn = w; kbShow(); document.activeElement && document.activeElement.blur && document.activeElement.blur();
+  clearTimeout(kbT); kbT = setTimeout(() => { if (kbLearn) { kbLearn = null; kbShow(); toast('沒收到按鍵。翻頁器可能還在音量模式，請切換成方向鍵或翻頁模式再試一次', 5000); } }, 10000);
+}
+$('#kbNext').onclick = e => { e.stopPropagation(); kbStart('next'); };
+$('#kbPrev').onclick = e => { e.stopPropagation(); kbStart('prev'); };
+$('#kbClear').onclick = () => { KB.next = []; KB.prev = []; kbLearn = null; kbSave(); kbShow(); toast('已恢復預設翻頁鍵'); };
+kbShow();
+window.addEventListener('keydown', e => {
+  if (kbLearn) {
+    e.preventDefault(); e.stopImmediatePropagation(); clearTimeout(kbT);
+    const w = kbLearn; kbLearn = null;
+    if (e.key === 'Escape') { kbShow(); return; }
+    const id = kbId(e), other = w === 'next' ? 'prev' : 'next';
+    KB[other] = KB[other].filter(x => x !== id);
+    if (!KB[w].includes(id)) KB[w].push(id);
+    kbSave(); kbShow(); toast('已設定' + (w === 'next' ? '下一頁' : '上一頁') + '：' + kbName(id));
+    if (/Volume/.test(e.key)) setTimeout(() => toast('提醒：音量鍵只有部分裝置會轉給網頁，若之後按了沒反應，請切換翻頁器模式', 5000), 2200);
+    return;
+  }
+  if (!R.book || !$('#modal').hidden || !$('#viewer').hidden) return;
+  const tg = e.target; if (tg.matches && tg.matches('input:not([type=range]),textarea')) return;
+  const id = kbId(e);
+  if (KB.next.includes(id)) { e.preventDefault(); e.stopImmediatePropagation(); next(); }
+  else if (KB.prev.includes(id)) { e.preventDefault(); e.stopImmediatePropagation(); prev(); }
+}, true);
 document.addEventListener('keydown', e => {
   if (!$('#viewer').hidden) { viewerKey(e); return; }
   if (e.target.matches('input,textarea')) { if (e.key === 'Escape') e.target.blur(); return; }
