@@ -305,6 +305,18 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
 
 #toast{position:fixed;left:50%;bottom:calc(96px + var(--safe-b));transform:translate(-50%,8px);background:#24262c;color:#f2f1ee;padding:10px 18px;border-radius:999px;font-size:14px;z-index:50;opacity:0;transition:opacity .2s,transform .2s;pointer-events:none;max-width:90vw;text-align:center}
 #toast.on{opacity:1;transform:translate(-50%,0)}
+#backJump{position:fixed;left:50%;bottom:calc(44px + var(--safe-b));transform:translateX(-50%);z-index:40;display:flex;align-items:stretch;max-width:calc(100vw - 32px);background:#24262c;color:#f2f1ee;border-radius:999px;box-shadow:0 8px 24px -8px rgba(0,0,0,.45);font-size:14px;animation:bjIn .25s ease-out}
+#backJump[hidden]{display:none}
+#backJump button{background:none;border:0;color:inherit;font:inherit;cursor:pointer}
+#backJumpGo{display:flex;align-items:center;gap:8px;padding:10px 6px 10px 16px;min-width:0}
+#backJumpGo .i{width:18px;height:18px;flex:none}
+#backJumpTxt{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#backJump{transition:opacity .35s}#backJump.out{opacity:0}
+#backJumpX{padding:0 14px 0 8px;font-size:18px;opacity:.7}
+#backJumpX:hover{opacity:1}
+#reader.bars~#backJump,.bars #backJump{bottom:calc(120px + var(--safe-b))}
+#reader[hidden]~#backJump{display:none}
+@keyframes bjIn{from{opacity:0;transform:translate(-50%,8px)}to{opacity:1;transform:translateX(-50%)}}
 #loading{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:5;background:var(--bg);color:var(--muted);font-size:14px;gap:14px}
 .pageflip{width:34px;height:26px;position:relative}
 .pageflip i{position:absolute;right:50%;top:0;width:50%;height:100%;border:2px solid var(--accent);border-radius:3px 0 0 3px;transform-origin:right center;animation:flip 1.1s ease-in-out infinite}
@@ -634,12 +646,7 @@ html[data-theme=dark] .flipper .tube b{background:linear-gradient(90deg,rgba(255
   <div class="srow"><div class="lab">簡轉繁</div><div class="ctl"><div class="togrow"><div>轉成繁體（台灣用語）<div class="sub">视频→影片、软件→軟體</div></div><button class="tog" data-tog="convert" aria-label="簡轉繁"></button></div></div></div>
   <div class="srow"><div class="lab">引號</div><div class="ctl"><div class="togrow"><div>“ ” 換成「 」</div><button class="tog" data-tog="quotes" aria-label="引號轉換"></button></div></div></div>
 
-  <h4 class="sgh">翻頁鍵</h4>
-  <div class="srow"><div class="lab">下一頁</div><div class="ctl"><button class="btn" id="kbNext">設定按鍵</button><span class="sub" id="kbNextV"></span></div></div>
-  <div class="srow"><div class="lab">上一頁</div><div class="ctl"><button class="btn" id="kbPrev">設定按鍵</button><span class="sub" id="kbPrevV"></span></div></div>
-  <div class="srow"><div class="lab"></div><div class="ctl"><button class="btn" id="kbClear">清除自訂</button><span class="sub">點「設定按鍵」後按一下藍牙翻頁器，就會記住那顆鍵。手機的音量鍵網頁收不到，翻頁器若在音量模式請切到方向鍵或翻頁模式。</span></div></div>
-
-  <div class="sfoot"><button class="btn" id="btnReset">恢復預設值</button><span class="sub">點畫面左右兩側翻頁，點中間或右下角的「⋯」叫出選單。也能滑動、按方向鍵或滾動滑鼠；Enter 鍵可開關選單，快速點兩下圖片（或按上方放大鏡）可進入看圖模式，自由放大、拖曳。<br>版本 2026.11.09b</span></div>
+  <div class="sfoot"><button class="btn" id="btnReset">恢復預設值</button><span class="sub">點畫面左右兩側翻頁，點中間或右下角的「⋯」叫出選單。也能滑動、按方向鍵或滾動滑鼠；Enter 鍵可開關選單，快速點兩下圖片（或按上方放大鏡）可進入看圖模式，自由放大、拖曳。<br>版本 2026.11.18b</span></div>
 </div>
 
 <div id="selpop" hidden></div>
@@ -659,6 +666,7 @@ html[data-theme=dark] .flipper .tube b{background:linear-gradient(90deg,rgba(255
   <div class="vhint" id="vHint">滾輪或雙指縮放　拖曳移動　點兩下放大　左右鍵翻頁</div>
 </div>
 <div id="modal" hidden></div>
+<div id="backJump" hidden><button id="backJumpGo" type="button"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 14 4 9l5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span id="backJumpTxt"></span></button><button id="backJumpX" type="button" aria-label="不用回去">×</button></div>
 <div id="toast"></div>
 
 <!-- JSZip (MIT License) https://stuk.github.io/jszip/ -->
@@ -1198,6 +1206,7 @@ async function openBook(id) {
   }
 }
 function closeBook() {
+  clearBack();
   if (R.book) { saveLocNow(); for (const u of R.book.imgCache.values()) URL.revokeObjectURL(u); }
   R.book = null; R.gen++; content.innerHTML = ''; hidePop(); closeDrawer(); closeSettings(); setBars(false);
   $('#reader').hidden = true; $('#library').hidden = false; document.title = '讀日子｜EPUB 閱讀工具';
@@ -1677,6 +1686,32 @@ async function goTo(spine, target) {
   }
   await renderChapter(spine, target);
 }
+/* ================= 跳去別處看，再一鍵回到原本讀的地方 =================
+   從目錄、書籤、劃線、搜尋、註釋、進度條、上下章跳走時，先記住原本讀到哪；畫面下方會出現「回到剛才讀的地方」。
+   連續跳好幾次也只記第一次的位置（那才是真正讀到的地方）。 */
+let backPos = null;
+function markJump() {
+  if (!R.book || !R.ti || backPos) return;
+  backPos = { spine: R.spine, offset: R.offset, label: R.curToc ? cv(R.curToc.label) : chapterTitleOf(R.spine), pct: globalFrac() };
+}
+async function jump(spine, target) { markJump(); await goTo(spine, target); showBack(); }
+function showBack() {
+  const el = $('#backJump'); if (!el) return;
+  if (!backPos || !R.book) { el.hidden = true; return; }
+  if (backPos.spine === R.spine && pageOfOffset(backPos.offset) === R.page) { backPos = null; el.hidden = true; return; }  // 已經回到原處
+  $('#backJumpTxt').textContent = `回到剛才讀的地方｜${backPos.label}　${(backPos.pct * 100).toFixed(0)}%`;
+  el.hidden = false; el.classList.remove('out');
+  // 8 秒後自己淡出；之後只要點畫面叫出工具列，它會再出現，直到回去或開別本書為止
+  clearTimeout(bjTimer); if (!barsOn()) bjTimer = setTimeout(fadeBack, 8000);
+}
+let bjTimer = 0;
+function fadeBack() { const el = $('#backJump'); if (!el || el.hidden) return; el.classList.add('out'); bjTimer = setTimeout(() => { el.hidden = true; el.classList.remove('out'); }, 350); }
+function clearBack() { backPos = null; clearTimeout(bjTimer); const el = $('#backJump'); if (el) { el.hidden = true; el.classList.remove('out'); } }
+document.addEventListener('click', async e => {
+  if (e.target.closest('#backJumpX')) { clearBack(); return; }
+  if (!e.target.closest('#backJump')) return;
+  const p = backPos; clearBack(); if (p) { await goTo(p.spine, { offset: p.offset }); setBars(false); }
+});
 
 /* ================= 進度與介面更新 ================= */
 function globalFrac() {
@@ -1885,9 +1920,9 @@ function renderToc() {
 $('#tocList').addEventListener('click', e => {
   const li = e.target.closest('li'); if (!li) return;
   closeDrawer();
-  if (li.dataset.sp != null) { goTo(+li.dataset.sp, { offset: 0 }); return; }
+  if (li.dataset.sp != null) { jump(+li.dataset.sp, { offset: 0 }); return; }
   const t = R.book.toc[+li.dataset.i]; if (t.idx < 0) { toast('找不到這個章節'); return; }
-  goTo(t.idx, t.frag ? { frag: t.frag } : { offset: 0 });
+  jump(t.idx, t.frag ? { frag: t.frag } : { offset: 0 });
 });
 function renderBM() {
   const list = R.annos.bookmarks.slice().sort((a, b) => a.spine - b.spine || a.offset - b.offset);
@@ -1899,7 +1934,7 @@ $('#bmList').addEventListener('click', e => {
   const del = e.target.closest('[data-del]');
   if (del) { R.annos.bookmarks = R.annos.bookmarks.filter(b => b.id !== del.dataset.del); saveAnnos(); renderBM(); updatePageUI(); return; }
   const li = e.target.closest('li[data-id]'); if (!li) return;
-  const b = R.annos.bookmarks.find(x => x.id === li.dataset.id); closeDrawer(); goTo(b.spine, { offset: b.offset });
+  const b = R.annos.bookmarks.find(x => x.id === li.dataset.id); closeDrawer(); jump(b.spine, { offset: b.offset });
 });
 function renderHL() {
   const hs = R.annos.highlights.slice().sort((a, b) => a.spine - b.spine || a.start - b.start);
@@ -1919,7 +1954,7 @@ $('#hlList').addEventListener('click', e => {
   const del = e.target.closest('[data-del]'); if (del) { const h = find(del.dataset.del); if (confirm('刪除這段劃線？')) { if (h.spine === R.spine) deleteHL(h); else { R.annos.highlights = R.annos.highlights.filter(x => x !== h); saveAnnos(); } renderHL(); } return; }
   const nt = e.target.closest('[data-note]'); if (nt) { editNote(find(nt.dataset.note)); return; }
   const li = e.target.closest('li[data-id]'); if (!li) return;
-  const h = find(li.dataset.id); closeDrawer(); goTo(h.spine, { offset: h.start });
+  const h = find(li.dataset.id); closeDrawer(); jump(h.spine, { offset: h.start });
 });
 /* 匯出劃線：閱讀中或書櫃（不必開書）都共用 */
 function notesText(rec, hs, mode) {
@@ -1981,11 +2016,11 @@ $('#searchList').addEventListener('click', e => {
   const li = e.target.closest('li[data-k]'); if (!li) return;
   const h = searchHits[+li.dataset.k];
   if (innerWidth < 700) closeDrawer();
-  goTo(h.spine, { offset: h.offset, flash: [h.offset, h.offset + h.len] });
+  jump(h.spine, { offset: h.offset, flash: [h.offset, h.offset + h.len] });
 });
 
 /* ================= 工具列與設定面板 ================= */
-function setBars(on) { $('#reader').classList.toggle('bars', on); }
+function setBars(on) { $('#reader').classList.toggle('bars', on); if (typeof backPos !== 'undefined' && backPos) { if (on) { clearTimeout(bjTimer); const el = $('#backJump'); el.classList.remove('out'); el.hidden = false; } else fadeBack(); } }
 function openSettings() { setBars(false); closeDrawer(); syncSettingsUI(); $('#settings').classList.add('on'); $('#scrim').classList.add('on'); }
 function closeSettings() { $('#settings').classList.remove('on'); if (!$('#drawer').classList.contains('on')) $('#scrim').classList.remove('on'); }
 function fmtVal(k, v) { return k === 'fontSize' ? v + 'px' : k === 'margin' ? v + 'px' : k === 'letterSpacing' ? (+v).toFixed(2) : k === 'paraSpacing' ? (+v).toFixed(1) : (+v).toFixed(2); }
@@ -2122,11 +2157,11 @@ async function handleLink(a) {
       const imgs = clone.querySelectorAll('[data-src]'); for (const im of imgs) { const u = await imgURL(im.dataset.src); if (im.localName === 'img') im.src = u; }
       openModal(`<div class="mbox note-pop"><div id="fnBody"></div><div class="acts"><button class="btn" id="fnGo">跳到註釋位置</button><button class="btn primary" data-x>關閉</button></div></div>`);
       $('#fnBody').appendChild(clone);
-      $('#fnGo').onclick = () => { closeModal(); goTo(idx, { frag }); };
+      $('#fnGo').onclick = () => { closeModal(); jump(idx, { frag }); };
       return;
     }
   }
-  goTo(idx, frag ? { frag } : { offset: 0 });
+  jump(idx, frag ? { frag } : { offset: 0 });
 }
 let wheelT = 0;
 pagesEl.addEventListener('touchstart', e => {
@@ -2140,44 +2175,6 @@ pagesEl.addEventListener('wheel', e => {
   wheelT = now; d > 0 ? next() : prev();
 }, { passive: false });
 document.addEventListener('pointerup', e => { if (e.target.matches && e.target.matches('#slider')) setTimeout(() => e.target.blur(), 0); });
-/* 自訂翻頁鍵（藍牙翻頁器） */
-const KB = (() => { try { return Object.assign({ next: [], prev: [] }, JSON.parse(localStorage.getItem('readays-keys') || '{}')); } catch (e) { return { next: [], prev: [] }; } })();
-let kbLearn = null, kbT = 0;
-const kbId = e => (e.key || '') + '|' + (e.code || '') + '|' + (e.keyCode || 0);
-const kbName = id => { const [k, c, n] = id.split('|'); const m = { ' ': '空白鍵', ArrowRight: '→', ArrowLeft: '←', ArrowUp: '↑', ArrowDown: '↓', PageDown: 'PageDown', PageUp: 'PageUp', Enter: 'Enter', AudioVolumeUp: '音量＋', AudioVolumeDown: '音量－' }; return m[k] || (k && k !== 'Unidentified' ? k : c || ('鍵碼 ' + n)); };
-function kbSave() { try { localStorage.setItem('readays-keys', JSON.stringify(KB)); } catch (e) { } }
-function kbShow() {
-  $('#kbNextV').textContent = KB.next.length ? '目前：' + KB.next.map(kbName).join('、') : '使用預設（→ ↓ PageDown 空白鍵）';
-  $('#kbPrevV').textContent = KB.prev.length ? '目前：' + KB.prev.map(kbName).join('、') : '使用預設（← ↑ PageUp）';
-  $('#kbNext').textContent = kbLearn === 'next' ? '請按翻頁器…' : '設定按鍵';
-  $('#kbPrev').textContent = kbLearn === 'prev' ? '請按翻頁器…' : '設定按鍵';
-}
-function kbStart(w) {
-  kbLearn = w; kbShow(); document.activeElement && document.activeElement.blur && document.activeElement.blur();
-  clearTimeout(kbT); kbT = setTimeout(() => { if (kbLearn) { kbLearn = null; kbShow(); toast('沒收到按鍵。翻頁器可能還在音量模式，請切換成方向鍵或翻頁模式再試一次', 5000); } }, 10000);
-}
-$('#kbNext').onclick = e => { e.stopPropagation(); kbStart('next'); };
-$('#kbPrev').onclick = e => { e.stopPropagation(); kbStart('prev'); };
-$('#kbClear').onclick = () => { KB.next = []; KB.prev = []; kbLearn = null; kbSave(); kbShow(); toast('已恢復預設翻頁鍵'); };
-kbShow();
-window.addEventListener('keydown', e => {
-  if (kbLearn) {
-    e.preventDefault(); e.stopImmediatePropagation(); clearTimeout(kbT);
-    const w = kbLearn; kbLearn = null;
-    if (e.key === 'Escape') { kbShow(); return; }
-    const id = kbId(e), other = w === 'next' ? 'prev' : 'next';
-    KB[other] = KB[other].filter(x => x !== id);
-    if (!KB[w].includes(id)) KB[w].push(id);
-    kbSave(); kbShow(); toast('已設定' + (w === 'next' ? '下一頁' : '上一頁') + '：' + kbName(id));
-    if (/Volume/.test(e.key)) setTimeout(() => toast('提醒：音量鍵只有部分裝置會轉給網頁，若之後按了沒反應，請切換翻頁器模式', 5000), 2200);
-    return;
-  }
-  if (!R.book || !$('#modal').hidden || !$('#viewer').hidden) return;
-  const tg = e.target; if (tg.matches && tg.matches('input:not([type=range]),textarea')) return;
-  const id = kbId(e);
-  if (KB.next.includes(id)) { e.preventDefault(); e.stopImmediatePropagation(); next(); }
-  else if (KB.prev.includes(id)) { e.preventDefault(); e.stopImmediatePropagation(); prev(); }
-}, true);
 document.addEventListener('keydown', e => {
   if (!$('#viewer').hidden) { viewerKey(e); return; }
   const tg = e.target;
@@ -2212,12 +2209,12 @@ slider.addEventListener('input', () => {
   tip.hidden = false; tip.textContent = `${chapterTitleOf(l.spine)}　${(f * 100).toFixed(1)}%`;
 });
 slider.addEventListener('change', async () => {
-  const l = fracToLoc(slider.value / 1000); tip.hidden = true;
+  const l = fracToLoc(slider.value / 1000); tip.hidden = true; markJump();
   if (l.spine === R.spine) goPage(Math.floor(l.within * R.total)); else await renderChapter(l.spine, { pageFrac: l.within });
-  sliding = false;
+  sliding = false; showBack();
 });
-$('#btnPrevChap').onclick = () => { if (R.spine > 0) renderChapter(R.spine - 1, { offset: 0 }); };
-$('#btnNextChap').onclick = () => { if (R.spine < R.book.spine.length - 1) renderChapter(R.spine + 1, { offset: 0 }); };
+$('#btnPrevChap').onclick = () => { if (R.spine > 0) jump(R.spine - 1, { offset: 0 }); };
+$('#btnNextChap').onclick = () => { if (R.spine < R.book.spine.length - 1) jump(R.spine + 1, { offset: 0 }); };
 
 /* ================= 看圖模式：放大、拖曳、雙指縮放 ================= */
 function imageEl(t) {
